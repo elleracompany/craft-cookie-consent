@@ -1,0 +1,14 @@
+{% import "_includes/forms" as forms %}
+
+{{ forms.textField({
+    first: true,
+    label: "Headline"|t('cookie-consent'),
+    name: 'headline',
+    value: settings.headline
+}) }}
+
+{{ forms.textArea({
+    label: "Description"|t('cookie-consent'),
+    name: 'description',
+    value: settings.description
+}) }}

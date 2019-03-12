@@ -14,15 +14,18 @@
     border-right: 1px solid #c4c4c4;
     background: #f4f4f4;
 }
-#cookie-consent .consent-action #detail-link {
+#cookie-consent .consent-action {
+    justify-content: center;
+    align-items: center;
+}
+#cookie-consent .consent-action .text-link {
     text-transform: uppercase;
-    text-decoration: underline;
     margin-top: 3em;
 }
-#cookie-consent .consent-action #accept-link {
+
+#cookie-consent .consent-action .button-link {
     text-transform: uppercase;
     width: 10em;
-    margin-top: 2em;
 }
 #cookie-consent .is-display-none {
     display: none;
