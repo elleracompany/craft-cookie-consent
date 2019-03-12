@@ -23,7 +23,7 @@
     }
   },
   "extra": {
-    "name": "Cookie Consent Plugin",
+    "name": "Cookie Consent",
     "handle": "cookie-consent",
     "documentationUrl": "https://gitlab.com/elleracompany/craft-plugins/craft-cookie-consent/blob/master/README.md",
     "changelogUrl": "https://gitlab.com/elleracompany/craft-plugins/craft-cookie-consent/blob/master/CHANGELOG.md",

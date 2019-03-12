@@ -3,6 +3,10 @@ namespace elleracompany\cookieconsent;
 
 use Craft;
 use craft\web\View;
+use yii\base\Event;
+use craft\web\UrlManager;
+use craft\events\RegisterUrlRulesEvent;
+use craft\helpers\UrlHelper;
 
 /**
  * Class Plugin
@@ -12,10 +16,24 @@ use craft\web\View;
 class CookieConsent extends \craft\base\Plugin
 {
 	/**
-	 * Enable settings in CP
+	 * Database Table name for SiteSettings record
+	 */
+	const SITE_SETTINGS_TABLE = '{{%cookie_consent_site_settings}}';
+
+	/**
+	 * Enable CpNav
+	 *
 	 * @var bool
 	 */
-	public $hasCpSettings = true;
+	public $hasCpSection = true;
+
+	/**
+	 * Schema version
+	 * For applying migrations etc.
+	 *
+	 * @var string
+	 */
+	public $schemaVersion = '0.0.1';
 
 	/**
 	 * Plugin Initiator
@@ -23,35 +41,23 @@ class CookieConsent extends \craft\base\Plugin
 	public function init()
 	{
 		parent::init();
-		if(!isset($_COOKIE['cookieConsent'])) Craft::$app->view->hook('before-body-end', function(array &$context) {
-			return $this->renderPluginTemplate('cookie-consent/banner', [
-				'banner' => $this->getSettings()
-			]);
-		});
+		if(!Craft::$app->request->isCpRequest) {
+			if(!isset($_COOKIE['cookieConsent'])) Craft::$app->view->hook('before-body-end', function(array &$context) {
+				return $this->renderPluginTemplate('cookie-consent/banner', [
+					'banner' => $this->getSettings()
+				]);
+			});
+		}
+		else $this->installCpEventListeners();
 	}
 
 	/**
-	 * Returns the settings model
-	 *
-	 * @return \craft\base\Model|models\Settings|null
+	 * @inheritdoc
 	 */
-	protected function createSettingsModel()
+	public function getSettingsResponse()
 	{
-		return new \elleracompany\cookieconsent\models\Settings();
-	}
-
-	/**
-	 * Returns the setting HTML for CP
-	 *
-	 * @return null|string
-	 * @throws \Twig_Error_Loader
-	 * @throws \yii\base\Exception
-	 */
-	protected function settingsHtml()
-	{
-		return \Craft::$app->getView()->renderTemplate('cookie-consent/settings', [
-			'settings' => $this->getSettings()
-		]);
+		// Just redirect to the plugin settings page
+		Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('cookie-consent'));
 	}
 
 	/**
@@ -74,5 +80,58 @@ class CookieConsent extends \craft\base\Plugin
 		$html = Craft::$app->view->renderTemplate($path,$params);
 		Craft::$app->view->setTemplateMode($oldMode);
 		return $html;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getCpNavItem()
+	{
+		$subNavs = [];
+		$navItem = parent::getCpNavItem();
+
+		$subNavs['dashboard'] = [
+			'label' => 'Dashboard',
+			'url' => 'seomatic/dashboard',
+		];
+
+		$navItem = array_merge($navItem, [
+			'subnav' => $subNavs,
+		]);
+
+		return $navItem;
+	}
+
+	/**
+	 *
+	 */
+	protected function installCpEventListeners()
+	{
+		// Handler: UrlManager::EVENT_REGISTER_CP_URL_RULES
+		Event::on(
+			UrlManager::class,
+			UrlManager::EVENT_REGISTER_CP_URL_RULES,
+			function (RegisterUrlRulesEvent $event) {
+				$event->rules = array_merge(
+					$event->rules,
+					$this->customAdminCpRoutes()
+				);
+			}
+		);
+	}
+
+	/**
+	 * Return the custom Control Panel routes
+	 *
+	 * @return array
+	 */
+	protected function customAdminCpRoutes(): array
+	{
+		return [
+			'cookie-consent' =>
+				'cookie-consent/settings/index',
+			'cookie-consent/<siteHandle:{handle}>' =>
+				'cookie-consent/settings/index',
+		];
 	}
 }

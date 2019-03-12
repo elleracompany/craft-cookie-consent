@@ -7,5 +7,6 @@ return [
 	'OK' => 'OK',
 	'Save' => 'Lagre',
 	'Details' => 'Detaljer',
-	'Hide Details' => 'Skjul detaljer'
+	'Hide Details' => 'Skjul detaljer',
+	'Necessary' => 'Nødvendig'
 ];
