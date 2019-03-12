@@ -6,8 +6,20 @@
 {% block contextMenu %}
     {% if craft.app.getIsMultiSite() %}
         {% set urlFormat = url("cookie-consent/{handle}") %}
-        {% include "cookie-consent/settings/_sitemenu.twig" with {
+        {% include "cookie-consent/settings/_includes/sitemenu.twig" with {
             urlFormat: urlFormat
         }  %}
     {% endif %}
+{% endblock %}
+
+{% block sidebar %}
+    <nav>
+        <ul>
+            <li class="heading"><span>Settings</span></li>
+            <li><a href="#" class="sel">Site Settings</a></li>
+            <li class="heading"><span>Sections</span></li>
+            <li><a href="#">Necessary</a></li>
+        </ul>
+        <a href="submit" class="btn submit">Add new section</a>
+    </nav>
 {% endblock %}

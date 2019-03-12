@@ -1,6 +1,5 @@
 {% extends "cookie-consent/settings/_layout.twig" %}
 {% set title = "Cookie Consent Settings"|t('cookie-consent') %}
 {% block content %}
-<h1>Hello, {{ currentSiteHandle }}</h1>
-    <pre>{{ dump(craft.app.sites.getEditableSiteIds()) }}</pre>
+    {% include "cookie-consent/settings/_includes/site_settings.twig" %}
 {% endblock %}

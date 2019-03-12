@@ -83,31 +83,10 @@ class CookieConsent extends \craft\base\Plugin
 	}
 
 	/**
-	 * @inheritdoc
-	 */
-	public function getCpNavItem()
-	{
-		$subNavs = [];
-		$navItem = parent::getCpNavItem();
-
-		$subNavs['dashboard'] = [
-			'label' => 'Dashboard',
-			'url' => 'seomatic/dashboard',
-		];
-
-		$navItem = array_merge($navItem, [
-			'subnav' => $subNavs,
-		]);
-
-		return $navItem;
-	}
-
-	/**
 	 *
 	 */
 	protected function installCpEventListeners()
 	{
-		// Handler: UrlManager::EVENT_REGISTER_CP_URL_RULES
 		Event::on(
 			UrlManager::class,
 			UrlManager::EVENT_REGISTER_CP_URL_RULES,
