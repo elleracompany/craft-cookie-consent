@@ -15,11 +15,17 @@
 {% block sidebar %}
     <nav>
         <ul>
-            <li class="heading"><span>Settings</span></li>
-            <li><a href="#" class="sel">Site Settings</a></li>
-            <li class="heading"><span>Sections</span></li>
+            <li class="heading"><span>{{ "Settings"|t('cookie-consent') }}</span></li>
+            <li><a href="#" class="sel">{{ "Site Settings"|t('cookie-consent') }}</a></li>
+            <li class="heading"><span>{{ "Sections"|t('cookie-consent') }}</span></li>
             <li><a href="#">Necessary</a></li>
         </ul>
-        <a href="submit" class="btn submit">Add new section</a>
+        <a href="submit" class="btn submit">{{ "Add new section"|t('cookie-consent') }}</a>
     </nav>
+{% endblock %}
+
+{% block actionButton %}
+    <div class="buttons">
+        <button type="submit" class="btn submit">{{ "Save"|t('cookie-consent') }}</button>
+    </div>
 {% endblock %}

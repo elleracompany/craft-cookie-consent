@@ -107,10 +107,9 @@ class CookieConsent extends \craft\base\Plugin
 	protected function customAdminCpRoutes(): array
 	{
 		return [
-			'cookie-consent' =>
-				'cookie-consent/settings/index',
-			'cookie-consent/<siteHandle:{handle}>' =>
-				'cookie-consent/settings/index',
+			'cookie-consent' 									=>	'cookie-consent/settings/index',
+			'cookie-consent/<siteHandle:{handle}>'				=> 	'cookie-consent/settings/index',
+			'cookie-consent/save/site/<siteHandle:{handle}>'	=> 	'cookie-consent/settings/save-site-settings',
 		];
 	}
 }

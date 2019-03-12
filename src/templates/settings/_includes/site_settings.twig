@@ -1,6 +1,22 @@
 {% import "_includes/forms" as forms %}
 
 
-<input type="hidden" name="action" value="...">
+<input type="hidden" name="action" value="cookie-consent/save/site/{{ currentSiteHandle }}">
 <input type="hidden" name="siteId" value="{{ currentSiteId }}">
-{{ redirectInput("...") }}
+
+{{ forms.textField({
+    label: "Visible Text"|t('cookie-consent'),
+    id: "headline",
+    name: "Headline"|t('cookie-consent'),
+    value: model.headline,
+    warning: false,
+    errors: model.getErrors("headline"),
+}) }}
+
+{{ forms.textArea({
+    id: "description",
+    name: "Description"|t('cookie-consent'),
+    value: model.description,
+    warning: false,
+    errors: model.getErrors("description"),
+}) }}
