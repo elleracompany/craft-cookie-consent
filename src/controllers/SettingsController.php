@@ -16,7 +16,7 @@ class SettingsController extends Controller
 	 * @return \yii\web\Response
 	 * @throws NotFoundHttpException
 	 */
-	function actionIndex(string $siteHandle = null)
+	public function actionIndex(string $siteHandle = null)
 	{
 		$params = [];
 		$siteId = $this->getSiteIdFromHandle($siteHandle);
@@ -28,8 +28,14 @@ class SettingsController extends Controller
 		return $this->renderTemplate('cookie-consent/settings/index', $params);
 	}
 
-	function actionSaveSiteSettings(string $siteHandle = null)
+	/**
+	 * @param string $siteHandle
+	 *
+	 * @throws \yii\web\BadRequestHttpException
+	 */
+	public function actionSaveSiteSettings(string $siteHandle)
 	{
+		$this->requirePostRequest();
 		// TODO: Failed route
 		// TODO: Fetch from record / save to record
 		echo "<pre>";

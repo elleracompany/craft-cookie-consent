@@ -91,6 +91,7 @@ class CookieConsent extends \craft\base\Plugin
 			UrlManager::class,
 			UrlManager::EVENT_REGISTER_CP_URL_RULES,
 			function (RegisterUrlRulesEvent $event) {
+				Craft::debug('Loaded CookieConsent CP Routes', 'cookie-consent');
 				$event->rules = array_merge(
 					$event->rules,
 					$this->customAdminCpRoutes()

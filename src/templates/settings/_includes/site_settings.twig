@@ -1,8 +1,10 @@
 {% import "_includes/forms" as forms %}
 
 
-<input type="hidden" name="action" value="cookie-consent/save/site/{{ currentSiteHandle }}">
+<input type="hidden" name="action" value="save/site/{{ currentSiteHandle }}">
 <input type="hidden" name="siteId" value="{{ currentSiteId }}">
+
+{{ csrfInput() }}
 
 {{ forms.textField({
     label: "Visible Text"|t('cookie-consent'),
