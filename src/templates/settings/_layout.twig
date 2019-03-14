@@ -5,7 +5,7 @@
 
 {% block contextMenu %}
     {% if craft.app.getIsMultiSite() %}
-        {% set urlFormat = url("cookie-consent/{handle}") %}
+        {% set urlFormat = url("cookie-consent/site/{handle}") %}
         {% include "cookie-consent/settings/_includes/sitemenu.twig" with {
             urlFormat: urlFormat
         }  %}
@@ -16,12 +16,18 @@
     <nav>
         <ul>
             <li class="heading"><span>{{ "Settings"|t('cookie-consent') }}</span></li>
-            <li><a href="#" class="sel">{{ "Site Settings"|t('cookie-consent') }}</a></li>
+            <li><a href="/admin/cookie-consent/site/{{ currentSiteHandle }}"{{ currentPage == 'site' ? ' class="sel"' : ''}}>{{ "Site Settings"|t('cookie-consent') }}</a></li>
             <li class="heading"><span>{{ "Sections"|t('cookie-consent') }}</span></li>
-            <li><a href="#">Necessary</a></li>
+            {% for cookieGroup in model.cookieGroups %}
+            <li><a href="/admin/cookie-consent/group/{{ currentSiteHandle }}/{{ cookieGroup.id }}"{{ currentPage == 'group' and cookieGroup.id == group.id ? ' class="sel"' : ''}}>{{  cookieGroup.name }}</a></li>
+            {% endfor %}
         </ul>
-        <a href="submit" class="btn submit">{{ "Add new section"|t('cookie-consent') }}</a>
     </nav>
+    {% if not model.isNewRecord %}
+    <div class="buttons">
+        <a href="/admin/cookie-consent/group/{{ currentSiteHandle }}" class="btn add icon">{{ "Add new cookie group"|t('cookie-consent') }}</a>
+    </div>
+    {% endif %}
 {% endblock %}
 
 {% block actionButton %}

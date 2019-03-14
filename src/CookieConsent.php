@@ -3,10 +3,12 @@ namespace elleracompany\cookieconsent;
 
 use Craft;
 use craft\web\View;
+use elleracompany\cookieconsent\services\Variables;
 use yii\base\Event;
 use craft\web\UrlManager;
 use craft\events\RegisterUrlRulesEvent;
 use craft\helpers\UrlHelper;
+use craft\web\twig\variables\CraftVariable;
 
 /**
  * Class Plugin
@@ -19,7 +21,11 @@ class CookieConsent extends \craft\base\Plugin
 	 * Database Table name for SiteSettings record
 	 */
 	const SITE_SETTINGS_TABLE = '{{%cookie_consent_site_settings}}';
+	const COOKIE_GROUP_TABLE = '{{%cookie_consent_group}}';
+	const COOKIES_TABLE = '{{%cookie_consent_cookie}}';
+	const CONSENT_TABLE = '{{%cookie_consent_consent}}';
 
+	const PLUGIN_NAME = 'Cookie Banner';
 	/**
 	 * Enable CpNav
 	 *
@@ -41,8 +47,15 @@ class CookieConsent extends \craft\base\Plugin
 	public function init()
 	{
 		parent::init();
+		Event::on(CraftVariable::class, CraftVariable::EVENT_INIT, function(Event $e) {
+			$e->sender->set('cookieConsent', Variables::class);
+		});
+		$this->setComponents([
+			'cookieConsent' => Variables::class,
+		]);
 		if(!Craft::$app->request->isCpRequest) {
-			if(!isset($_COOKIE['cookieConsent'])) Craft::$app->view->hook('before-body-end', function(array &$context) {
+			if($this->cookieConsent->render()) Craft::$app->view->hook('before-body-end', function(array &$context) {
+
 				return $this->renderPluginTemplate('cookie-consent/banner', [
 					'banner' => $this->getSettings()
 				]);
@@ -108,9 +121,10 @@ class CookieConsent extends \craft\base\Plugin
 	protected function customAdminCpRoutes(): array
 	{
 		return [
-			'cookie-consent' 									=>	'cookie-consent/settings/index',
-			'cookie-consent/<siteHandle:{handle}>'				=> 	'cookie-consent/settings/index',
-			'cookie-consent/save/site/<siteHandle:{handle}>'	=> 	'cookie-consent/settings/save-site-settings',
+			'cookie-consent' 														=>	'cookie-consent/settings/index',
+			'cookie-consent/site/<siteHandle:{handle}>'								=> 	'cookie-consent/settings/index',
+			'cookie-consent/group/<siteHandle:{handle}>'							=> 	'cookie-consent/settings/group',
+			'cookie-consent/group/<siteHandle:{handle}>/<sectionId:\d+>'			=> 	'cookie-consent/settings/group',
 		];
 	}
 }

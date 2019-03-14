@@ -1,24 +1,41 @@
 {% import "_includes/forms" as forms %}
 
-
-<input type="hidden" name="action" value="save/site/{{ currentSiteHandle }}">
-<input type="hidden" name="siteId" value="{{ currentSiteId }}">
+{% for alert in alerts %}
+    {{ alert }}
+{% endfor %}
+<input type="hidden" name="action" value="cookie-consent/settings/index">
+<input type="hidden" name="site_id" value="{{ currentSiteId }}">
 
 {{ csrfInput() }}
 
+{{ forms.lightswitchField({
+    label: model.getAttributeLabel('activated'),
+    instructions: 'Activate the cookie consent banner for all visitors.'|t('cookie-consent'),
+    name: "activated",
+    on: model.activated,
+}) }}
+
 {{ forms.textField({
-    label: "Visible Text"|t('cookie-consent'),
+    label: model.getAttributeLabel('template'),
+    instructions: 'The banner template. Defaults to "cookie-consent/banner".'|t('cookie-consent'),
+    id: "template",
+    name: "template",
+    value: model.template,
+    errors: model.getErrors("template"),
+}) }}
+
+{{ forms.textField({
+    label: model.getAttributeLabel('headline'),
     id: "headline",
-    name: "Headline"|t('cookie-consent'),
+    name: "headline",
     value: model.headline,
-    warning: false,
     errors: model.getErrors("headline"),
 }) }}
 
-{{ forms.textArea({
+{{ forms.textAreaField({
     id: "description",
-    name: "Description"|t('cookie-consent'),
+    name: "description",
+    rows: 4,
     value: model.description,
-    warning: false,
     errors: model.getErrors("description"),
 }) }}

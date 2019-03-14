@@ -5,7 +5,6 @@ namespace elleracompany\cookieconsent\records;
 
 use craft\db\ActiveRecord;
 use elleracompany\cookieconsent\CookieConsent;
-use yii\db\ActiveQueryInterface;
 
 /**
  * This is the model class for table "auth_item".
@@ -16,7 +15,7 @@ use yii\db\ActiveQueryInterface;
  * @property string 	$description
  * @property string		$template
  */
-class SiteSettings extends ActiveRecord
+class Consent extends ActiveRecord
 {
 	/**
 	 * @inheritdoc
@@ -25,10 +24,8 @@ class SiteSettings extends ActiveRecord
 	{
 		$fields = [
 			'site_id',
-			'activated',
-			'headline',
-			'description',
-			'template'
+			'ip',
+			'data',
 		];
 		return array_merge($fields, parent::fields());
 	}
@@ -38,27 +35,15 @@ class SiteSettings extends ActiveRecord
 	 */
 	public static function tableName(): string
 	{
-		return CookieConsent::SITE_SETTINGS_TABLE;
+		return CookieConsent::CONSENT_TABLE;
 	}
 
 	public function rules()
 	{
 		return [
-			[['headline', 'description', 'template'], 'string'],
-			[['headline', 'description', 'template'], 'required'],
-			['activated', 'boolean'],
-			['activated', 'default', 'value' => 0],
+			[['data'], 'string'],
+			[['site_id', 'description', 'template'], 'required'],
 			['site_id', 'integer']
 		];
-	}
-
-	/**
-	 * Returns the site’s cookie groups.
-	 *
-	 * @return ActiveQueryInterface The relational query object.
-	 */
-	public function getCookieGroups(): ActiveQueryInterface
-	{
-		return $this->hasMany(CookieGroup::class, ['site_id' => 'site_id']);
 	}
 }

@@ -7,14 +7,24 @@ window.onload = function () {
         event.preventDefault();
         toggleExpand();
     });
-    $("#accept-link").click(function (event) {
+    $("#cookie-consent-form").submit( function(event) {
+
         event.preventDefault();
-        saveSettings();
+
+        let data = $(this).serialize();
+
+        $.ajax({
+            method: 'POST',
+            url: '/',
+            data: data,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            success: function(data) {
+                $("#cookie-consent").remove();
+                console.log('success', data);
+            }
+        });
     });
-    $("#save-link").click(function (event) {
-        event.preventDefault();
-        saveSettings();
-    });
+
     function toggleExpand()
     {
         $("#cookie-consent-settings").toggleClass("is-display-none");
@@ -22,15 +32,5 @@ window.onload = function () {
         $("#save-link").toggleClass("is-display-none");
         $("#hide-detail-link").toggleClass("is-display-none");
         $("#detail-link").toggleClass("is-display-none");
-    }
-
-    function saveSettings()
-    {
-        document.cookie = "cookieConsent=" + JSON.stringify({
-            "functional": $('#checkbox-functional').is(":checked") ? 'on' : 'off',
-            "statistical": $('#checkbox-statistical').is(":checked") ? 'on' : 'off',
-            "marketing": $('#checkbox-marketing').is(":checked") ? 'on' : 'off',
-        }) + ";path=/";
-        $("#cookie-consent").remove();
     }
 }
