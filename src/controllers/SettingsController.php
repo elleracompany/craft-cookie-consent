@@ -83,6 +83,7 @@ class SettingsController extends Controller
 			$siteId = $record->site_id;
 			$site = Craft::$app->sites->getSiteById($siteId);
 			$siteHandle = $site->handle;
+			if($record->required) $record->default = true;
 			if($record->save()) {
 				Craft::$app->getSession()->setNotice(Craft::t('cookie-consent', 'Cookie group saved.'));
 			}
