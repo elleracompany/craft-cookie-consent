@@ -28,7 +28,7 @@ class ConsentController extends Controller
 		$consentRecord->data = json_encode($consent);
 		$consentRecord->save();
 		Craft::$app->response->format = Response::FORMAT_JSON;
-		Craft::$app->session->set('cookieConsent', json_encode($consent));
+		Craft::$app->session->set('cookieConsent', json_encode(array_merge(['consent_uid' => $consentRecord->uid],$consent)));
 		return true;
 	}
 }
