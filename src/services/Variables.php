@@ -17,9 +17,15 @@ class Variables extends Component
 
 	/**
 	 * User consent
-	 * @var string|null
+	 * @var bool
 	 */
 	private $consent;
+
+	/**
+	 * User consent content
+	 * @var string
+	 */
+	private $consent_string;
 
 	/**
 	 * Initiate the plugin for this site
@@ -27,7 +33,9 @@ class Variables extends Component
 	public function init()
 	{
 		$this->settings = SiteSettings::find()->where(['site_id' => Craft::$app->getSites()->currentSite->id])->with('cookieGroups')->one();
-		$this->consent = Craft::$app->session->get('cookieConsent');
+		$consent = Craft::$app->session->get('cookieConsent');
+		$this->consent = $consent !== null;
+		$this->consent_string = json_decode($consent);
 		parent::init();
 	}
 
@@ -74,5 +82,10 @@ class Variables extends Component
 	public function groups()
 	{
 		return $this->settings ? $this->settings->cookieGroups : [];
+	}
+
+	public function getConsent($slug)
+	{
+		return isset($this->consent_string->$slug) ? $this->consent_string->$slug == 'on' : false;
 	}
 }

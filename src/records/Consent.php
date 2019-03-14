@@ -9,11 +9,9 @@ use elleracompany\cookieconsent\CookieConsent;
 /**
  * This is the model class for table "auth_item".
  *
- * @property boolean 	$activated
  * @property integer 	$site_id
- * @property string 	$headline
- * @property string 	$description
- * @property string		$template
+ * @property string 	$ip
+ * @property string 	$data
  */
 class Consent extends ActiveRecord
 {
@@ -42,7 +40,7 @@ class Consent extends ActiveRecord
 	{
 		return [
 			[['data'], 'string'],
-			[['site_id', 'description', 'template'], 'required'],
+			[['site_id', 'data'], 'required'],
 			['site_id', 'integer']
 		];
 	}

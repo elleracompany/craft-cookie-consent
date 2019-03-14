@@ -30,6 +30,12 @@ class CookieGroup extends ActiveRecord
 				'class' => SluggableBehavior::className(),
 				'attribute' => 'name',
 				'slugAttribute' => 'slug',
+				'ensureUnique' => true,
+				'immutable' => true,
+				'uniqueSlugGenerator' => function ($baseSlug, $iteration, $model)
+				{
+					return $baseSlug.'-'.$model->id;
+				}
 			],
 		];
 		return array_merge($behaviors, parent::behaviors());
