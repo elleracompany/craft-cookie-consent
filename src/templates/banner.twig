@@ -40,6 +40,22 @@
                         </div>
                     </div>
                 </div>
+                {% for cookie in group.cookies|json_decode %}
+                    <div class="columns">
+                        <div class="column is-one-fourth">
+                            {{ cookie.name }}
+                        </div>
+                        <div class="column is-one-fourth">
+                            {{ cookie.provider }}
+                        </div>
+                        <div class="column is-one-fourth">
+                            {{ cookie.description }}
+                        </div>
+                        <div class="column is-one-fourth">
+                            {{ cookie.expiry }}
+                        </div>
+                    </div>
+                {% endfor %}
             {% endfor %}
         </div>
     </form>
