@@ -4,6 +4,7 @@
 namespace elleracompany\cookieconsent\records;
 
 use craft\db\ActiveRecord;
+use craft\records\Site;
 use elleracompany\cookieconsent\CookieConsent;
 use yii\behaviors\SluggableBehavior;
 /**
@@ -28,13 +29,13 @@ class CookieGroup extends ActiveRecord
 		$behaviors = [
 			[
 				'class' => SluggableBehavior::className(),
-				'attribute' => 'name',
+				'attribute' => 'slugattribute',
 				'slugAttribute' => 'slug',
 				'ensureUnique' => true,
 				'immutable' => true,
 				'uniqueSlugGenerator' => function ($baseSlug, $iteration, $model)
 				{
-					return $iteration > 1 ? $baseSlug.'-'.$model->site_id.'-'.$iteration : $baseSlug.'-'.$model->site_id;
+					return $baseSlug.'-'.$iteration;
 				}
 			],
 		];
@@ -75,5 +76,15 @@ class CookieGroup extends ActiveRecord
 			[['required', 'store_ip', 'default'], 'default', 'value' => 0],
 			['site_id', 'integer']
 		];
+	}
+
+	public function getSlugattribute()
+	{
+		return $this->site->handle.'-'.$this->name;
+	}
+
+	public function getSite()
+	{
+		return $this->hasOne(Site::class, ['id' => 'site_id']);
 	}
 }
