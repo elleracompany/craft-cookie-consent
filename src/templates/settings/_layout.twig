@@ -21,6 +21,9 @@
             {% for cookieGroup in model.cookieGroups %}
             <li><a href="/admin/cookie-consent/group/{{ currentSiteHandle }}/{{ cookieGroup.id }}"{{ currentPage == 'group' and cookieGroup.id == group.id ? ' class="sel"' : ''}}>{{  cookieGroup.name }}</a></li>
             {% endfor %}
+            {% if group is defined and group.isNewRecord %}
+            <li><a href="#" class="sel">{{ "New cookie group"|t('cookie-consent') }}</a></li>
+            {% endif %}
         </ul>
     </nav>
     {% if not model.isNewRecord %}

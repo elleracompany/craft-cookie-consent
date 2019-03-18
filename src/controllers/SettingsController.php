@@ -97,20 +97,28 @@ class SettingsController extends Controller
 				$record = new CookieGroup();
 			}
 			$siteId = $this->getSiteIdFromHandle($siteHandle);
+			$site = Craft::$app->sites->getSiteById($siteId);
 			$record->site_id = $siteId;
 		}
-
 		$params['currentSiteId'] = empty($siteId) ? Craft::$app->getSites()->currentSite->id : $siteId;
 		$params['currentSiteHandle'] = empty($siteHandle) ? Craft::$app->getSites()->currentSite->handle : $siteHandle;
-		$params['model'] = SiteSettings::findOne($siteId);
+
+		$siteModel = SiteSettings::findOne($siteId);
+		if(!$siteModel) return $this->redirect('/admin/cookie-consent/site/'.$siteHandle);
+
+		$params['model'] = $siteModel;
 		$params['group'] = $record;
 		$params['currentPage'] = 'group';
-		$params['title'] = Craft::t('cookie-consent', 'Cookie Group');
+		$params['title'] = $record->isNewRecord ? Craft::t('cookie-consent', 'New cookie Group') : $record->name;
 		$params['fullPageForm'] = true;
 		$params['crumbs'] = [
 			[
 				'label' => CookieConsent::PLUGIN_NAME,
 				'url' => UrlHelper::cpUrl('cookie-consent'),
+			],
+			[
+				'label' => $site->name,
+				'url' => UrlHelper::cpUrl('cookie-consent/site/'.$site->handle),
 			]
 		];
 

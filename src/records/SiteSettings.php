@@ -4,6 +4,7 @@
 namespace elleracompany\cookieconsent\records;
 
 use craft\db\ActiveRecord;
+use craft\records\Site;
 use elleracompany\cookieconsent\CookieConsent;
 use yii\db\ActiveQueryInterface;
 
@@ -60,5 +61,10 @@ class SiteSettings extends ActiveRecord
 	public function getCookieGroups(): ActiveQueryInterface
 	{
 		return $this->hasMany(CookieGroup::class, ['site_id' => 'site_id']);
+	}
+
+	public function getSite(): ActiveQueryInterface
+	{
+		return $this->hasOne(Site::class, ['id' => 'site_id']);
 	}
 }
