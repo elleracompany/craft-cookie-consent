@@ -7,6 +7,7 @@
             <div class="column is-three-quarters consent-description">
                 <h3 class="is-size-3">{{ craft.cookieConsent.headline }}</h3>
                 <p>{{ craft.cookieConsent.description }}</p>
+                <p>Last updated at: {{ craft.cookieConsent.updated|datetime('short') }}</p>
             </div>
             <div class="column is-one-quarter has-text-centered is-vcentered text-center consent-action is-flex">
                 <div>

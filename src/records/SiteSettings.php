@@ -53,6 +53,14 @@ class SiteSettings extends ActiveRecord
 		];
 	}
 
+	public function getLastUpdate()
+	{
+		$dates = [];
+		if(isset($this->dateUpdated)) $dates[] = strtotime($this->dateUpdated);
+		foreach ($this->cookieGroups as $group) $dates[] = strtotime($group->dateUpdated);
+		return max($dates);
+	}
+
 	/**
 	 * Returns the site’s cookie groups.
 	 *

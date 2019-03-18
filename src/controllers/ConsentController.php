@@ -24,7 +24,7 @@ class ConsentController extends Controller
 		}
 		$consentRecord = new Consent();
 		$consentRecord->site_id = $post['site_id'];
-		$consentRecord->ip = $save_ip ? Craft::$app->request->getUserIP() : '***.***.***.***';
+		$consentRecord->ip = $save_ip ? Craft::$app->request->getUserIP() : null;
 		$consentRecord->data = json_encode($consent);
 		$consentRecord->save();
 		Craft::$app->response->format = Response::FORMAT_JSON;

@@ -53,3 +53,30 @@
     value: group.description,
     errors: group.getErrors("description"),
 }) }}
+
+{{ forms.editableTable({
+    id: 'cookies',
+    name: 'cookies',
+    label: group.getAttributeLabel('cookies'),
+    required: false,
+    cols: {
+        name: {
+            heading: "Cookie-name" |t,
+            type: "singleline" |t
+        },
+        provider: {
+            heading: "Provider" |t,
+            type: "singleline" |t
+        },
+        description: {
+            heading: "Description" |t,
+            type: "multiline" |t
+        },
+        expiry: {
+            heading: "Expiry" |t,
+            type: "singleline" |t
+        }
+    },
+    errors: group.getErrors("cookies"),
+    rows: group.cookies
+}) }}

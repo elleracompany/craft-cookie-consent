@@ -22,8 +22,61 @@ class CookieConsent extends \craft\base\Plugin
 	 */
 	const SITE_SETTINGS_TABLE = '{{%cookie_consent_site_settings}}';
 	const COOKIE_GROUP_TABLE = '{{%cookie_consent_group}}';
-	const COOKIES_TABLE = '{{%cookie_consent_cookie}}';
 	const CONSENT_TABLE = '{{%cookie_consent_consent}}';
+	const DEFAULT_TEMPLATE = 'cookie-consent/banner';
+	const DEFAULT_HEADLINE = 'This website uses cookies';
+	const DEFAULT_DESCRIPTION = 'We use cookies to personalise content and ads, and to analyse our traffic and improve our service. You consent to cookies if you continue to use our website.';
+	const DEFAULT_GROUPS = [
+		[
+			'required' => true,
+			'store_ip' => false,
+			'default' => true,
+			'name' => 'Necessary',
+			'description' => 'Cookies that the site cannot function properly without. This includes cookies for access to secure areas and CSRF security. Please note that Craft’s default cookies do not collect any personal or sensitive information. Craft\'s default cookies do not collect IP addresses. The information they store is not sent to Pixel & Tonic or any 3rd parties.',
+			'cookies' => [
+				[
+					'name' => 'CraftSessionId',
+					'description' => 'Craft relies on PHP sessions to maintain sessions across web requests. That is done via the PHP session cookie. Craft names that cookie “CraftSessionId” by default, but it can be renamed via the phpSessionId config setting. This cookie will expire as soon as the session expires.',
+					'provider' => 'this site',
+					'expiry' => 'Session',
+				],
+				[
+					'name' => '*_identity',
+					'description' => 'When you log into the Control Panel, you will get an authentication cookie used to maintain your authenticated state. The cookie name is prefixed with a long, randomly generated string, followed by _identity. The cookie only stores information necessary to maintain a secure, authenticated session and will only exist for as long as the user is authenticated in Craft.',
+					'provider' => 'this site',
+					'expiry' => 'Persistent',
+				],
+				[
+					'name' => '*_username',
+					'description' => 'If you check the "Keep me logged in" option during login, this cookie is used to remember the username for your next authentication.',
+					'provider' => 'this site',
+					'expiry' => 'Persistent',
+				],
+				[
+					'name' => 'CRAFT_CSRF_TOKEN',
+					'description' => 'Protects us and you as a user against Cross-Site Request Forgery attacks.',
+					'provider' => 'this site',
+					'expiry' => 'Session',
+				]
+			]
+		],
+		[
+			'required' => false,
+			'store_ip' => false,
+			'default' => true,
+			'name' => 'Statistics',
+			'description' => 'Statistic cookies help us understand how visitors interact with websites by collecting and reporting information anonymously.',
+			'cookies' => []
+		],
+		[
+			'required' => false,
+			'store_ip' => true,
+			'default' => false,
+			'name' => 'Marketing',
+			'description' => 'Marketing cookies are used to track visitors across websites. The intention is to display ads that are relevant and engaging for the individual user and thereby more valuable for publishers and third party advertisers.',
+			'cookies' => []
+		]
+	];
 
 	const PLUGIN_NAME = 'Cookie Banner';
 	/**

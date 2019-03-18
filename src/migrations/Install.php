@@ -57,6 +57,7 @@ class Install extends Migration
 				'required' => $this->boolean()->notNull(),
 				'store_ip' => $this->boolean()->notNull(),
 				'default' => $this->boolean()->notNull(),
+				'cookies' => $this->text(),
 				'description' => $this->text(),
 				'site_id' => $this->integer(11),
 				'dateCreated' => $this->dateTime()->notNull(),
@@ -68,35 +69,6 @@ class Install extends Migration
 			CookieConsent::COOKIE_GROUP_TABLE,
 			'site_id',
 			Table::SITES,
-			'id',
-			'CASCADE',
-			'CASCADE'
-		);
-
-		// Cookies
-		$this->createTable(
-			CookieConsent::COOKIES_TABLE,
-			[
-				'uid'         => $this->uid(),
-				'group_id' => $this->integer(11),
-				'name' => $this->string(),
-				'slug' => $this->string(),
-				'required' => $this->boolean()->notNull(),
-				'description' => $this->text(),
-				'dateCreated' => $this->dateTime()->notNull(),
-				'dateUpdated' => $this->dateTime()->notNull(),
-			]
-		);
-		$this->addPrimaryKey(
-			'pk_cookie_consent_cookie',
-			CookieConsent::COOKIES_TABLE,
-			'uid'
-		);
-		$this->addForeignKey(
-			'fk_cookie_consent_cookie_belong_to_group',
-			CookieConsent::COOKIES_TABLE,
-			'group_id',
-			CookieConsent::COOKIE_GROUP_TABLE,
 			'id',
 			'CASCADE',
 			'CASCADE'
@@ -137,7 +109,6 @@ class Install extends Migration
 	public function safeDown()
 	{
 		$this->dropTableIfExists(CookieConsent::CONSENT_TABLE);
-		$this->dropTableIfExists(CookieConsent::COOKIES_TABLE);
 		$this->dropTableIfExists(CookieConsent::COOKIE_GROUP_TABLE);
 		$this->dropTableIfExists(CookieConsent::SITE_SETTINGS_TABLE);
 		return true;

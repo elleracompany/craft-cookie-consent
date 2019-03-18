@@ -38,7 +38,23 @@ class SettingsController extends Controller
 			$record = SiteSettings::findOne($siteId);
 			if(!$record) {
 				$record = new SiteSettings();
-				$record->template = 'cookie-consent/banner';
+				$record->template = CookieConsent::DEFAULT_TEMPLATE;
+				$record->headline = CookieConsent::DEFAULT_HEADLINE;
+				$record->site_id = $siteId;
+				$record->activated = false;
+				$record->save(false);
+				foreach (CookieConsent::DEFAULT_GROUPS as $group)
+				{
+					$m = new CookieGroup();
+					$m->required = $group['required'];
+					$m->site_id = $record->site_id;
+					$m->store_ip = $group['store_ip'];
+					$m->default = $group['default'];
+					$m->name = $group['name'];
+					$m->description = $group['description'];
+					$m->cookies = $group['cookies'];
+					$m->save(true);
+				}
 			}
 		}
 
@@ -77,7 +93,6 @@ class SettingsController extends Controller
 	{
 		$params = [];
 
-
 		if(Craft::$app->request->isPost)
 		{
 			$record = CookieGroup::findOne([
@@ -102,6 +117,9 @@ class SettingsController extends Controller
 			]);
 			if(!$record) {
 				$record = new CookieGroup();
+			}
+			else {
+				$record->unstringifyCookies();
 			}
 			$siteId = $this->getSiteIdFromHandle($siteHandle);
 			$site = Craft::$app->sites->getSiteById($siteId);

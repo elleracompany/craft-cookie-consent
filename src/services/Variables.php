@@ -68,6 +68,15 @@ class Variables extends Component
 	{
 		return $this->settings->description;
 	}
+	/**
+	 * Get Description
+	 *
+	 * @return string
+	 */
+	public function updated() : string
+	{
+		return $this->settings->getLastUpdate();
+	}
 
 	/**
 	 * Get Headline
