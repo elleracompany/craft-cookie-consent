@@ -3,6 +3,7 @@
 namespace elleracompany\cookieconsent\controllers;
 
 use Craft;
+use craft\records\Site;
 use craft\web\Controller;
 use elleracompany\cookieconsent\CookieConsent;
 use elleracompany\cookieconsent\records\CookieGroup;
@@ -44,6 +45,8 @@ class SettingsController extends Controller
 		$params['currentSiteId'] = empty($siteId) ? Craft::$app->getSites()->currentSite->id : $siteId;
 		$params['currentSiteHandle'] = empty($siteHandle) ? Craft::$app->getSites()->currentSite->handle : $siteHandle;
 
+		$site = Site::findOne($siteId);
+
 		$params['currentPage'] = 'site';
 		$params['model'] = $record;
 		$params['title'] = Craft::t('cookie-consent', 'Site Settings');
@@ -52,6 +55,10 @@ class SettingsController extends Controller
 			[
 				'label' => CookieConsent::PLUGIN_NAME,
 				'url' => UrlHelper::cpUrl('cookie-consent'),
+			],
+			[
+				'label' => $site->name,
+				'url' => UrlHelper::cpUrl('cookie-consent/site/'.$site->handle),
 			]
 		];
 

@@ -34,7 +34,7 @@ class CookieGroup extends ActiveRecord
 				'immutable' => true,
 				'uniqueSlugGenerator' => function ($baseSlug, $iteration, $model)
 				{
-					return $baseSlug.'-'.$model->id;
+					return $iteration > 1 ? $baseSlug.'-'.$model->site_id.'-'.$iteration : $baseSlug.'-'.$model->site_id;
 				}
 			],
 		];
