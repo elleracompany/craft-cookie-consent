@@ -109,8 +109,9 @@ class SettingsController extends Controller
 				'group' => $record
 			]);
 			Craft::$app->getSession()->setError(Craft::t('cookie-consent', 'Couldn’t save the cookie group.'));
+			return null;
 		}
-		return null;
+		return $this->redirect($record->getEditUrl());
 	}
 
 	/**
