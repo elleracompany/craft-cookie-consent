@@ -3,10 +3,12 @@
 
 namespace elleracompany\cookieconsent\records;
 
+use Craft;
 use craft\db\ActiveRecord;
 use craft\records\Site;
 use elleracompany\cookieconsent\CookieConsent;
 use yii\db\ActiveQueryInterface;
+use yii\web\NotFoundHttpException;
 
 /**
  * This is the model class for table "auth_item".
@@ -62,6 +64,20 @@ class SiteSettings extends ActiveRecord
 	}
 
 	/**
+	 * Returns the URL to edit this record
+	 *
+	 * @return int|null|string
+	 * @throws NotFoundHttpException
+	 */
+	public function getEditUrl()
+	{
+		if($this->site_id) {
+			return 'cookie-consent/site/'.$this->getSiteHandleFromId($this->site_id);
+		}
+		return 'cookie-consent';
+	}
+
+	/**
 	 * Returns the site’s cookie groups.
 	 *
 	 * @return ActiveQueryInterface The relational query object.
@@ -74,5 +90,28 @@ class SiteSettings extends ActiveRecord
 	public function getSite(): ActiveQueryInterface
 	{
 		return $this->hasOne(Site::class, ['id' => 'site_id']);
+	}
+
+	/**
+	 * Return a siteHandle from a siteId
+	 *
+	 * @param string $siteId
+	 *
+	 * @return int|null
+	 * @throws NotFoundHttpException
+	 */
+	protected function getSiteHandleFromId($siteId)
+	{
+		if ($siteId !== null) {
+			$site = Craft::$app->getSites()->getSiteById($siteId);
+			if (!$site) {
+				throw new NotFoundHttpException('Invalid site ID: '.$siteId);
+			}
+			$siteHandle = $site->handle;
+		} else {
+			$siteHandle = Craft::$app->getSites()->currentSite->handle;
+		}
+
+		return $siteHandle;
 	}
 }

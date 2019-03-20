@@ -3,7 +3,7 @@
 {% for alert in alerts %}
     {{ alert }}
 {% endfor %}
-<input type="hidden" name="action" value="cookie-consent/settings/index">
+<input type="hidden" name="action" value="cookie-consent/settings/save-site-settings">
 <input type="hidden" name="site_id" value="{{ currentSiteId }}">
 
 {{ csrfInput() }}

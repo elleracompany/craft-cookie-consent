@@ -1,4 +1,4 @@
-#cookie-consent {
+#elc-cookie-consent {
     position: fixed;
     width: 100%;
     max-height: 90%;
@@ -7,40 +7,44 @@
     background-color: white;
     border-top: 1px solid #c4c4c4;
 }
-#cookie-consent-visible {
+#elc-cookie-consent-visible {
     margin: 0;
 }
-#cookie-consent .consent-description {
+#elc-cookie-consent .elc-consent-description {
     border-right: 1px solid #c4c4c4;
     background: #f4f4f4;
 }
-#cookie-consent .consent-action {
+#elc-cookie-consent .elc-consent-action {
     justify-content: center;
     align-items: center;
 }
-#cookie-consent .consent-action .text-link {
+#elc-cookie-consent .elc-consent-action .elc-text-link {
     text-transform: uppercase;
     margin-top: 3em;
 }
 
-#cookie-consent .consent-action .button-link {
+#elc-cookie-consent .elc-consent-action .elc-button-link {
     text-transform: uppercase;
     width: 10em;
 }
-#cookie-consent .is-display-none {
+#elc-cookie-consent .elc-is-display-none {
     display: none;
 }
-#cookie-consent #cookie-consent-settings {
+#elc-cookie-consent #elc-cookie-consent-settings {
     background-color: white;
     margin: 0;
 }
-#cookie-consent .checkbox-row {
+#elc-cookie-consent .elc-checkbox-row {
     margin: 0;
     border-top: 1px solid #eeeeee;
 }
-#cookie-consent .checkbox-row-first {
+#elc-cookie-consent .elc-checkbox-row-first {
     margin: 0;
     border-top: 1px solid #c4c4c4;
+}
+#elc-cookie-consent-settings .elc-cookie-list {
+    padding: 1em;
+    font-size: .8em;
 }
 
 .switch_box{

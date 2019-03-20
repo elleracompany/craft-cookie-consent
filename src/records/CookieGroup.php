@@ -3,10 +3,13 @@
 
 namespace elleracompany\cookieconsent\records;
 
+use Craft;
 use craft\db\ActiveRecord;
 use craft\records\Site;
 use elleracompany\cookieconsent\CookieConsent;
 use yii\behaviors\SluggableBehavior;
+use yii\web\NotFoundHttpException;
+
 /**
  * This is the model class for table "auth_item".
  *
@@ -89,6 +92,23 @@ class CookieGroup extends ActiveRecord
 	{
 		$this->stringifyCookies();
 		return parent::beforeSave($insert);
+	}
+
+	/**
+	 * Returns edit url for the current record
+	 *
+	 * @return string
+	 * @throws \craft\errors\MissingComponentException
+	 */
+	public function getEditUrl()
+	{
+		if($this->site_id)
+		{
+			$site = Craft::$app->sites->getSiteById($this->site_id);
+			if($site) return 'cookie-consent/group/'.$site->handle.'/'.$this->id;
+		}
+		Craft::$app->getSession()->setError(Craft::t('cookie-consent', 'Could not get return url.'));
+		return 'cookie-consent';
 	}
 
 	public function afterSave($insert, $changedAttributes)

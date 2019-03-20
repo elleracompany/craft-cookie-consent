@@ -14,140 +14,103 @@ use craft\helpers\UrlHelper;
 class SettingsController extends Controller
 {
 	/**
-	 * @param string|null $siteHandle
+	 * Render the view for editing SiteSettings
+	 *
+	 * @param string|null       $siteHandle
+	 * @param SiteSettings|null $model
 	 *
 	 * @return \yii\web\Response
-	 * @throws NotFoundHttpException
-	 * @throws \craft\errors\MissingComponentException
 	 */
-	public function actionIndex(string $siteHandle = null)
+	public function actionEditSiteSettings(string $siteHandle = null, SiteSettings $model = null)
 	{
-		$params = [];
-		if(Craft::$app->request->isPost) {
-			$record = SiteSettings::findOne(Craft::$app->request->post('site_id'));
-			if(!$record) {
-				$record = new SiteSettings();
-			}
-			$record->load(Craft::$app->request->post(), '');
-			$siteId = $record->site_id;
-			if($record->save()) Craft::$app->getSession()->setNotice(Craft::t('cookie-consent', 'Settings saved.'));
-			else Craft::$app->getSession()->setError(Craft::t('cookie-consent', 'Couldn’t save the settings.'));
-		}
-		else {
-			$siteId = $this->getSiteIdFromHandle($siteHandle);
-			$record = SiteSettings::findOne($siteId);
-			if(!$record) {
-				$record = new SiteSettings();
-				$record->template = CookieConsent::DEFAULT_TEMPLATE;
-				$record->headline = CookieConsent::DEFAULT_HEADLINE;
-				$record->site_id = $siteId;
-				$record->activated = false;
-				$record->save(false);
-				foreach (CookieConsent::DEFAULT_GROUPS as $group)
-				{
-					$m = new CookieGroup();
-					$m->required = $group['required'];
-					$m->site_id = $record->site_id;
-					$m->store_ip = $group['store_ip'];
-					$m->default = $group['default'];
-					$m->name = $group['name'];
-					$m->description = $group['description'];
-					$m->cookies = $group['cookies'];
-					$m->save(true);
-				}
-			}
-		}
 
-		$params['currentSiteId'] = empty($siteId) ? Craft::$app->getSites()->currentSite->id : $siteId;
-		$params['currentSiteHandle'] = empty($siteHandle) ? Craft::$app->getSites()->currentSite->handle : $siteHandle;
-
-		$site = Site::findOne($siteId);
-
-		$params['currentPage'] = 'site';
-		$params['model'] = $record;
-		$params['title'] = Craft::t('cookie-consent', 'Site Settings');
-		$params['fullPageForm'] = true;
-		$params['crumbs'] = [
-			[
-				'label' => CookieConsent::PLUGIN_NAME,
-				'url' => UrlHelper::cpUrl('cookie-consent'),
-			],
-			[
-				'label' => $site->name,
-				'url' => UrlHelper::cpUrl('cookie-consent/site/'.$site->handle),
-			]
+		Craft::$app->getRequest();
+		$variables = [
+			'currentSiteHandle' => $siteHandle,
+			'model' => $model
 		];
+		$this->_prepEditSiteSettingsVariables($variables);
 
-		return $this->renderTemplate('cookie-consent/settings/index', $params);
+		return $this->renderTemplate('cookie-consent/settings/index', $variables);
 	}
 
 	/**
-	 * @param string|null $siteHandle
-	 * @param string|null $sectionId
+	 * Save site settings
+	 *
+	 * @throws NotFoundHttpException
+	 * @throws \craft\errors\MissingComponentException
+	 * @throws \yii\web\BadRequestHttpException
+	 */
+	public function actionSaveSiteSettings()
+	{
+		$this->requirePostRequest();
+
+		$record = SiteSettings::findOne(Craft::$app->request->post('site_id'));
+		if(!$record) {
+			throw new NotFoundHttpException('Settings for site not found');
+		}
+		$record->load(Craft::$app->request->post(), '');
+		if($record->save()) {
+			Craft::$app->getSession()->setNotice(Craft::t('cookie-consent', 'Settings saved.'));
+		}
+		else {
+			Craft::$app->getUrlManager()->setRouteParams([
+				'model' => $record
+			]);
+			Craft::$app->getSession()->setError(Craft::t('cookie-consent', 'Couldn’t save the settings.'));
+		}
+		return null;
+	}
+
+	/**
+	 * Render the view for editing a CookieGroup
+	 *
+	 * @param string|null      $siteHandle
+	 * @param string|null      $groupId
+	 * @param CookieGroup|null $group
 	 *
 	 * @return \yii\web\Response
 	 * @throws NotFoundHttpException
-	 * @throws \craft\errors\MissingComponentException
 	 */
-	public function actionGroup(string $siteHandle = null, string $sectionId = null)
+	public function actionEditCookieGroup(string $siteHandle = null, string $groupId = null, CookieGroup $group = null)
 	{
-		$params = [];
-
-		if(Craft::$app->request->isPost)
-		{
-			$record = CookieGroup::findOne([
-				'id' => Craft::$app->request->post('id')
-			]);
-			if(!$record) {
-				$record = new CookieGroup();
-			}
-			$record->load(Craft::$app->request->post(), '');
-			$siteId = $record->site_id;
-			$site = Craft::$app->sites->getSiteById($siteId);
-			$siteHandle = $site->handle;
-			if($record->required) $record->default = true;
-			if($record->save()) {
-				Craft::$app->getSession()->setNotice(Craft::t('cookie-consent', 'Cookie group saved.'));
-			}
-			else Craft::$app->getSession()->setError(Craft::t('cookie-consent', 'Couldn’t save the gookie group.'));
-		}
-		else {
-			$record = $sectionId == null ? new CookieGroup() : CookieGroup::findOne([
-				'id' => $sectionId
-			]);
-			if(!$record) {
-				$record = new CookieGroup();
-			}
-			else {
-				$record->unstringifyCookies();
-			}
-			$siteId = $this->getSiteIdFromHandle($siteHandle);
-			$site = Craft::$app->sites->getSiteById($siteId);
-			$record->site_id = $siteId;
-		}
-		$params['currentSiteId'] = empty($siteId) ? Craft::$app->getSites()->currentSite->id : $siteId;
-		$params['currentSiteHandle'] = empty($siteHandle) ? Craft::$app->getSites()->currentSite->handle : $siteHandle;
-
-		$siteModel = SiteSettings::findOne($siteId);
-		if(!$siteModel) return $this->redirect('/admin/cookie-consent/site/'.$siteHandle);
-
-		$params['model'] = $siteModel;
-		$params['group'] = $record;
-		$params['currentPage'] = 'group';
-		$params['title'] = $record->isNewRecord ? Craft::t('cookie-consent', 'New cookie Group') : $record->name;
-		$params['fullPageForm'] = true;
-		$params['crumbs'] = [
-			[
-				'label' => CookieConsent::PLUGIN_NAME,
-				'url' => UrlHelper::cpUrl('cookie-consent'),
-			],
-			[
-				'label' => $site->name,
-				'url' => UrlHelper::cpUrl('cookie-consent/site/'.$site->handle),
-			]
+		Craft::$app->getRequest();
+		$variables = [
+			'currentSiteHandle' => $siteHandle,
+			'groupId' => $groupId,
+			'group' => $group
 		];
+		$this->_prepEditGroupVariables($variables);
 
-		return $this->renderTemplate('cookie-consent/settings/group', $params);
+		return $this->renderTemplate('cookie-consent/settings/group', $variables);
+	}
+
+	/**
+	 * Save cookie group
+	 *
+	 * @throws \craft\errors\MissingComponentException
+	 * @throws \yii\web\BadRequestHttpException
+	 */
+	public function actionSaveCookieGroup()
+	{
+		$this->requirePostRequest();
+
+		$record = CookieGroup::findOne([
+			'id' => Craft::$app->request->post('id')
+		]);
+		if(!$record) {
+			$record = new CookieGroup();
+		}
+		$record->load(Craft::$app->request->post(), '');
+		if($record->required) $record->default = true;
+		if($record->save()) Craft::$app->getSession()->setNotice(Craft::t('cookie-consent', 'Cookie group saved.'));
+		else {
+			Craft::$app->getUrlManager()->setRouteParams([
+				'group' => $record
+			]);
+			Craft::$app->getSession()->setError(Craft::t('cookie-consent', 'Couldn’t save the cookie group.'));
+		}
+		return null;
 	}
 
 	/**
@@ -155,10 +118,10 @@ class SettingsController extends Controller
 	 *
 	 * @param string $siteHandle
 	 *
-	 * @return int|null
+	 * @return int
 	 * @throws NotFoundHttpException
 	 */
-	protected function getSiteIdFromHandle($siteHandle)
+	protected function getSiteIdFromHandle($siteHandle) : int
 	{
 		if ($siteHandle !== null) {
 			$site = Craft::$app->getSites()->getSiteByHandle($siteHandle);
@@ -171,5 +134,123 @@ class SettingsController extends Controller
 		}
 
 		return $siteId;
+	}
+
+	/**
+	 * Populate SiteSettings record with
+	 * default data
+	 *
+	 * @param SiteSettings $record
+	 */
+	protected function insertDefaultRecord(SiteSettings &$record)
+	{
+		$record->template = CookieConsent::DEFAULT_TEMPLATE;
+		$record->headline = CookieConsent::DEFAULT_HEADLINE;
+		$record->activated = false;
+		$record->save();
+		foreach (CookieConsent::DEFAULT_GROUPS as $group)
+		{
+			$m = new CookieGroup();
+			$m->required = $group['required'];
+			$m->site_id = $record->site_id;
+			$m->store_ip = $group['store_ip'];
+			$m->default = $group['default'];
+			$m->name = $group['name'];
+			$m->description = $group['description'];
+			$m->cookies = $group['cookies'];
+			$m->save();
+		}
+	}
+
+	/**
+	 * Prepare twig variables for Site Settings
+	 *
+	 * @param array $variables
+	 */
+	private function _prepEditSiteSettingsVariables(array &$variables)
+	{
+		if(empty($variables['currentSiteHandle']))
+		{
+			$variables['site'] = Craft::$app->getSites()->currentSite;
+			$variables['currentSiteId'] = $variables['site']->id;
+			$variables['currentSiteHandle'] = $variables['site']->handle;
+		}
+		else {
+			$variables['site'] = Craft::$app->sites->getSiteByHandle($variables['currentSiteHandle']);
+			$variables['currentSiteId'] = $variables['site']->id;
+		}
+		if (empty($variables['model'])) {
+			$variables['model'] = SiteSettings::findOne($variables['currentSiteId']);
+			if (!$variables['model']) {
+				$variables['model'] = new SiteSettings();
+				$variables['model']->site_id = $variables['currentSiteId'];
+				$this->insertDefaultRecord($variables['model']);
+			}
+		}
+		$variables['model'] = SiteSettings::findOne($variables['currentSiteId']);
+
+		$variables['currentPage'] = 'site';
+		$variables['title'] = Craft::t('cookie-consent', 'Site Settings');
+		$variables['fullPageForm'] = true;
+		$variables['crumbs'] = [
+			[
+				'label' => CookieConsent::PLUGIN_NAME,
+				'url' => UrlHelper::cpUrl('cookie-consent'),
+			],
+			[
+				'label' => $variables['site']->name,
+				'url' => UrlHelper::cpUrl('cookie-consent/site/'.$variables['site']->handle),
+			]
+		];
+	}
+
+	/**
+	 * Prepare twig variables for Group Edit
+	 *
+	 * @param array $variables
+	 *
+	 * @throws NotFoundHttpException
+	 */
+	private function _prepEditGroupVariables(array &$variables)
+	{
+		if(empty($variables['currentSiteHandle']))
+		{
+			$variables['site'] = Craft::$app->getSites()->currentSite;
+			$variables['currentSiteId'] = $variables['site']->id;
+			$variables['currentSiteHandle'] = $variables['site']->handle;
+		}
+		else {
+			$variables['site'] = Craft::$app->sites->getSiteByHandle($variables['currentSiteHandle']);
+			$variables['currentSiteId'] = $variables['site']->id;
+		}
+		if (empty($variables['group'])) {
+			if (!empty($variables['groupId'])) {
+				$variables['group'] = CookieGroup::findOne([
+					'id' => $variables['groupId']
+				]);
+				if (!$variables['group']) {
+					throw new NotFoundHttpException('Group not found');
+				}
+			} else {
+				$variables['group'] = new CookieGroup();
+				$variables['group']->site_id = $variables['currentSiteId'];
+			}
+		}
+		$variables['group']->unstringifyCookies();
+		$variables['model'] = SiteSettings::findOne($variables['currentSiteId']);
+
+		$variables['currentPage'] = 'group';
+		$variables['title'] = $variables['group']->isNewRecord ? Craft::t('cookie-consent', 'New cookie Group') : $variables['group']->name;
+		$variables['fullPageForm'] = true;
+		$variables['crumbs'] = [
+			[
+				'label' => CookieConsent::PLUGIN_NAME,
+				'url' => UrlHelper::cpUrl('cookie-consent'),
+			],
+			[
+				'label' => $variables['site']->name,
+				'url' => UrlHelper::cpUrl('cookie-consent/site/'.$variables['currentSiteHandle']),
+			]
+		];
 	}
 }

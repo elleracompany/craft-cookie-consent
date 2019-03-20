@@ -17,15 +17,42 @@ use craft\web\twig\variables\CraftVariable;
  */
 class CookieConsent extends \craft\base\Plugin
 {
+	// Constants
+	// =========================================================================
+
 	/**
-	 * Database Table name for SiteSettings record
+	 * Database Table name for SiteSettings records
 	 */
 	const SITE_SETTINGS_TABLE = '{{%cookie_consent_site_settings}}';
+
+	/**
+	 * Database Table name for Cookie Group records
+	 */
 	const COOKIE_GROUP_TABLE = '{{%cookie_consent_group}}';
+
+	/**
+	 * Database Table name for Cookie Consent records
+	 */
 	const CONSENT_TABLE = '{{%cookie_consent_consent}}';
+
+	/**
+	 * Default banner template location
+	 */
 	const DEFAULT_TEMPLATE = 'cookie-consent/banner';
+
+	/**
+	 * Default banner headline
+	 */
 	const DEFAULT_HEADLINE = 'This website uses cookies';
+
+	/**
+	 * Default banner description
+	 */
 	const DEFAULT_DESCRIPTION = 'We use cookies to personalise content and ads, and to analyse our traffic and improve our service. You consent to cookies if you continue to use our website.';
+
+	/**
+	 * Default cookie groups
+	 */
 	const DEFAULT_GROUPS = [
 		[
 			'required' => true,
@@ -78,7 +105,14 @@ class CookieConsent extends \craft\base\Plugin
 		]
 	];
 
+	/**
+	 * Plugin name
+	 */
 	const PLUGIN_NAME = 'Cookie Banner';
+
+	// Properties
+	// =========================================================================
+
 	/**
 	 * Enable CpNav
 	 *
@@ -93,6 +127,9 @@ class CookieConsent extends \craft\base\Plugin
 	 * @var string
 	 */
 	public $schemaVersion = '0.0.1';
+
+	// Public Methods
+	// =========================================================================
 
 	/**
 	 * Plugin Initiator
@@ -148,8 +185,11 @@ class CookieConsent extends \craft\base\Plugin
 		return $html;
 	}
 
+	// Private Methods
+	// =========================================================================
+
 	/**
-	 *
+	 * Install CP Event Listeners
 	 */
 	protected function installCpEventListeners()
 	{
@@ -174,10 +214,10 @@ class CookieConsent extends \craft\base\Plugin
 	protected function customAdminCpRoutes(): array
 	{
 		return [
-			'cookie-consent' 														=>	'cookie-consent/settings/index',
-			'cookie-consent/site/<siteHandle:{handle}>'								=> 	'cookie-consent/settings/index',
-			'cookie-consent/group/<siteHandle:{handle}>'							=> 	'cookie-consent/settings/group',
-			'cookie-consent/group/<siteHandle:{handle}>/<sectionId:\d+>'			=> 	'cookie-consent/settings/group',
+			'cookie-consent' 														=>	'cookie-consent/settings/edit-site-settings',
+			'cookie-consent/site/<siteHandle:{handle}>'								=> 	'cookie-consent/settings/edit-site-settings',
+			'cookie-consent/group/<siteHandle:{handle}>'							=> 	'cookie-consent/settings/edit-cookie-group',
+			'cookie-consent/group/<siteHandle:{handle}>/<groupId:\d+>'			=> 	'cookie-consent/settings/edit-cookie-group',
 		];
 	}
 }

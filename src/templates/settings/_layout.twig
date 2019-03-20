@@ -17,7 +17,7 @@
         <ul>
             <li class="heading"><span>{{ "Settings"|t('cookie-consent') }}</span></li>
             <li><a href="/admin/cookie-consent/site/{{ currentSiteHandle }}"{{ currentPage == 'site' ? ' class="sel"' : ''}}>{{ "Site Settings"|t('cookie-consent') }}</a></li>
-            <li class="heading"><span>{{ "Sections"|t('cookie-consent') }}</span></li>
+            <li class="heading"><span>{{ "Cookie Groups"|t('cookie-consent') }}</span></li>
             {% for cookieGroup in model.cookieGroups %}
             <li><a href="/admin/cookie-consent/group/{{ currentSiteHandle }}/{{ cookieGroup.id }}"{{ currentPage == 'group' and cookieGroup.id == group.id ? ' class="sel"' : ''}}>{{  cookieGroup.name }}</a></li>
             {% endfor %}

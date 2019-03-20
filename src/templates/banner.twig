@@ -1,27 +1,27 @@
-<div id="cookie-consent">
-    <form id="cookie-consent-form" action="" method="post" accept-charset="UTF-8">
+<div id="elc-cookie-consent">
+    <form id="elc-cookie-consent-form" action="" method="post" accept-charset="UTF-8">
         <input type="hidden" name="action" value="cookie-consent/consent/update">
         <input type="hidden" name="site_id" value="{{ currentSite.id }}">
         {{ csrfInput() }}
-        <div id="cookie-consent-visible" class="columns">
-            <div class="column is-three-quarters consent-description">
+        <div id="elc-cookie-consent-visible" class="columns">
+            <div class="column is-three-quarters elc-consent-description">
                 <h3 class="is-size-3">{{ craft.cookieConsent.headline }}</h3>
                 <p>{{ craft.cookieConsent.description }}</p>
                 <p>Last updated at: {{ craft.cookieConsent.updated|datetime('short') }}</p>
             </div>
-            <div class="column is-one-quarter has-text-centered is-vcentered text-center consent-action is-flex">
+            <div class="column is-one-quarter has-text-centered is-vcentered text-center elc-consent-action is-flex">
                 <div>
-                    <input id="accept-link" class="button is-primary button-link" type="submit" value="{{ "OK"|t('cookie-consent') }}">
-                    <input id="save-link" class="button is-primary button-link is-display-none" type="submit" value="{{ "Save"|t('cookie-consent') }}">
+                    <input id="elc-accept-link" class="button is-primary elc-button-link" type="submit" value="{{ "OK"|t('cookie-consent') }}">
+                    <input id="elc-save-link" class="button is-primary elc-button-link elc-is-display-none" type="submit" value="{{ "Save"|t('cookie-consent') }}">
                     <br>
-                    <a href="#" id="detail-link" class="is-size-7 text-link">{{ "Details"|t('cookie-consent') }}</a>
-                    <a href="#" id="hide-detail-link" class="is-size-7 text-link is-display-none">{{ "Hide Details"|t('cookie-consent') }}</a>
+                    <a href="#" id="elc-detail-link" class="is-size-7 elc-text-link">{{ "Details"|t('cookie-consent') }}</a>
+                    <a href="#" id="elc-hide-detail-link" class="is-size-7 elc-text-link elc-is-display-none">{{ "Hide Details"|t('cookie-consent') }}</a>
                 </div>
             </div>
         </div>
-        <div id="cookie-consent-settings" class="is-display-none has-text-grey">
+        <div id="elc-cookie-consent-settings" class="elc-is-display-none has-text-grey">
             {% for group in craft.cookieConsent.groups %}
-                <div class="columns checkbox-row-first">
+                <div class="columns elc-checkbox-row-first">
                     <div class="column is-three-quarters">
                         <h3 class="is-size-5">{{ group.name }}</h3>
                         <p class="is-size-7">{{ group.description }}</p>
@@ -41,7 +41,7 @@
                     </div>
                 </div>
                 {% for cookie in group.cookies|json_decode %}
-                    <div class="columns">
+                    <div class="columns elc-cookie-list">
                         <div class="column is-one-fourth">
                             {{ cookie.name }}
                         </div>
