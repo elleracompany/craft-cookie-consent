@@ -20,9 +20,11 @@ class SettingsController extends Controller
 	 * @param SiteSettings|null $model
 	 *
 	 * @return \yii\web\Response
+	 * @throws \yii\web\ForbiddenHttpException
 	 */
 	public function actionEditSiteSettings(string $siteHandle = null, SiteSettings $model = null)
 	{
+		$this->requirePermission('cookie-consent:site-settings');
 
 		Craft::$app->getRequest();
 		$variables = [
@@ -30,6 +32,8 @@ class SettingsController extends Controller
 			'model' => $model
 		];
 		$this->_prepEditSiteSettingsVariables($variables);
+		$this->_checkSiteEditPermission($variables['currentSiteId']);
+		$this->_prepSiteSettingsPermissionVariables($variables);
 
 		return $this->renderTemplate('cookie-consent/settings/index', $variables);
 	}
@@ -37,19 +41,24 @@ class SettingsController extends Controller
 	/**
 	 * Save site settings
 	 *
+	 * @return null
 	 * @throws NotFoundHttpException
 	 * @throws \craft\errors\MissingComponentException
 	 * @throws \yii\web\BadRequestHttpException
+	 * @throws \yii\web\ForbiddenHttpException
 	 */
 	public function actionSaveSiteSettings()
 	{
 		$this->requirePostRequest();
+
+		$this->_checkSiteEditPermission(Craft::$app->request->post('site_id'));
 
 		$record = SiteSettings::findOne(Craft::$app->request->post('site_id'));
 		if(!$record) {
 			throw new NotFoundHttpException('Settings for site not found');
 		}
 		$record->load(Craft::$app->request->post(), '');
+		$record->activated = (int) $record->activated;
 		if($record->save()) {
 			Craft::$app->getSession()->setNotice(Craft::t('cookie-consent', 'Settings saved.'));
 		}
@@ -71,6 +80,7 @@ class SettingsController extends Controller
 	 *
 	 * @return \yii\web\Response
 	 * @throws NotFoundHttpException
+	 * @throws \yii\web\ForbiddenHttpException
 	 */
 	public function actionEditCookieGroup(string $siteHandle = null, string $groupId = null, CookieGroup $group = null)
 	{
@@ -81,6 +91,8 @@ class SettingsController extends Controller
 			'group' => $group
 		];
 		$this->_prepEditGroupVariables($variables);
+		$this->_checkSiteEditPermission($variables['currentSiteId']);
+		$this->_prepGroupPermissionVariables($variables);
 
 		return $this->renderTemplate('cookie-consent/settings/group', $variables);
 	}
@@ -88,8 +100,10 @@ class SettingsController extends Controller
 	/**
 	 * Save cookie group
 	 *
+	 * @return null|\yii\web\Response
 	 * @throws \craft\errors\MissingComponentException
 	 * @throws \yii\web\BadRequestHttpException
+	 * @throws \yii\web\ForbiddenHttpException
 	 */
 	public function actionSaveCookieGroup()
 	{
@@ -99,9 +113,14 @@ class SettingsController extends Controller
 			'id' => Craft::$app->request->post('id')
 		]);
 		if(!$record) {
+			$this->requirePermission('cookie-consent:cookie-groups:create');
 			$record = new CookieGroup();
 		}
+		else $this->requirePermission('cookie-consent:cookie-groups:edit');
 		$record->load(Craft::$app->request->post(), '');
+
+		$this->_checkSiteEditPermission($record->site_id);
+
 		if($record->required) $record->default = true;
 		if($record->save()) Craft::$app->getSession()->setNotice(Craft::t('cookie-consent', 'Cookie group saved.'));
 		else {
@@ -112,6 +131,29 @@ class SettingsController extends Controller
 			return null;
 		}
 		return $this->redirect($record->getEditUrl());
+	}
+
+	/**
+	 * Deletes cookie group
+	 *
+	 * @throws NotFoundHttpException
+	 * @throws \Throwable
+	 * @throws \yii\db\StaleObjectException
+	 * @throws \yii\web\ForbiddenHttpException
+	 */
+	public function actionDeleteCookieGroup()
+	{
+		$this->_checkSiteEditPermission(Craft::$app->request->getParam('site_id'));
+		$this->requirePermission('cookie-consent:cookie-groups:delete');
+		$group = CookieGroup::findOne([
+			'id' => Craft::$app->request->getParam('id'),
+			'site_id' => Craft::$app->request->getParam('site_id')
+		]);
+		if(!$group) throw new NotFoundHttpException('Cookie group not found');
+		if($group->delete()) Craft::$app->getSession()->setNotice(Craft::t('cookie-consent', 'Cookie group deleted.'));;
+		return $this->redirect(UrlHelper::cpUrl('cookie-consent/site/'.
+			Craft::$app->getSites()->getSiteById(Craft::$app->request->getParam('site_id'))->handle
+		));
 	}
 
 	/**
@@ -188,7 +230,6 @@ class SettingsController extends Controller
 				$this->insertDefaultRecord($variables['model']);
 			}
 		}
-		$variables['model'] = SiteSettings::findOne($variables['currentSiteId']);
 
 		$variables['currentPage'] = 'site';
 		$variables['title'] = Craft::t('cookie-consent', 'Site Settings');
@@ -253,5 +294,41 @@ class SettingsController extends Controller
 				'url' => UrlHelper::cpUrl('cookie-consent/site/'.$variables['currentSiteHandle']),
 			]
 		];
+	}
+
+	/**
+	 * Check if the user can edit the current site
+	 *
+	 * @param int $siteId
+	 *
+	 * @throws \yii\web\ForbiddenHttpException
+	 */
+	private function _checkSiteEditPermission(int $siteId)
+	{
+		if (Craft::$app->getIsMultiSite()) {
+
+			$variables['editableSites'] = Craft::$app->getSites()->getEditableSiteIds();
+
+			if (!\in_array($siteId, $variables['editableSites'], false)) {
+					$this->requirePermission('editSite:'.$siteId);
+			}
+		}
+	}
+
+	private function _prepGroupPermissionVariables(array &$variables)
+	{
+		$variables['canCreate'] = Craft::$app->user->checkPermission('cookie-consent:cookie-groups:create-new');
+		$variables['canEdit'] = Craft::$app->user->checkPermission('cookie-consent:cookie-groups:edit');
+		$variables['canDelete'] = Craft::$app->user->checkPermission('cookie-consent:cookie-groups:delete');
+		$variables['canGroups'] = Craft::$app->user->checkPermission('cookie-consent:cookie-groups');
+	}
+
+	private function _prepSiteSettingsPermissionVariables(array &$variables)
+	{
+		$variables['canActivate'] = Craft::$app->user->checkPermission('cookie-consent:site-settings:activate');
+		$variables['canChangeTemplate'] = Craft::$app->user->checkPermission('cookie-consent:site-settings:template');
+		$variables['canUpdate'] = Craft::$app->user->checkPermission('cookie-consent:site-settings:content');
+		$variables['canCreate'] = Craft::$app->user->checkPermission('cookie-consent:cookie-groups:create-new');
+		$variables['canGroups'] = Craft::$app->user->checkPermission('cookie-consent:cookie-groups');
 	}
 }

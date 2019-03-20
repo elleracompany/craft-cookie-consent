@@ -12,7 +12,9 @@
     label: model.getAttributeLabel('activated'),
     instructions: 'Activate the cookie consent banner for all visitors.'|t('cookie-consent'),
     name: "activated",
+    disabled: not canActivate,
     on: model.activated,
+    errors: model.getErrors("activated"),
 }) }}
 
 {{ forms.textField({
@@ -20,6 +22,7 @@
     instructions: 'The banner template. Defaults to "cookie-consent/banner".'|t('cookie-consent'),
     id: "template",
     name: "template",
+    disabled: not canChangeTemplate,
     value: model.template,
     errors: model.getErrors("template"),
 }) }}
@@ -28,6 +31,7 @@
     label: model.getAttributeLabel('headline'),
     id: "headline",
     name: "headline",
+    disabled: not canUpdate,
     value: model.headline,
     errors: model.getErrors("headline"),
 }) }}
@@ -35,6 +39,7 @@
 {{ forms.textAreaField({
     id: "description",
     name: "description",
+    disabled: not canUpdate,
     rows: 4,
     value: model.description,
     errors: model.getErrors("description"),

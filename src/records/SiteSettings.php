@@ -50,16 +50,33 @@ class SiteSettings extends ActiveRecord
 			[['headline', 'description', 'template'], 'string'],
 			[['headline', 'description', 'template'], 'required'],
 			['activated', 'boolean'],
+			[['activated', 'headline', 'description', 'template'], 'validatePermission'],
 			['activated', 'default', 'value' => 0],
 			['site_id', 'integer']
 		];
+	}
+	public function permissions()
+	{
+		return [
+			'activated' => 'cookie-consent:site-settings:activate',
+			'headline' => 'cookie-consent:site-settings:content',
+			'description' => 'cookie-consent:site-settings:content',
+			'template' => 'cookie-consent:site-settings:template'
+		];
+	}
+	public function validatePermission($attribute, $params)
+	{
+		$attribute_to_permission = $this->permissions();
+		if(in_array($attribute, array_keys($this->getDirtyAttributes())) && !Craft::$app->user->checkPermission($attribute_to_permission[$attribute])) {
+			$this->addError($attribute, Craft::t('cookie-consent', ' You do not have permission to change this attribute'));
+		}
 	}
 
 	public function getLastUpdate()
 	{
 		$dates = [];
 		if(isset($this->dateUpdated)) $dates[] = strtotime($this->dateUpdated);
-		foreach ($this->cookieGroups as $group) $dates[] = strtotime($group->dateUpdated);
+		foreach ($this->getCookieGroups() as $group) $dates[] = strtotime($group->dateUpdated);
 		return max($dates);
 	}
 

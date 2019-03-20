@@ -3,13 +3,14 @@
 <input type="hidden" name="action" value="cookie-consent/settings/save-cookie-group">
 <input type="hidden" name="site_id" value="{{ currentSiteId }}">
 <input type="hidden" name="id" value="{{ group.id }}">
-
+{% set disabled = group.isNewRecord ? not canCreate : not canEdit %}
 {{ csrfInput() }}
 
 {{ forms.lightswitchField({
     label: group.getAttributeLabel('required'),
     instructions: 'If required, the visitor can not turn off this cookie group.'|t('cookie-consent'),
     name: "required",
+    disabled: disabled,
     on: group.required,
 }) }}
 
@@ -17,6 +18,7 @@
     label: group.getAttributeLabel('store_ip'),
     instructions: 'If this cookie group is accepted, we store the IP-address in our consent log.'|t('cookie-consent'),
     name: "store_ip",
+    disabled: disabled,
     on: group.store_ip,
 }) }}
 
@@ -24,6 +26,7 @@
     label: group.getAttributeLabel('default'),
     instructions: 'Should this cookie group be toggled by default.'|t('cookie-consent'),
     name: "default",
+    disabled: disabled,
     on: group.default,
 }) }}
 {% if not group.isNewRecord %}
@@ -33,6 +36,7 @@
     instructions: 'Use this slug to refrence this consent in your code.'|t('cookie-consent'),
     label: group.getAttributeLabel('slug'),
     name: "slug",
+    disabled: disabled,
     value: group.slug,
 }) }}
 {% endif %}
@@ -41,6 +45,7 @@
     id: "name",
     label: group.getAttributeLabel('name'),
     name: "name",
+    disabled: disabled,
     value: group.name,
     errors: group.getErrors("name"),
 }) }}
@@ -49,11 +54,13 @@
     id: "description",
     label: group.getAttributeLabel('description'),
     name: "description",
+    disabled: disabled,
     rows: 4,
     value: group.description,
     errors: group.getErrors("description"),
 }) }}
 
+{% if not disabled %}
 {{ forms.editableTable({
     id: 'cookies',
     name: 'cookies',
@@ -80,3 +87,29 @@
     errors: group.getErrors("cookies"),
     rows: group.cookies
 }) }}
+{% elseif group.cookies %}
+    <div class="elements">
+        <div class="tableview">
+            <table class="data fullwidth">
+                <thead style="font-weight: bold;">
+                <tr>
+                    <td>{{ "Cookie-name" |t }}</td>
+                    <td>{{ "Provider" |t }}</td>
+                    <td>{{ "Description" |t }}</td>
+                    <td>{{ "Expiry" |t }}</td>
+                </tr>
+                </thead>
+                <tbody>
+                {% for cookie in group.cookies %}
+                    <tr>
+                        <td>{{ cookie.name }}</td>
+                        <td>{{ cookie.provider }}</td>
+                        <td>{{ cookie.description }}</td>
+                        <td>{{ cookie.expiry }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endif %}

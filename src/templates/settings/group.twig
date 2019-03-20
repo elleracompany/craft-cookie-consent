@@ -2,3 +2,32 @@
 {% block content %}
     {% include "cookie-consent/settings/_includes/group.twig" %}
 {% endblock %}
+
+{% block actionButton %}
+    {% if group.isNewRecord %}
+        {% if canCreate %}
+            <div class="buttons">
+                <button type="submit" class="btn submit">{{ "Save"|t('app') }}</button>
+            </div>
+        {% endif %}
+    {% else %}
+        {% if not canDelete %}
+            {% if canEdit %}
+                <div class="buttons">
+                    <button type="submit" class="btn submit">{{ "Save"|t('app') }}</button>
+                </div>
+            {% endif %}
+        {% else %}
+                <div class="btngroup">
+                    <input type="submit" class="btn submit" value="{{ 'Save'|t('app') }}">
+
+                    <div class="btn submit menubtn"></div>
+                    <div class="menu">
+                            <ul>
+                                <li><a class="formsubmit error" data-action="cookie-consent/settings/delete-cookie-group" data-confirm="{{ 'Are you sure you want to delete this group?'|t('cookie-consent') }}">{{ 'Delete'|t('app') }}</a></li>
+                            </ul>
+                    </div>
+                </div>
+        {% endif %}
+    {% endif %}
+{% endblock %}
