@@ -9,6 +9,9 @@ use craft\web\UrlManager;
 use craft\events\RegisterUrlRulesEvent;
 use craft\helpers\UrlHelper;
 use craft\web\twig\variables\CraftVariable;
+use craft\services\UserPermissions;
+use craft\events\RegisterUserPermissionsEvent;
+use craft\errors\SiteNotFoundException;
 
 /**
  * Class Plugin
@@ -204,6 +207,13 @@ class CookieConsent extends \craft\base\Plugin
 				);
 			}
 		);
+		Event::on(
+			UserPermissions::class,
+			UserPermissions::EVENT_REGISTER_PERMISSIONS,
+			function (RegisterUserPermissionsEvent $event) {
+				$event->permissions[Craft::t('cookie-consent', self::PLUGIN_NAME)] = $this->customAdminCpPermissions();
+			}
+		);
 	}
 
 	/**
@@ -218,6 +228,45 @@ class CookieConsent extends \craft\base\Plugin
 			'cookie-consent/site/<siteHandle:{handle}>'							=> 	'cookie-consent/settings/edit-site-settings',
 			'cookie-consent/group/<siteHandle:{handle}>'						=> 	'cookie-consent/settings/edit-cookie-group',
 			'cookie-consent/group/<siteHandle:{handle}>/<groupId:\d+>'			=> 	'cookie-consent/settings/edit-cookie-group',
+		];
+	}
+
+	/**
+	 * Returns the custom Control Panel user permissions.
+	 *
+	 * @return array
+	 */
+	protected function customAdminCpPermissions(): array
+	{
+		return [
+			'cookie-consent:site-settings' => [
+				'label' => Craft::t('cookie-consent', 'Site Settings'),
+				'nested' => [
+					'cookie-consent:site-settings:activate' => [
+						'label' => Craft::t('cookie-consent', 'Activate Banner'),
+					],
+					'cookie-consent:site-settings:template' => [
+						'label' => Craft::t('cookie-consent', 'Change Template'),
+					],
+					'cookie-consent:site-settings:content' => [
+						'label' => Craft::t('cookie-consent', 'Update Content'),
+					],
+				],
+			],
+			'cookie-consent:cookie-groups' => [
+				'label' => Craft::t('cookie-consent', 'Cookie Groups'),
+				'nested' => [
+					'cookie-consent:cookie-groups:create-new' => [
+						'label' => Craft::t('cookie-consent', 'Create new Cookie Group'),
+					],
+					'cookie-consent:cookie-groups:edit' => [
+						'label' => Craft::t('cookie-consent', 'Edit Cookie Group'),
+					],
+					'cookie-consent:cookie-groups:delete' => [
+						'label' => Craft::t('cookie-consent', 'Delete Cookie Group'),
+					],
+				],
+			],
 		];
 	}
 }
