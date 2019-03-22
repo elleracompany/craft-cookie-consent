@@ -10,6 +10,7 @@ use elleracompany\cookieconsent\records\SiteSettings;
 
 class ConsentController extends Controller
 {
+	protected $allowAnonymous = true;
 	/**
 	 * Ajax Cookie Consent Store endpoint
 	 *
