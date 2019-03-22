@@ -55,6 +55,18 @@ class SiteSettings extends ActiveRecord
 			['site_id', 'integer']
 		];
 	}
+
+	public function attributeLabels()
+	{
+		return [
+			'site_id' => Craft::t('cookie-consent', 'Site ID'),
+			'activated' => Craft::t('cookie-consent', 'Activated'),
+			'headline' => Craft::t('cookie-consent', 'Headline'),
+			'description' => Craft::t('cookie-consent', 'Description'),
+			'template' => Craft::t('cookie-consent', 'Template')
+		];
+	}
+
 	public function permissions()
 	{
 		return [

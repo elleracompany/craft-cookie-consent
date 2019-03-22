@@ -31,5 +31,16 @@ return [
 	'Update Content' => 'Oppdatere innhold',
 	'Create new Cookie Group' => 'Opprette cookie-gruppe',
 	'Edit Cookie Group' => 'Endre cookie-gruppe',
-	'Delete Cookie Group' => 'Slette cookie-gruppe'
+	'Delete Cookie Group' => 'Slette cookie-gruppe',
+	'ID' => 'ID',
+	'Name' => 'Navn',
+	'Slug' => 'Slug',
+	'Required' => 'Påkrevd',
+	'Cookies' => 'Cookier',
+	'Store IP' => 'Lagre IP-adresse',
+	'Site ID' => 'Side-ID',
+	'Activated' => 'Aktivert',
+	'Headline' => 'Overskrift',
+	'Template' => 'Template',
+	'Default' => 'Standard-valg'
 ];

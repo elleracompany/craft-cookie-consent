@@ -64,6 +64,21 @@ class CookieGroup extends ActiveRecord
 		return array_merge($fields, parent::fields());
 	}
 
+	public function attributeLabels()
+	{
+		return [
+			'id' => Craft::t('cookie-consent', 'ID'),
+			'name' => Craft::t('cookie-consent', 'Name'),
+			'slug' => Craft::t('cookie-consent', 'Slug'),
+			'required' => Craft::t('cookie-consent', 'Required'),
+			'default' => Craft::t('cookie-consent', 'Default'),
+			'cookies' => Craft::t('cookie-consent', 'Cookies'),
+			'store_ip' => Craft::t('cookie-consent', 'Store IP'),
+			'description' => Craft::t('cookie-consent', 'Description'),
+			'site_id' => Craft::t('cookie-consent', 'Site ID')
+		];
+	}
+
 	/**
 	 * @inheritdoc
 	 */

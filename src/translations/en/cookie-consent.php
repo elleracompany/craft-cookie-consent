@@ -31,5 +31,16 @@ return [
 	'Update Content' => 'Update Content',
 	'Create new Cookie Group' => 'Create new Cookie Group',
 	'Edit Cookie Group' => 'Edit Cookie Group',
-	'Delete Cookie Group' => 'Delete Cookie Group'
+	'Delete Cookie Group' => 'Delete Cookie Group',
+	'ID' => 'ID',
+	'Name' => 'Name',
+	'Slug' => 'Slug',
+	'Required' => 'Required',
+	'Cookies' => 'Cookies',
+	'Store IP' => 'Store IP',
+	'Site ID' => 'Site ID',
+	'Activated' => 'Activated',
+	'Headline' => 'Headline',
+	'Template' => 'Template',
+	'Default' => 'Default',
 ];

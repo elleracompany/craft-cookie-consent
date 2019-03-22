@@ -68,20 +68,20 @@
     required: false,
     cols: {
         name: {
-            heading: "Cookie-name" |t,
-            type: "singleline" |t
+            heading: "Cookie-name"|t('cookie-consent'),
+            type: "singleline"
         },
         provider: {
-            heading: "Provider" |t,
-            type: "singleline" |t
+            heading: "Provider"|t('cookie-consent'),
+            type: "singleline"
         },
         description: {
-            heading: "Description" |t,
-            type: "multiline" |t
+            heading: "Description"|t('cookie-consent'),
+            type: "multiline"
         },
         expiry: {
-            heading: "Expiry" |t,
-            type: "singleline" |t
+            heading: "Expiry"|t('cookie-consent'),
+            type: "singleline"
         }
     },
     errors: group.getErrors("cookies"),
@@ -93,10 +93,10 @@
             <table class="data fullwidth">
                 <thead style="font-weight: bold;">
                 <tr>
-                    <td>{{ "Cookie-name" |t }}</td>
-                    <td>{{ "Provider" |t }}</td>
-                    <td>{{ "Description" |t }}</td>
-                    <td>{{ "Expiry" |t }}</td>
+                    <td>{{ "Cookie-name"|t('cookie-consent') }}</td>
+                    <td>{{ "Provider"|t('cookie-consent') }}</td>
+                    <td>{{ "Description"|t('cookie-consent') }}</td>
+                    <td>{{ "Expiry"|t('cookie-consent') }}</td>
                 </tr>
                 </thead>
                 <tbody>
