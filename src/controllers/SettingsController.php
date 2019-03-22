@@ -190,7 +190,7 @@ class SettingsController extends Controller
 		$record->template = CookieConsent::DEFAULT_TEMPLATE;
 		$record->headline = CookieConsent::DEFAULT_HEADLINE;
 		$record->activated = false;
-		$record->save();
+		$record->save(false);
 		foreach (CookieConsent::DEFAULT_GROUPS as $group)
 		{
 			$m = new CookieGroup();
