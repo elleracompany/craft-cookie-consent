@@ -68,7 +68,7 @@ class SiteSettings extends ActiveRecord
 	{
 		$attribute_to_permission = $this->permissions();
 		if(in_array($attribute, array_keys($this->getDirtyAttributes())) && !Craft::$app->user->checkPermission($attribute_to_permission[$attribute])) {
-			$this->addError($attribute, Craft::t('cookie-consent', ' You do not have permission to change this attribute'));
+			$this->addError($attribute, Craft::t('cookie-consent', 'You do not have permission to change this attribute'));
 		}
 	}
 
