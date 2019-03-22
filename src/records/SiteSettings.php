@@ -88,7 +88,7 @@ class SiteSettings extends ActiveRecord
 	{
 		$dates = [];
 		if(isset($this->dateUpdated)) $dates[] = strtotime($this->dateUpdated);
-		foreach ($this->getCookieGroups() as $group) $dates[] = strtotime($group->dateUpdated);
+		if($this->getCookieGroups()) foreach ($this->getCookieGroups() as $group) $dates[] = strtotime($group->dateUpdated);
 		return max($dates);
 	}
 
