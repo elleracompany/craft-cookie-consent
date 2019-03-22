@@ -116,6 +116,12 @@ class SiteSettings extends ActiveRecord
 		return $this->hasMany(CookieGroup::class, ['site_id' => 'site_id']);
 	}
 
+	public function getRequiredCookieGroups() : array
+	{
+		$required = [];
+		foreach ($this->cookieGroups as $group) if(isset($group->required) && $group->required) $required[] = $group->slug;
+	}
+
 	public function getSite(): ActiveQueryInterface
 	{
 		return $this->hasOne(Site::class, ['id' => 'site_id']);
