@@ -120,6 +120,7 @@ class SiteSettings extends ActiveRecord
 	{
 		$required = [];
 		foreach ($this->cookieGroups as $group) if(isset($group->required) && $group->required) $required[] = $group->slug;
+		return $required;
 	}
 
 	public function getSite(): ActiveQueryInterface
