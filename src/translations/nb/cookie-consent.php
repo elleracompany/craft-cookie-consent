@@ -11,7 +11,7 @@ return [
 	'If required, the visitor can not turn off this cookie group.' => 'Dersom påkrevd kan ikke den besøkende velge å skru av denne gruppen.',
 	'If this cookie group is accepted, we store the visitors IP-address in the consent log.' => 'Hvis denne cookie-gruppen blir akseptert lagres IP-adressen til den besøkende i samtykkeloggen.',
 	'Should this cookie group be toggled on by default (for the user in consent window).' => 'Skal denne cookie-gruppen være på som standard (for brukeren i samtykkevindu).',
-	'Use this slug to refrence this consent in your code.' => 'Bruk denne sluggen til å referere til aksepten i koden.',
+	'Use this slug to refrence this consent in your code. Note the first part being site slug.' => 'Bruk denne sluggen til å referere til aksepten i koden. Merk, første del er nettsidens slug.',
 	'Cookie-name' => 'Cookie-navn',
 	'Provider' => 	'Leverandør',
 	'Description' => 'Beskrivelse',

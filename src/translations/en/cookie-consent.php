@@ -11,7 +11,7 @@ return [
 	'If required, the visitor can not turn off this cookie group.' => '',
 	'If this cookie group is accepted, we store the visitors IP-address in the consent log.' => '',
 	'Should this cookie group be toggled on by default (for the user in consent window).' => '',
-	'Use this slug to refrence this consent in your code.' => '',
+	'Use this slug to refrence this consent in your code. Note the first part being site slug.' => '',
 	'Cookie-name' => '',
 	'Provider' => '',
 	'Description' => '',
