@@ -15,9 +15,9 @@ class SettingsController extends Controller
 	public function actionIndex()
 	{
 		$variables = [
-			'content' => file_get_contents(dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR.'README.md')
+			'content' => file_get_contents(dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR.'README.md'),
+			'currentSite' => 'readme'
 		];
-		$this->_prepEditSiteSettingsVariables($variables);
 		$this->_prepSiteSettingsPermissionVariables($variables);
 		return $this->renderTemplate('cookie-consent/settings/index', $variables);
 	}
