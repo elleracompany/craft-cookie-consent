@@ -3,7 +3,6 @@
 namespace elleracompany\cookieconsent\controllers;
 
 use Craft;
-use craft\records\Site;
 use craft\web\Controller;
 use elleracompany\cookieconsent\CookieConsent;
 use elleracompany\cookieconsent\records\CookieGroup;
