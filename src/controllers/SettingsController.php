@@ -16,8 +16,11 @@ class SettingsController extends Controller
 	{
 		$variables = [
 			'content' => file_get_contents(dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR.'README.md'),
-			'currentPage' => 'readme'
+			'currentPage' => 'readme',
+			'site' => Craft::$app->getSites()->currentSite
 		];
+		$variables['currentSiteId'] = $variables['site']->id;
+		$variables['currentSiteHandle'] = $variables['site']->handle;
 		$this->_prepSiteSettingsPermissionVariables($variables);
 		return $this->renderTemplate('cookie-consent/settings/index', $variables);
 	}
