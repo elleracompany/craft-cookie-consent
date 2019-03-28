@@ -1,4 +1,4 @@
 {% extends "cookie-consent/settings/_layout.twig" %}
 {% block content %}
-    {{ content|markdown }}
+    {% include "cookie-consent/settings/_includes/site_settings.twig" %}
 {% endblock %}

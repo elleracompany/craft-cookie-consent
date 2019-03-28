@@ -12,6 +12,15 @@ use craft\helpers\UrlHelper;
 
 class SettingsController extends Controller
 {
+	public function actionIndex()
+	{
+		$variables = [
+			'content' => file_get_contents(dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR.'README.md')
+		];
+		$this->_prepEditSiteSettingsVariables($variables);
+		return $this->renderTemplate('cookie-consent/settings/index', $variables);
+	}
+
 	/**
 	 * Render the view for editing SiteSettings
 	 *
@@ -34,7 +43,7 @@ class SettingsController extends Controller
 		$this->_checkSiteEditPermission($variables['currentSiteId']);
 		$this->_prepSiteSettingsPermissionVariables($variables);
 
-		return $this->renderTemplate('cookie-consent/settings/index', $variables);
+		return $this->renderTemplate('cookie-consent/settings/site', $variables);
 	}
 
 	/**
