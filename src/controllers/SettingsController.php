@@ -19,8 +19,9 @@ class SettingsController extends Controller
 			'currentPage' => 'readme',
 			'site' => Craft::$app->getSites()->currentSite
 		];
-		$variables['currentSiteId'] = $variables['site']->id;
-		$variables['currentSiteHandle'] = $variables['site']->handle;
+		$this->_prepVariables($variables);
+		$variables['currentPage'] = 'readme';
+		$variables['title'] = Craft::t('cookie-consent', 'Readme');
 		$this->_prepSiteSettingsPermissionVariables($variables);
 		return $this->renderTemplate('cookie-consent/settings/index', $variables);
 	}
@@ -43,7 +44,9 @@ class SettingsController extends Controller
 			'currentSiteHandle' => $siteHandle,
 			'model' => $model
 		];
-		$this->_prepEditSiteSettingsVariables($variables);
+		$this->_prepVariables($variables);
+		$variables['currentPage'] = 'site';
+		$variables['title'] = Craft::t('cookie-consent', 'Site Settings');
 		$this->_checkSiteEditPermission($variables['currentSiteId']);
 		$this->_prepSiteSettingsPermissionVariables($variables);
 
@@ -222,7 +225,7 @@ class SettingsController extends Controller
 	 *
 	 * @param array $variables
 	 */
-	private function _prepEditSiteSettingsVariables(array &$variables)
+	private function _prepVariables(array &$variables)
 	{
 		if(empty($variables['currentSiteHandle']))
 		{
@@ -243,8 +246,6 @@ class SettingsController extends Controller
 			}
 		}
 
-		$variables['currentPage'] = 'site';
-		$variables['title'] = Craft::t('cookie-consent', 'Site Settings');
 		$variables['fullPageForm'] = true;
 		$variables['crumbs'] = [
 			[
