@@ -16,7 +16,7 @@
 
 {{ forms.lightswitchField({
     label: group.getAttributeLabel('store_ip'),
-    instructions: 'If this cookie group is accepted, we store the IP-address in our consent log.'|t('cookie-consent'),
+    instructions: 'If this cookie group is accepted, we store the visitors IP-address in the consent log.'|t('cookie-consent'),
     name: "store_ip",
     disabled: disabled,
     on: group.store_ip,
@@ -24,7 +24,7 @@
 
 {{ forms.lightswitchField({
     label: group.getAttributeLabel('default'),
-    instructions: 'Should this cookie group be toggled by default.'|t('cookie-consent'),
+    instructions: 'Should this cookie group be toggled on by default (for the user in consent window).'|t('cookie-consent'),
     name: "default",
     disabled: disabled,
     on: group.default,
@@ -33,7 +33,7 @@
 {{ forms.textField({
     id: "slug",
     disabled: true,
-    instructions: 'Use this slug to refrence this consent in your code.'|t('cookie-consent'),
+    instructions: 'Use this slug to refrence this consent in your code. Note the first part being site slug.'|t('cookie-consent'),
     label: group.getAttributeLabel('slug'),
     name: "slug",
     disabled: true,
