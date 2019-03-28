@@ -18,6 +18,7 @@ class SettingsController extends Controller
 			'content' => file_get_contents(dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR.'README.md')
 		];
 		$this->_prepEditSiteSettingsVariables($variables);
+		$this->_prepSiteSettingsPermissionVariables($variables);
 		return $this->renderTemplate('cookie-consent/settings/index', $variables);
 	}
 
