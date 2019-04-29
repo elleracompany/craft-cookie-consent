@@ -88,6 +88,11 @@ class Variables extends Component
 		return $this->settings->headline;
 	}
 
+	public function getTemplate() : string
+	{
+		return $this->settings->template;
+	}
+
 	/**
 	 * @throws \yii\base\InvalidConfigException
 	 */

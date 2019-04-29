@@ -148,10 +148,8 @@ class CookieConsent extends \craft\base\Plugin
 		]);
 		if(!Craft::$app->request->isCpRequest) {
 			if($this->cookieConsent->render()) Craft::$app->view->hook('before-body-end', function(array &$context) {
-
-				return $this->renderPluginTemplate('cookie-consent/banner', [
-					'banner' => $this->getSettings()
-				]);
+				$settings = $this->getSettings();
+				return $this->renderPluginTemplate($this->cookieConsent->getTemplate());
 			});
 		}
 		else $this->installCpEventListeners();
@@ -181,10 +179,16 @@ class CookieConsent extends \craft\base\Plugin
 	 */
 	public function renderPluginTemplate($path, $params = [])
 	{
-		$oldMode = Craft::$app->view->getTemplateMode();
-		Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
-		$html = Craft::$app->view->renderTemplate($path,$params);
-		Craft::$app->view->setTemplateMode($oldMode);
+		if($path == 'cookie-consent/banner')
+		{
+			$oldMode = Craft::$app->view->getTemplateMode();
+			Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
+			$html = Craft::$app->view->renderTemplate($path,$params);
+			Craft::$app->view->setTemplateMode($oldMode);
+		}
+		else {
+			$html = Craft::$app->view->renderTemplate($path,$params);
+		}
 		return $html;
 	}
 
