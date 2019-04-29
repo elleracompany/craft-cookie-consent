@@ -11,9 +11,9 @@ use yii\db\ActiveQueryInterface;
 use yii\web\NotFoundHttpException;
 
 /**
- * This is the model class for table "auth_item".
- *
  * @property boolean 	$activated
+ * @property boolean 	$jsAssets
+ * @property boolean 	$cssAssets
  * @property integer 	$site_id
  * @property string 	$headline
  * @property string 	$description
@@ -29,6 +29,8 @@ class SiteSettings extends ActiveRecord
 		$fields = [
 			'site_id',
 			'activated',
+			'cssAssets',
+			'jsAssets',
 			'headline',
 			'description',
 			'template'
@@ -49,9 +51,10 @@ class SiteSettings extends ActiveRecord
 		return [
 			[['headline', 'description', 'template'], 'string'],
 			[['headline', 'description', 'template'], 'required'],
-			['activated', 'boolean'],
+			[['activated', 'cssAssets', 'jsAssets'], 'boolean'],
 			[['activated', 'headline', 'description', 'template'], 'validatePermission'],
 			['activated', 'default', 'value' => 0],
+			[['cssAssets', 'jsAssets'], 'default', 'value' => 1],
 			['site_id', 'integer']
 		];
 	}
@@ -61,6 +64,8 @@ class SiteSettings extends ActiveRecord
 		return [
 			'site_id' => Craft::t('cookie-consent', 'Site ID'),
 			'activated' => Craft::t('cookie-consent', 'Activated'),
+			'cssAssets' => Craft::t('cookie-consent', 'Load CSS Assets'),
+			'jsAssets' => Craft::t('cookie-consent', 'Load JS Assets'),
 			'headline' => Craft::t('cookie-consent', 'Headline'),
 			'description' => Craft::t('cookie-consent', 'Description'),
 			'template' => Craft::t('cookie-consent', 'Template')

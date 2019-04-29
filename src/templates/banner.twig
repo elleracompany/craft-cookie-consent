@@ -60,5 +60,5 @@
         </div>
     </form>
 </div>
-
-{% do view.registerAssetBundle("elleracompany\\cookieconsent\\AssetBundle") %}
+    {% do craft.cookieConsent.loadCss %}
+    {% do craft.cookieConsent.loadJs %}

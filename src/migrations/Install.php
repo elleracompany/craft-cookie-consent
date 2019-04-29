@@ -26,6 +26,8 @@ class Install extends Migration
 				'dateUpdated' => $this->dateTime()->notNull(),
 				'uid'         => $this->uid(),
 				'activated' => $this->boolean()->notNull()->defaultValue(false),
+				'cssAssets' => $this->boolean()->notNull()->defaultValue(true),
+				'jsAssets' => $this->boolean()->notNull()->defaultValue(true),
 				'headline' => $this->string(255)->notNull(),
 				'description' => $this->text(),
 				'template' => $this->string()->notNull()

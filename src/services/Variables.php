@@ -88,6 +88,22 @@ class Variables extends Component
 		return $this->settings->headline;
 	}
 
+	/**
+	 * @throws \yii\base\InvalidConfigException
+	 */
+	public function loadCss()
+	{
+		if($this->settings->cssAssets) Craft::$app->view->registerAssetBundle("elleracompany\\cookieconsent\\CSSAssets");
+	}
+
+	/**
+	 * @throws \yii\base\InvalidConfigException
+	 */
+	public function loadJs()
+	{
+		if($this->settings->jsAssets) Craft::$app->view->registerAssetBundle("elleracompany\\cookieconsent\\JSAssets");
+	}
+
 	public function groups()
 	{
 		return $this->settings ? $this->settings->cookieGroups : [];

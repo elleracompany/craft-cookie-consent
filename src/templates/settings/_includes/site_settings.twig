@@ -17,6 +17,24 @@
     errors: model.getErrors("activated"),
 }) }}
 
+{{ forms.lightswitchField({
+    label: model.getAttributeLabel('cssAssets'),
+    instructions: 'Load plugin default CSS assets.'|t('cookie-consent'),
+    name: "cssAssets",
+    disabled: not canUpdate,
+    on: model.cssAssets,
+    errors: model.getErrors("cssAssets"),
+}) }}
+
+{{ forms.lightswitchField({
+    label: model.getAttributeLabel('jsAssets'),
+    instructions: 'Load plugin default JS assets.'|t('cookie-consent'),
+    name: "jsAssets",
+    disabled: not canUpdate,
+    on: model.jsAssets,
+    errors: model.getErrors("jsAssets"),
+}) }}
+
 {{ forms.textField({
     label: model.getAttributeLabel('template'),
     instructions: 'The banner template. Defaults to "cookie-consent/banner".'|t('cookie-consent'),
