@@ -52,6 +52,7 @@ function toggleExpand(event)
 {
     event.preventDefault();
     document.getElementById("elc-cookie-consent-settings").classList.toggle('elc-is-display-none');
+    document.getElementById("elc-cookie-consent").classList.toggle('elc-fullwidth');
     document.getElementById("elc-accept-link").classList.toggle('elc-is-display-none');
     document.getElementById("elc-save-link").classList.toggle('elc-is-display-none');
     document.getElementById("elc-hide-detail-link").classList.toggle('elc-is-display-none');

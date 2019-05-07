@@ -147,10 +147,14 @@ class CookieConsent extends \craft\base\Plugin
 			'cookieConsent' => Variables::class,
 		]);
 		if(!Craft::$app->request->isCpRequest) {
-			if($this->cookieConsent->render()) Craft::$app->view->hook('before-body-end', function(array &$context) {
-				$settings = $this->getSettings();
-				return $this->renderPluginTemplate($this->cookieConsent->getTemplate());
-			});
+			if($this->cookieConsent->render()) {
+				$this->cookieConsent->loadCss();
+				$this->cookieConsent->loadJs();
+				Craft::$app->view->hook('before-body-end', function(array &$context) {
+					$settings = $this->getSettings();
+					return $this->renderPluginTemplate($this->cookieConsent->getTemplate());
+				});
+			}
 		}
 		else $this->installCpEventListeners();
 	}
