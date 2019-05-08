@@ -234,6 +234,7 @@ class CookieConsent extends \craft\base\Plugin
 		return [
 			'cookie-consent' 													=>	'cookie-consent/settings/index',
 			'cookie-consent/site/<siteHandle:{handle}>'							=> 	'cookie-consent/settings/edit-site-settings',
+			'cookie-consent/site/<siteHandle:{handle}>/consent'					=> 	'cookie-consent/settings/consent',
 			'cookie-consent/group/<siteHandle:{handle}>'						=> 	'cookie-consent/settings/edit-cookie-group',
 			'cookie-consent/group/<siteHandle:{handle}>/<groupId:\d+>'			=> 	'cookie-consent/settings/edit-cookie-group',
 		];
@@ -258,6 +259,9 @@ class CookieConsent extends \craft\base\Plugin
 					],
 					'cookie-consent:site-settings:content' => [
 						'label' => Craft::t('cookie-consent', 'Update Content'),
+					],
+					'cookie-consent:site-settings:view-consents' => [
+						'label' => Craft::t('cookie-consent', 'View Consents'),
 					],
 				],
 			],

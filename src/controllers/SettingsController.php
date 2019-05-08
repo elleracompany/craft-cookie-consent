@@ -5,6 +5,7 @@ namespace elleracompany\cookieconsent\controllers;
 use Craft;
 use craft\web\Controller;
 use elleracompany\cookieconsent\CookieConsent;
+use elleracompany\cookieconsent\records\Consent;
 use elleracompany\cookieconsent\records\CookieGroup;
 use elleracompany\cookieconsent\records\SiteSettings;
 use yii\web\NotFoundHttpException;
@@ -51,6 +52,31 @@ class SettingsController extends Controller
 		$this->_prepSiteSettingsPermissionVariables($variables);
 
 		return $this->renderTemplate('cookie-consent/settings/site', $variables);
+	}
+
+	/**
+	 * Render the view for consent entries
+	 *
+	 * @param string|null       $siteHandle
+	 *
+	 * @return \yii\web\Response
+	 * @throws \yii\web\ForbiddenHttpException
+	 */
+	public function actionConsent(string $siteHandle = null)
+	{
+		$this->requirePermission('cookie-consent:site-settings:view-consents');
+
+		Craft::$app->getRequest();
+		$variables = [
+			'currentSiteHandle' => $siteHandle,
+		];
+		$this->_prepVariables($variables);
+		$variables['currentPage'] = 'consent';
+		$variables['consents'] = Consent::find()->where(['site_id' => $variables['currentSiteId']])->all();
+		$variables['title'] = Craft::t('cookie-consent', 'Consents');
+		$this->_prepSiteSettingsPermissionVariables($variables);
+
+		return $this->renderTemplate('cookie-consent/settings/consent', $variables);
 	}
 
 	/**
