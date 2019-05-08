@@ -2,6 +2,10 @@
 <div id="elc-cookie-consent">
     <form id="elc-cookie-consent-form" action="" method="post" accept-charset="UTF-8">
 
+        <input type="hidden" name="action" value="cookie-consent/consent/update">
+        <input type="hidden" name="site_id" value="{{ currentSite.id }}">
+        {{ csrfInput() }}
+        
         <h3>{{ craft.cookieConsent.headline }}</h3>
 
         <p>{{ craft.cookieConsent.description }}</p>
