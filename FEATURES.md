@@ -8,19 +8,19 @@ Ellera Cookie Consent Plugin
 - Implement javascript and css in your own files, and disable the loading of ours
 - Add or remove cookies and cookie groups
 
-![Configurable](docs/configure.png)
+![Configurable](https://raw.githubusercontent.com/elleracompany/craft-cookie-consent/master/docs/configure.png)
 
 ### Give your visitors all the information you're required to
 
-![Cookies](docs/cookies.png)
+![Cookies](https://raw.githubusercontent.com/elleracompany/craft-cookie-consent/master/docs/cookies.png)
 ### Multisite compatible
 - Have different cookies and settings for each site
 - Manage permissions for each user
 
-![User Permissions](docs/user_permissions.png)
+![User Permissions](https://raw.githubusercontent.com/elleracompany/craft-cookie-consent/master/docs/user_permissions.png)
 
 ### Overview of visitors consent
 
 View what visitors are accepting, and have the information ready in your database if you need to prove consent.
 
-![Overview](docs/overview.png)
+![Overview](https://raw.githubusercontent.com/elleracompany/craft-cookie-consent/master/docs/overview.png)
