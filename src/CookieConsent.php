@@ -146,7 +146,7 @@ class CookieConsent extends \craft\base\Plugin
 		$this->setComponents([
 			'cookieConsent' => Variables::class,
 		]);
-		if(!Craft::$app->request->isCpRequest) {
+		if(!Craft::$app->request->isCpRequest && !Craft::$app->request->isConsoleRequest) {
 			if($this->cookieConsent->render()) {
 				$this->cookieConsent->loadCss();
 				$this->cookieConsent->loadJs();

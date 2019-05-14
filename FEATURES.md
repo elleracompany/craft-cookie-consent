@@ -31,4 +31,4 @@ View what visitors are accepting, and have the information ready in your databas
 ![Overview](https://raw.githubusercontent.com/elleracompany/craft-cookie-consent/master/docs/overview.png)
 
 ## Acknowledgements
-Plugin Icon designed by Trinh Ho from Flaticon
+Plugin "cookie" used in the Icon designed by Trinh Ho from Flaticon
