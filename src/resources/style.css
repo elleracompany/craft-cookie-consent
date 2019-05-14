@@ -142,3 +142,14 @@
 #elc-cookie-tab a {
     color: #ffffff;
 }
+#elc-cookie-consent input[type="checkbox" i] {
+    -webkit-appearance: checkbox;
+    box-sizing: border-box;
+}
+#elc-cookie-consent input[type="checkbox" i] {
+    background-color: initial;
+    cursor: default;
+    margin: 3px 3px 3px 0.6em;
+    padding: initial;
+    border: initial;
+}

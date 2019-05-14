@@ -1,4 +1,9 @@
 # Release Notes for Cookie Consent
+## 1.1.0.1 - 2019-14-05
+
+### Updated
+- Added margins to checkboxes
+
 ## 1.1.0 - 2019-14-05
 
 ### Added
