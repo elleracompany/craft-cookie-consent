@@ -35,6 +35,15 @@
     errors: model.getErrors("jsAssets"),
 }) }}
 
+{{ forms.lightswitchField({
+    label: model.getAttributeLabel('templateAsset'),
+    instructions: 'Load template.'|t('cookie-consent'),
+    name: "templateAsset",
+    disabled: not canChangeTemplate,
+    on: model.templateAsset,
+    errors: model.getErrors("templateAsset"),
+}) }}
+
 {{ forms.textField({
     label: model.getAttributeLabel('template'),
     instructions: 'The banner template. Defaults to "cookie-consent/banner".'|t('cookie-consent'),

@@ -14,6 +14,7 @@ use yii\web\NotFoundHttpException;
  * @property boolean 	$activated
  * @property boolean 	$jsAssets
  * @property boolean 	$cssAssets
+ * @property boolean	$templateAsset
  * @property integer 	$site_id
  * @property string 	$headline
  * @property string 	$description
@@ -33,7 +34,8 @@ class SiteSettings extends ActiveRecord
 			'jsAssets',
 			'headline',
 			'description',
-			'template'
+			'template',
+			'templateAsset'
 		];
 		return array_merge($fields, parent::fields());
 	}
@@ -51,10 +53,10 @@ class SiteSettings extends ActiveRecord
 		return [
 			[['headline', 'description', 'template'], 'string'],
 			[['headline', 'description', 'template'], 'required'],
-			[['activated', 'cssAssets', 'jsAssets'], 'boolean'],
-			[['activated', 'headline', 'description', 'template'], 'validatePermission'],
+			[['activated', 'cssAssets', 'jsAssets', 'templateAsset'], 'boolean'],
+			[['activated', 'headline', 'description', 'template', 'templateAsset'], 'validatePermission'],
 			['activated', 'default', 'value' => 0],
-			[['cssAssets', 'jsAssets'], 'default', 'value' => 1],
+			[['cssAssets', 'jsAssets', 'templateAsset'], 'default', 'value' => 1],
 			['site_id', 'integer']
 		];
 	}
@@ -78,7 +80,8 @@ class SiteSettings extends ActiveRecord
 			'activated' => 'cookie-consent:site-settings:activate',
 			'headline' => 'cookie-consent:site-settings:content',
 			'description' => 'cookie-consent:site-settings:content',
-			'template' => 'cookie-consent:site-settings:template'
+			'template' => 'cookie-consent:site-settings:template',
+			'templateAsset' => 'cookie-consent:site-settings:template'
 		];
 	}
 	public function validatePermission($attribute, $params)

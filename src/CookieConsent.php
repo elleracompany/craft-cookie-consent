@@ -150,7 +150,7 @@ class CookieConsent extends \craft\base\Plugin
 			if($this->cookieConsent->render()) {
 				$this->cookieConsent->loadCss();
 				$this->cookieConsent->loadJs();
-				Craft::$app->view->hook('before-body-end', function(array &$context) {
+				if($this->cookieConsent->renderTemplate()) Craft::$app->view->hook('before-body-end', function(array &$context) {
 					$settings = $this->getSettings();
 					return $this->renderPluginTemplate($this->cookieConsent->getTemplate());
 				});

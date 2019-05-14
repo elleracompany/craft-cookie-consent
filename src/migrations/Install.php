@@ -28,6 +28,7 @@ class Install extends Migration
 				'activated' => $this->boolean()->notNull()->defaultValue(false),
 				'cssAssets' => $this->boolean()->notNull()->defaultValue(true),
 				'jsAssets' => $this->boolean()->notNull()->defaultValue(true),
+				'templateAsset' => $this->boolean()->notNull()->defaultValue(true),
 				'headline' => $this->string(255)->notNull(),
 				'description' => $this->text(),
 				'template' => $this->string()->notNull()

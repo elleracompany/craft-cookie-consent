@@ -50,13 +50,23 @@ class Variables extends Component
 	}
 
 	/**
-	 * Should we render the banner?
+	 * Should we render anything?
 	 *
 	 * @return bool
 	 */
 	public function render() : bool
 	{
 		return !$this->consent && $this->activated();
+	}
+
+	/**
+	 * Should we render the banner?
+	 *
+	 * @return bool
+	 */
+	public function renderTemplate() : bool
+	{
+		return $this->settings->templateAsset == 1;
 	}
 
 	/**
