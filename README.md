@@ -16,6 +16,17 @@ Go to "Site Settings" and add your cookies and cookie groups (We've added some b
 
 Toggle the "Activated" lightswitch and you're off!
 
+## Customize
+
+### Using a custom template
+Update the template file under Site Settings to point to your template file.
+The path is rendered with `Craft::$app->view->renderTemplate()`.
+
+### Using custom CSS and/or JS
+You can turn off loading of assets in Site Settings if you have your own.
+
+You can look in `vendor/elleracompany/craft-cookie-consent/src/resources` to see the functionality currently implemented by the plugin.
+
 ## Check for user consent
 You can use this function to manage cookie generation for your scripts
 
