@@ -34,5 +34,8 @@ You can use this function to manage cookie generation for your scripts
 
 You can use it in SEOmatic by navigating to `admin/seomatic/tracking` and updating the script template.
 
+## Planned features
+- Project.yaml compatibility
+
 ## Acknowledgements
 Plugin Icon designed by Trinh Ho from Flaticon

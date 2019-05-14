@@ -4,6 +4,7 @@ Ellera Cookie Consent Plugin
 
 ## Features
 ### Fully configurable
+- Multisite Compatible - Customize settings for each site
 - Use our default template or create one yourself
 - Implement javascript and css in your own files, and disable the loading of ours
 - List all cookies your site is using - Add or remove cookies and cookie groups
