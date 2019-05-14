@@ -1,4 +1,12 @@
 # Release Notes for Cookie Consent
+## 1.1.0 - 2019-14-05
+
+### Added
+- Toggle checkboxes on/off for the initial small box
+- Toggle a small cookie tab to bring back the consent form after consent is given
+
+### Updated
+- README now includes an example for SEOmatic
 
 ## 1.0.0.3 - 2019-14-05
 

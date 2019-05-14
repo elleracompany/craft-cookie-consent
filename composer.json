@@ -1,7 +1,7 @@
 {
   "name": "elleracompany/craft-cookie-consent",
   "description": "GDPR Compliant Cookie Consent Plugin",
-  "version": "1.0.0.3",
+  "version": "1.1.0",
   "type": "craft-plugin",
   "keywords": ["cookies", "consent", "gdpr"],
   "license": "Craft",
@@ -26,8 +26,8 @@
   "extra": {
     "name": "GDPR Cookie Consent",
     "handle": "cookie-consent",
-    "documentationUrl": "https://gitlab.com/elleracompany/craft-plugins/craft-cookie-consent/blob/master/README.md",
-    "changelogUrl": "https://gitlab.com/elleracompany/craft-plugins/craft-cookie-consent/blob/master/CHANGELOG.md",
+    "documentationUrl": "https://github.com/elleracompany/craft-cookie-consent/blob/master/README.md",
+    "changelogUrl": "https://github.com/elleracompany/craft-cookie-consent/blob/master/CHANGELOG.md",
     "class": "elleracompany\\cookieconsent\\CookieConsent"
   }
 }

@@ -23,6 +23,13 @@ window.onload = function () {
     } else if (form.attachEvent) {
         form.attachEvent("onsubmit", submitConsent);
     }
+
+    let tabLink = document.getElementById("elc-tab-link");
+    if (tabLink.addEventListener) {
+        tabLink.addEventListener("click", toggleTab);
+    } else if (tabLink.attachEvent) {
+        tabLink.attachEvent("onclick", toggleTab);
+    }
 };
 
 function submitConsent(event) {
@@ -40,7 +47,8 @@ function submitConsent(event) {
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
             if (xhr.status === 200) {
-                document.querySelector("#elc-cookie-consent").remove();
+                document.getElementById("elc-cookie-consent").classList.toggle('elc-hidden');
+                document.getElementById("elc-cookie-tab").classList.toggle('elc-hidden');
             } else {
                 console.log('Error: ' + xhr.status);
             }
@@ -51,12 +59,15 @@ function submitConsent(event) {
 function toggleExpand(event)
 {
     event.preventDefault();
-    document.getElementById("elc-cookie-consent-settings").classList.toggle('elc-is-display-none');
     document.getElementById("elc-cookie-consent").classList.toggle('elc-fullwidth');
-    document.getElementById("elc-accept-link").classList.toggle('elc-is-display-none');
-    document.getElementById("elc-save-link").classList.toggle('elc-is-display-none');
-    document.getElementById("elc-hide-detail-link").classList.toggle('elc-is-display-none');
-    document.getElementById("elc-detail-link").classList.toggle('elc-is-display-none');
+    document.getElementById("elc-cookie-consent").classList.toggle('elc-small');
+}
+
+function toggleTab(event)
+{
+    event.preventDefault();
+    document.getElementById("elc-cookie-consent").classList.toggle('elc-hidden');
+    document.getElementById("elc-cookie-tab").classList.toggle('elc-hidden');
 }
 
 /*!

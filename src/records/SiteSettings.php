@@ -15,6 +15,8 @@ use yii\web\NotFoundHttpException;
  * @property boolean 	$jsAssets
  * @property boolean 	$cssAssets
  * @property boolean	$templateAsset
+ * @property boolean	$showCheckboxes
+ * @property boolean	$showAfterConsent
  * @property integer 	$site_id
  * @property string 	$headline
  * @property string 	$description
@@ -32,6 +34,8 @@ class SiteSettings extends ActiveRecord
 			'activated',
 			'cssAssets',
 			'jsAssets',
+			'showCheckboxes',
+			'showAfterConsent',
 			'headline',
 			'description',
 			'template',
@@ -53,8 +57,8 @@ class SiteSettings extends ActiveRecord
 		return [
 			[['headline', 'description', 'template'], 'string'],
 			[['headline', 'description', 'template'], 'required'],
-			[['activated', 'cssAssets', 'jsAssets', 'templateAsset'], 'boolean'],
-			[['activated', 'headline', 'description', 'template', 'templateAsset'], 'validatePermission'],
+			[['activated', 'cssAssets', 'jsAssets', 'templateAsset', 'showCheckboxes', 'showAfterConsent'], 'boolean'],
+			[['activated', 'headline', 'description', 'template', 'templateAsset', 'showCheckboxes', 'showAfterConsent'], 'validatePermission'],
 			['activated', 'default', 'value' => 0],
 			[['cssAssets', 'jsAssets', 'templateAsset'], 'default', 'value' => 1],
 			['site_id', 'integer']
@@ -68,6 +72,9 @@ class SiteSettings extends ActiveRecord
 			'activated' => Craft::t('cookie-consent', 'Activated'),
 			'cssAssets' => Craft::t('cookie-consent', 'Load CSS Assets'),
 			'jsAssets' => Craft::t('cookie-consent', 'Load JS Assets'),
+			'templateAsset' => Craft::t('cookie-consent', 'Load Template'),
+			'showCheckboxes' => Craft::t('cookie-consent', 'Show Checkboxes'),
+			'showAfterConsent' => Craft::t('cookie-consent', 'Show after Consent'),
 			'headline' => Craft::t('cookie-consent', 'Headline'),
 			'description' => Craft::t('cookie-consent', 'Description'),
 			'template' => Craft::t('cookie-consent', 'Template')
@@ -80,6 +87,8 @@ class SiteSettings extends ActiveRecord
 			'activated' => 'cookie-consent:site-settings:activate',
 			'headline' => 'cookie-consent:site-settings:content',
 			'description' => 'cookie-consent:site-settings:content',
+			'showCheckboxes' => 'cookie-consent:site-settings:content',
+			'showAfterConsent' => 'cookie-consent:site-settings:content',
 			'template' => 'cookie-consent:site-settings:template',
 			'templateAsset' => 'cookie-consent:site-settings:template'
 		];

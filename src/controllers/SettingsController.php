@@ -103,6 +103,8 @@ class SettingsController extends Controller
 		$record->jsAssets = (int) $record->jsAssets;
 		$record->cssAssets = (int) $record->cssAssets;
 		$record->templateAsset = (int) $record->templateAsset;
+		$record->showCheckboxes = (int) $record->showCheckboxes;
+		$record->showAfterConsent = (int) $record->showAfterConsent;
 		if($record->save()) {
 			Craft::$app->getSession()->setNotice(Craft::t('cookie-consent', 'Settings saved.'));
 		}
@@ -237,6 +239,8 @@ class SettingsController extends Controller
 		$record->cssAssets = true;
 		$record->jsAssets = true;
 		$record->templateAsset = true;
+		$record->showCheckboxes = true;
+		$record->showAfterConsent = true;
 		$record->save(false);
 		foreach (CookieConsent::DEFAULT_GROUPS as $group)
 		{

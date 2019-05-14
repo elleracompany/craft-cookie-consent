@@ -56,7 +56,17 @@ class Variables extends Component
 	 */
 	public function render() : bool
 	{
-		return !$this->consent && $this->activated();
+		return $this->activated() && (!$this->consent || $this->settings->showAfterConsent);
+	}
+
+	/**
+	 * Should we render anything?
+	 *
+	 * @return bool
+	 */
+	public function hideCheckboxes() : bool
+	{
+		return ! (bool) $this->settings->showCheckboxes;
 	}
 
 	/**
@@ -122,6 +132,21 @@ class Variables extends Component
 	public function groups()
 	{
 		return $this->settings ? $this->settings->cookieGroups : [];
+	}
+
+	public function consentGiven()
+	{
+		return $this->consent;
+	}
+
+	public function showAfterConsent()
+	{
+		return (bool) $this->settings->showAfterConsent;
+	}
+
+	public function getUid()
+	{
+		return $this->consent_string->consent_uid;
 	}
 
 	public function getConsent($slug)

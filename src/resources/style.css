@@ -5,7 +5,6 @@
     padding: 2em;
     background-color: #fff;
     font-size: 0.8em;
-    width: 30em;
     max-width: calc(100% - 6em);
     max-height: calc(100% - 6em);
     overflow: auto;
@@ -13,13 +12,26 @@
     z-index: 10000;
     box-shadow: 0 0 10px 0 rgba(0,0,0,.25);
 }
+.elc-small {
+    width: 30em;
+}
 #elc-cookie-consent h3 {
     font-weight: bold;
     font-size: 20px;
     margin: 0;
 }
+#elc-cookie-consent h4 {
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+}
+.elc-fullwidth h4 {
+    font-weight: bold;
+    font-size: 1.4em;
+}
 #elc-cookie-consent .button-container {
     text-align: right;
+    clear: both;
 }
 .elc-fullwidth {
     width: calc(100% - 6em) !important;
@@ -55,12 +67,21 @@
     text-transform: uppercase;
     width: 8em;
 }
-#elc-cookie-consent .elc-is-display-none {
-    display: none;
+#elc-cookie-consent .elc-cookie-group {
+    float: left;
+    padding-right: 1em;
 }
+
+.elc-fullwidth .elc-cookie-group {
+    width: 100%;
+}
+
 #elc-cookie-consent .elc-row {
     width: 100%;
     clear: both;
+}
+#elc-cookie-consent #elc-cookie-consent-settings {
+    margin-bottom: 4em;
 }
 #elc-cookie-consent .elc-row .elc-cookie-name {
     float: left;
@@ -72,7 +93,52 @@
     border-top: 1px solid #cccccc;
     padding-top: 1em;
     margin-bottom: 1em;
+    display: none;
+}
+.elc-fullwidth .elc-cookie-description {
+    display: block !important;
 }
 #elc-cookie-consent .elc-cookie {
     margin-bottom: 1em;
+}
+#elc-cookie-consent .elc-cookie-field {
+    display: none;
+}
+.elc-fullwidth .elc-cookie-field {
+    display: block !important;
+}
+
+.elc-fullwidth #elc-detail-link {
+    display: none;
+}
+
+.elc-fullwidth #elc-accept-link {
+    display: none;
+}
+
+.elc-small #elc-hide-detail-link {
+    display: none;
+}
+
+.elc-small #elc-save-link {
+    display: none;
+}
+.elc-small .elc-hide-when-small {
+    display: none;
+}
+.elc-hidden {
+    display: none;
+}
+#elc-cookie-tab {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    padding: 0.2em 1em;
+    background-color: #0e3a5e;
+    font-size: 0.8em;
+    z-index: 10000;
+    box-shadow: 0 0 10px 0 rgba(0,0,0,.25);
+}
+#elc-cookie-tab a {
+    color: #ffffff;
 }
