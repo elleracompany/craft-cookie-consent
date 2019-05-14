@@ -6,7 +6,8 @@ Ellera Cookie Consent Plugin
 ### Fully configurable
 - Use our default template or create one yourself
 - Implement javascript and css in your own files, and disable the loading of ours
-- Add or remove cookies and cookie groups
+- List all cookies your site is using - Add or remove cookies and cookie groups
+- Consents are stored in the database
 
 ![Configurable](https://raw.githubusercontent.com/elleracompany/craft-cookie-consent/master/docs/configure.png)
 
@@ -24,3 +25,6 @@ Ellera Cookie Consent Plugin
 View what visitors are accepting, and have the information ready in your database if you need to prove consent.
 
 ![Overview](https://raw.githubusercontent.com/elleracompany/craft-cookie-consent/master/docs/overview.png)
+
+## Acknowledgements
+Plugin Icon designed by Trinh Ho from Flaticon

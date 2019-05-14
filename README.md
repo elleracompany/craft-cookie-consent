@@ -33,3 +33,6 @@ You can use this function to manage cookie generation for your scripts
 `{% if craft.cookieConsent.getConsent('slug') %}`
 
 You can use it in SEOmatic by navigating to `admin/seomatic/tracking` and updating the script template.
+
+## Acknowledgements
+Plugin Icon designed by Trinh Ho from Flaticon
