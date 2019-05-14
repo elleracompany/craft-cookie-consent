@@ -1,6 +1,6 @@
 {
   "name": "elleracompany/craft-cookie-consent",
-  "description": "Ellera's Cookie Consent Plugin",
+  "description": "GDPR Compliant Cookie Consent Plugin",
   "version": "1.0.0",
   "type": "craft-plugin",
   "keywords": ["cookies", "consent", "gdpr"],
@@ -24,7 +24,7 @@
     }
   },
   "extra": {
-    "name": "Cookie Consent",
+    "name": "GDPR Cookie Consent",
     "handle": "cookie-consent",
     "documentationUrl": "https://gitlab.com/elleracompany/craft-plugins/craft-cookie-consent/blob/master/README.md",
     "changelogUrl": "https://gitlab.com/elleracompany/craft-plugins/craft-cookie-consent/blob/master/CHANGELOG.md",
