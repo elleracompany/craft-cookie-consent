@@ -1,5 +1,5 @@
 <div id="elc-cookie-consent" class="elc-small{% if craft.cookieConsent.consentGiven == 1 %} elc-hidden{% endif %}">
-    <form id="elc-cookie-consent-form" action="" method="post" accept-charset="UTF-8">
+    <form id="elc-cookie-consent-form" action="" data-url="{{ actionUrl() }}" method="post" accept-charset="UTF-8">
 
         <input type="hidden" name="action" value="cookie-consent/consent/update">
         <input type="hidden" name="site_id" value="{{ currentSite.id }}">

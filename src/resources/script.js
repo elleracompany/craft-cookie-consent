@@ -40,7 +40,7 @@ function submitConsent(event) {
     let data = serialize(form);
 
     let xhr = new XMLHttpRequest();
-    xhr.open('POST', '/');
+    xhr.open('POST', form.dataset.url);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.send(data);
 
