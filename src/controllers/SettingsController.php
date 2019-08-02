@@ -72,7 +72,7 @@ class SettingsController extends Controller
 		];
 		$this->_prepVariables($variables);
 		$variables['currentPage'] = 'consent';
-		$variables['consents'] = Consent::find()->where(['site_id' => $variables['currentSiteId']])->all();
+		$variables['consents'] = Consent::find()->where(['site_id' => $variables['currentSiteId']])->orderBy('dateUpdated')->all();
 		$variables['title'] = Craft::t('cookie-consent', 'Consents');
 		$this->_prepSiteSettingsPermissionVariables($variables);
 
