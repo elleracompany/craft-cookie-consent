@@ -16,14 +16,14 @@
     <nav>
         <ul>
             <li class="heading"><span>{{ "Information"|t('cookie-consent') }}</span></li>
-            <li><a href="/admin/cookie-consent"{{ currentPage == 'readme' ? ' class="sel"' : ''}}>{{ "Readme"|t('cookie-consent') }}</a></li>
-            <li><a href="/admin/cookie-consent/site/{{ currentSiteHandle }}/consent"{{ currentPage == 'consent' ? ' class="sel"' : ''}}>{{ "View consents"|t('cookie-consent') }}</a></li>
+            <li><a href="{{ cpUrl() }}/cookie-consent"{{ currentPage == 'readme' ? ' class="sel"' : ''}}>{{ "Readme"|t('cookie-consent') }}</a></li>
+            <li><a href="{{ cpUrl() }}/cookie-consent/site/{{ currentSiteHandle }}/consent"{{ currentPage == 'consent' ? ' class="sel"' : ''}}>{{ "View consents"|t('cookie-consent') }}</a></li>
             <li class="heading"><span>{{ "Settings"|t('cookie-consent') }}</span></li>
-            <li><a href="/admin/cookie-consent/site/{{ currentSiteHandle }}"{{ currentPage == 'site' ? ' class="sel"' : ''}}>{{ "Site Settings"|t('cookie-consent') }}</a></li>
+            <li><a href="{{ cpUrl() }}/cookie-consent/site/{{ currentSiteHandle }}"{{ currentPage == 'site' ? ' class="sel"' : ''}}>{{ "Site Settings"|t('cookie-consent') }}</a></li>
             {% if canGroups %}
                 <li class="heading"><span>{{ "Cookie Groups"|t('cookie-consent') }}</span></li>
                 {% for cookieGroup in model.cookieGroups %}
-                <li><a href="/admin/cookie-consent/group/{{ currentSiteHandle }}/{{ cookieGroup.id }}"{{ currentPage == 'group' and cookieGroup.id == group.id ? ' class="sel"' : ''}}>{{  cookieGroup.name }}</a></li>
+                <li><a href="{{ cpUrl() }}/cookie-consent/group/{{ currentSiteHandle }}/{{ cookieGroup.id }}"{{ currentPage == 'group' and cookieGroup.id == group.id ? ' class="sel"' : ''}}>{{  cookieGroup.name }}</a></li>
                 {% endfor %}
                 {% if group is defined and group.isNewRecord %}
                 <li><a href="#" class="sel">{{ "New cookie group"|t('cookie-consent') }}</a></li>
@@ -33,7 +33,7 @@
     </nav>
     {% if not model.isNewRecord and canCreate %}
     <div class="buttons">
-        <a href="/admin/cookie-consent/group/{{ currentSiteHandle }}" class="btn add icon">{{ "Add new cookie group"|t('cookie-consent') }}</a>
+        <a href="{{ cpUrl() }}/cookie-consent/group/{{ currentSiteHandle }}" class="btn add icon">{{ "Add new cookie group"|t('cookie-consent') }}</a>
     </div>
     {% endif %}
 {% endblock %}

@@ -1,5 +1,5 @@
 <div id="elc-cookie-consent" class="elc-small{% if craft.cookieConsent.consentGiven == 1 %} elc-hidden{% endif %}">
-    <form id="elc-cookie-consent-form" action="" method="post" accept-charset="UTF-8">
+    <form id="elc-cookie-consent-form" action="" data-url="{{ actionUrl() }}" method="post" accept-charset="UTF-8">
 
         <input type="hidden" name="action" value="cookie-consent/consent/update">
         <input type="hidden" name="site_id" value="{{ currentSite.id }}">
@@ -19,7 +19,7 @@
                 <div class="elc-cookie-group">
                     <div class="elc-row elc-cookie-headline">
                         <h4 class="elc-cookie-name">{{ group.name }}{% if group.required == 1 %} <small>({{ "Required"|t }})</small>{% endif %}</h4>
-                        <input type="checkbox" class="elc-cookie-checkbox" name="group-{{ group.slug }}"{{ group.required == 1 ? ' disabled="disabled"' : "" }}{{ group.default == 1 ? " checked" : "" }}>
+                        <input type="checkbox" class="elc-cookie-checkbox" name="group-{{ group.slug }}"{{ group.required == 1 ? ' disabled="disabled"' : "" }}{{ ((craft.cookieConsent.consentGiven != 1 and group.default == 1) or craft.cookieConsent.getConsent(group.slug)) ? " checked" : "" }}>
                     </div>
                     <div class="elc-row elc-cookie-description">
                         {{ group.description }}
