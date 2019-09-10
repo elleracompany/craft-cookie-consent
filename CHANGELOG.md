@@ -1,6 +1,6 @@
 # Release Notes for Cookie Consent
 
-## 1.2.0.0 - 2019-08-02
+## 1.2.0 - 2019-08-02
 
 ### Bugfix
 - Removed alert rendering from site settings (\#1)
@@ -11,12 +11,10 @@
 - Consents are now ordered by date in the CP list
 
 
-## 1.1.0.1 - 2019-05-14
+## 1.1.0 - 2019-05-14
 
 ### Updated
 - Added margins to checkboxes
-
-## 1.1.0 - 2019-05-14
 
 ### Added
 - Toggle checkboxes on/off for the initial small box
