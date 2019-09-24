@@ -6,6 +6,7 @@ namespace elleracompany\cookieconsent\services;
 use Craft;
 use elleracompany\cookieconsent\records\SiteSettings;
 use yii\base\Component;
+use yii\web\Cookie;
 
 class Variables extends Component
 {
@@ -36,7 +37,8 @@ class Variables extends Component
 
         $consent = Craft::$app->session->get('cookieConsent');
 
-        if($consent) {
+        if($consent)
+        {
             $cookie = new Cookie([
                 'name' => 'cookie-consent',
                 'value' => $consent,
@@ -49,7 +51,7 @@ class Variables extends Component
 
 		$this->consent = $consent !== null;
 		$this->consent_string = json_decode($consent);
-		
+
 		parent::init();
 	}
 
