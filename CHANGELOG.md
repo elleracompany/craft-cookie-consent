@@ -1,5 +1,10 @@
 # Release Notes for Cookie Consent
 
+## 1.2.2 - 2019-09-24
+
+### Updated
+- Composer.json updated to reflect new version
+
 ## 1.2.1 - 2019-09-24
 
 ### Enhancements
