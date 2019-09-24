@@ -33,7 +33,7 @@ class Variables extends Component
 	public function init()
 	{
 		$this->settings = SiteSettings::find()->where(['site_id' => Craft::$app->getSites()->currentSite->id])->with('cookieGroups')->one();
-		$consent = Craft::$app->session->get('cookieConsent');
+		$consent = Craft::$app->request->cookies->get('cookie-consent');
 		$this->consent = $consent !== null;
 		$this->consent_string = json_decode($consent);
 		parent::init();

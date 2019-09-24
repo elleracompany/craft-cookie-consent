@@ -7,6 +7,7 @@ use craft\web\Controller;
 use craft\web\Response;
 use elleracompany\cookieconsent\records\Consent;
 use elleracompany\cookieconsent\records\SiteSettings;
+use yii\web\Cookie;
 
 class ConsentController extends Controller
 {
@@ -37,7 +38,14 @@ class ConsentController extends Controller
 		$consentRecord->save();
 
 		Craft::$app->response->format = Response::FORMAT_JSON;
-		Craft::$app->session->set('cookieConsent', json_encode(array_merge(['consent_uid' => $consentRecord->uid],$consent)));
+
+		$cookie = new Cookie([
+		    'name' => 'cookie-consent',
+            'value' => json_encode(array_merge(['consent_uid' => $consentRecord->uid],$consent)),
+            'expire' => strtotime('+1 year', time())
+        ]);
+
+		Craft::$app->response->cookies->add($cookie);
 
 		return true;
 	}
