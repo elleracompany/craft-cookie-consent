@@ -146,6 +146,16 @@ class CookieConsent extends \craft\base\Plugin
 		$this->setComponents([
 			'cookieConsent' => Variables::class,
 		]);
+
+        Craft::info(
+            Craft::t(
+                'cookie-consent',
+                '{name} plugin loaded',
+                ['name' => $this->name]
+            ),
+            __METHOD__
+        );
+
 		if(!Craft::$app->request->isCpRequest && !Craft::$app->request->isConsoleRequest) {
 			if($this->cookieConsent->render()) {
 				$this->cookieConsent->loadCss();
@@ -168,19 +178,20 @@ class CookieConsent extends \craft\base\Plugin
 		Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('cookie-consent'));
 	}
 
-	/**
-	 * Shuffling template mode and rendering template
-	 * and JS/CSS files.
-	 *
-	 * https://docs.craftcms.com/v3/extend/updating-plugins.html#rendering-templates
-	 *
-	 * @param       $path
-	 * @param array $params
-	 *
-	 * @return string
-	 * @throws \Twig_Error_Loader
-	 * @throws \yii\base\Exception
-	 */
+    /**
+     * Shuffling template mode and rendering template
+     * and JS/CSS files.
+     *
+     * https://docs.craftcms.com/v3/extend/updating-plugins.html#rendering-templates
+     *
+     * @param $path
+     * @param array $params
+     * @return string
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     * @throws \yii\base\Exception
+     */
 	public function renderPluginTemplate($path, $params = [])
 	{
 		if($path == 'cookie-consent/banner')

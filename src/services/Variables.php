@@ -33,9 +33,23 @@ class Variables extends Component
 	public function init()
 	{
 		$this->settings = SiteSettings::find()->where(['site_id' => Craft::$app->getSites()->currentSite->id])->with('cookieGroups')->one();
-		$consent = Craft::$app->session->get('cookieConsent');
+
+        $consent = Craft::$app->session->get('cookieConsent');
+
+        if($consent) {
+            $cookie = new Cookie([
+                'name' => 'cookie-consent',
+                'value' => $consent,
+                'expire' => strtotime('+1 year', time())
+            ]);
+
+            Craft::$app->response->cookies->add($cookie);
+        }
+		else $consent = Craft::$app->request->cookies->get('cookie-consent');
+
 		$this->consent = $consent !== null;
 		$this->consent_string = json_decode($consent);
+		
 		parent::init();
 	}
 
