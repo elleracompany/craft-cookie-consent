@@ -3,6 +3,7 @@
 ## 1.2.2 - 2019-09-24
 
 ### Updated
+- Consent storage moved from session to cookie
 - Composer.json updated to reflect new version
 
 ## 1.2.1 - 2019-09-24
