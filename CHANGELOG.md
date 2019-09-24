@@ -1,5 +1,10 @@
 # Release Notes for Cookie Consent
 
+## 1.2.1 - 2019-09-24
+
+### Enhancements
+- Consent storage moved from session to cookie
+
 ## 1.2.0 - 2019-08-02
 
 ### Bugfix
