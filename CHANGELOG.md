@@ -3,7 +3,7 @@
 ## 1.2.3 - 2019-09-30
 
 ### Fixed
-- Changed license to craft-plugin in composer.json for packagist 
+- Changed license to proprietary in composer.json for packagist 
 
 ## 1.2.2 - 2019-09-24
 

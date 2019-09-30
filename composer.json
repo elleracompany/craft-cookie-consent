@@ -4,7 +4,7 @@
   "version": "1.2.3",
   "type": "craft-plugin",
   "keywords": ["cookies", "consent", "gdpr"],
-  "license": "craft-plugin",
+  "license": "proprietary",
   "authors": [
     {
       "name": "Ellera AS",
