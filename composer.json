@@ -1,10 +1,10 @@
 {
   "name": "elleracompany/craft-cookie-consent",
   "description": "GDPR Compliant Cookie Consent Plugin",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "type": "craft-plugin",
   "keywords": ["cookies", "consent", "gdpr"],
-  "license": "Craft",
+  "license": "craft-plugin",
   "authors": [
     {
       "name": "Ellera AS",
