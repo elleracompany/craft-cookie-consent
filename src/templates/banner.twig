@@ -18,8 +18,8 @@
             {% for group in craft.cookieConsent.groups %}
                 <div class="elc-cookie-group">
                     <div class="elc-row elc-cookie-headline">
-                        <label class="elc-cookie-name" for="elc-checkbox-{{loop.index}}">{{ group.name }}{% if group.required == 1 %} <small>({{ "Required"|t }})</small>{% endif %}</label>
                         <input type="checkbox" id="elc-checkbox-{{loop.index}}" class="elc-cookie-checkbox" name="group-{{ group.slug }}"{{ group.required == 1 ? ' disabled="disabled"' : "" }}{{ ((craft.cookieConsent.consentGiven != 1 and group.default == 1) or craft.cookieConsent.getConsent(group.slug)) ? " checked" : "" }}>
+                        <label class="elc-cookie-name" for="elc-checkbox-{{loop.index}}">{{ group.name }}{% if group.required == 1 %} <small>({{ "Required"|t }})</small>{% endif %}</label>
                     </div>
                     <div class="elc-row elc-cookie-description">
                         {{ group.description }}
