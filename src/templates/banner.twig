@@ -1,4 +1,4 @@
-<div id="elc-cookie-consent" class="elc-small{% if craft.cookieConsent.consentGiven == 1 %} elc-hidden{% endif %}">
+<section id="elc-cookie-consent" class="elc-small{% if craft.cookieConsent.consentGiven == 1 %} elc-hidden{% endif %}">
     <form id="elc-cookie-consent-form" action="" data-url="{{ actionUrl() }}" method="post" accept-charset="UTF-8">
 
         <input type="hidden" name="action" value="cookie-consent/consent/update">
@@ -10,7 +10,7 @@
 
         {{ csrfInput() }}
 
-        <h3>{{ craft.cookieConsent.headline }}</h3>
+        <h1 class="elc-primary-heading">{{ craft.cookieConsent.headline }}</h1>
 
         <p>{{ craft.cookieConsent.description }}</p>
 
@@ -18,8 +18,8 @@
             {% for group in craft.cookieConsent.groups %}
                 <div class="elc-cookie-group">
                     <div class="elc-row elc-cookie-headline">
-                        <h4 class="elc-cookie-name">{{ group.name }}{% if group.required == 1 %} <small>({{ "Required"|t }})</small>{% endif %}</h4>
-                        <input type="checkbox" class="elc-cookie-checkbox" name="group-{{ group.slug }}"{{ group.required == 1 ? ' disabled="disabled"' : "" }}{{ ((craft.cookieConsent.consentGiven != 1 and group.default == 1) or craft.cookieConsent.getConsent(group.slug)) ? " checked" : "" }}>
+                        <label class="elc-cookie-name" for="elc-checkbox-{{loop.index}}">{{ group.name }}{% if group.required == 1 %} <small>({{ "Required"|t }})</small>{% endif %}</label>
+                        <input type="checkbox" id="elc-checkbox-{{loop.index}}" class="elc-cookie-checkbox" name="group-{{ group.slug }}"{{ group.required == 1 ? ' disabled="disabled"' : "" }}{{ ((craft.cookieConsent.consentGiven != 1 and group.default == 1) or craft.cookieConsent.getConsent(group.slug)) ? " checked" : "" }}>
                     </div>
                     <div class="elc-row elc-cookie-description">
                         {{ group.description }}
@@ -53,7 +53,7 @@
         </div>
 
     </form>
-</div>
+</section>
 {% if craft.cookieConsent.showAfterConsent == 1 %}
 <div id="elc-cookie-tab"{% if not craft.cookieConsent.consentGiven == 1 %} class="elc-hidden"{% endif %}>
     <a href="#" id="elc-tab-link">{{ "COOKIES"|t('cookie-consent') }}</a>
