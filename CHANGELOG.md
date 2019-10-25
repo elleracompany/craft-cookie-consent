@@ -1,5 +1,10 @@
 # Release Notes for Cookie Consent
 
+## 1.2.4 - 2019-10-25
+
+### Fixed
+- Merged in PR #9 from @jtrobinson1993 to follow basic accessibility guidelines.
+
 ## 1.2.3 - 2019-09-30
 
 ### Fixed
