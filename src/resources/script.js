@@ -1,4 +1,4 @@
-window.onload = function () {
+document.addEventListener('DOMContentLoaded', function () {
     /*
      * addEventListner: For all major browsers, except IE 8 and earlier
      * attachEvent:     For IE 8 and earlier versions
@@ -30,7 +30,7 @@ window.onload = function () {
     } else if (tabLink.attachEvent) {
         tabLink.attachEvent("onclick", toggleTab);
     }
-};
+});
 
 function submitConsent(event) {
 
