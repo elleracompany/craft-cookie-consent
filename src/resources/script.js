@@ -39,6 +39,9 @@ function submitConsent(event) {
     let form = document.querySelector('#elc-cookie-consent-form');
     let data = serialize(form);
 
+    document.getElementById("elc-cookie-consent").classList.toggle('elc-hidden');
+    document.getElementById("elc-cookie-tab").classList.toggle('elc-hidden');
+
     let xhr = new XMLHttpRequest();
     xhr.open('POST', form.dataset.url);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -46,12 +49,7 @@ function submitConsent(event) {
 
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
-            if (xhr.status === 200) {
-                document.getElementById("elc-cookie-consent").classList.toggle('elc-hidden');
-                document.getElementById("elc-cookie-tab").classList.toggle('elc-hidden');
-            } else {
-                console.log('Error: ' + xhr.status);
-            }
+            if (xhr.status !== 200) console.log('Error: ' + xhr.status);
         }
     }
 }
