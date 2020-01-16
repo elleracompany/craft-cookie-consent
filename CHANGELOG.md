@@ -1,5 +1,13 @@
 # Release Notes for Cookie Consent
 
+## 1.2.5 - 2020-01-16
+
+### Bugfix
+- Merged in PR #12 from @NRauh to solve issue with consent before the DOM is fully loaded.
+
+### Enhancements
+- Closing down the consent window before the ajax request to make the function feel more responsive and snappy
+
 ## 1.2.4 - 2019-10-25
 
 ### Fixed
