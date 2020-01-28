@@ -1,5 +1,10 @@
 # Release Notes for Cookie Consent
 
+## 1.2.6 - 2020-01-28
+
+### Bugfix
+- Fixed a bug where the id field was populated with an empty string for new records. This was not accepted by postgres DBs (#13)
+
 ## 1.2.5 - 2020-01-16
 
 ### Bugfix
