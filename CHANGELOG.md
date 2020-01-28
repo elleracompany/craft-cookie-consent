@@ -1,5 +1,10 @@
 # Release Notes for Cookie Consent
 
+## 1.2.7 - 2020-01-28
+
+### Bugfix
+- Fixed a bug with some elements being null when the cookie tab is not shown after consent
+
 ## 1.2.6 - 2020-01-28
 
 ### Bugfix
