@@ -155,8 +155,10 @@ class SettingsController extends Controller
 	{
 		$this->requirePostRequest();
 
+		$id = Craft::$app->request->post('id');
+
 		$record = CookieGroup::findOne([
-			'id' => Craft::$app->request->post('id')
+			'id' => is_numeric($id) ? $id : null
 		]);
 		if(!$record) {
 			$this->requirePermission('cookie-consent:cookie-groups:create');

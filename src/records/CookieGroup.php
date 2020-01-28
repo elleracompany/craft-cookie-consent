@@ -52,7 +52,6 @@ class CookieGroup extends ActiveRecord
 	public function fields()
 	{
 		$fields = [
-			'id',
 			'name',
 			'slug',
 			'required',
