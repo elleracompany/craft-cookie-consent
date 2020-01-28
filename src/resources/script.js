@@ -25,10 +25,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     let tabLink = document.getElementById("elc-tab-link");
-    if (tabLink.addEventListener) {
-        tabLink.addEventListener("click", toggleTab);
-    } else if (tabLink.attachEvent) {
-        tabLink.attachEvent("onclick", toggleTab);
+    if (typeof tabLink !== 'undefined' && tabLink !== null) {
+        if (tabLink.addEventListener) {
+            tabLink.addEventListener("click", toggleTab);
+        } else if (tabLink.attachEvent) {
+            tabLink.attachEvent("onclick", toggleTab);
+        }
     }
 });
 
@@ -40,7 +42,8 @@ function submitConsent(event) {
     let data = serialize(form);
 
     document.getElementById("elc-cookie-consent").classList.toggle('elc-hidden');
-    document.getElementById("elc-cookie-tab").classList.toggle('elc-hidden');
+    let cookieTab = document.getElementById("elc-cookie-tab");
+    if(typeof cookieTab !== 'undefined' && cookieTab !== null) document.getElementById("elc-cookie-tab").classList.toggle('elc-hidden');
 
     let xhr = new XMLHttpRequest();
     xhr.open('POST', form.dataset.url);
