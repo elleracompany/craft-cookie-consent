@@ -85,8 +85,9 @@
         }
     },
     errors: group.getErrors("cookies"),
-    rows: group.cookies
+    rows: group.cookies | json_decode
 }) }}
+
 {% elseif group.cookies %}
     <div class="elements">
         <div class="tableview">
