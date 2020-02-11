@@ -1,5 +1,10 @@
 # Release Notes for Cookie Consent
 
+## 1.2.8 - 2020-02-11
+
+### Bugfix
+- Fixed a bug where EditableTables in settings did not output the existing rows. This was due to the values being delivered as a string, not as json. (#16)
+
 ## 1.2.7 - 2020-01-28
 
 ### Bugfix
