@@ -237,6 +237,7 @@ class SettingsController extends Controller
 	{
 		$record->template = CookieConsent::DEFAULT_TEMPLATE;
 		$record->headline = CookieConsent::DEFAULT_HEADLINE;
+		$record->description = CookieConsent::DEFAULT_DESCRIPTION;
 		$record->activated = false;
 		$record->cssAssets = true;
 		$record->jsAssets = true;

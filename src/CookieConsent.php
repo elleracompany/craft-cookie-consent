@@ -93,7 +93,7 @@ class CookieConsent extends \craft\base\Plugin
 		[
 			'required' => false,
 			'store_ip' => false,
-			'default' => true,
+			'default' => false,
 			'name' => 'Statistics',
 			'description' => 'Statistic cookies help us understand how visitors interact with websites by collecting and reporting information anonymously.',
 			'cookies' => []

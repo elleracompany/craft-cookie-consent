@@ -5,6 +5,9 @@
 ### Added
 - Option to choose cookie name for the plugins consent (#21)
 
+### Updated
+- Changed default setting to have all groups toggled off (#19)
+
 ## 1.2.8 - 2020-02-11
 
 ### Bugfix
