@@ -31,6 +31,8 @@ class Install extends Migration
 				'templateAsset' => $this->boolean()->notNull()->defaultValue(true),
 				'showCheckboxes' => $this->boolean()->notNull()->defaultValue(true),
 				'showAfterConsent' => $this->boolean()->notNull()->defaultValue(true),
+                'cookieName' => $this->string()->notNull()->defaultValue('cookie-consent'),
+                'acceptAllButton' => $this->boolean()->notNull()->defaultValue(false),
 				'headline' => $this->string(255)->notNull(),
 				'description' => $this->text(),
 				'template' => $this->string()->notNull()

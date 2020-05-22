@@ -36,6 +36,7 @@ class SiteSettings extends ActiveRecord
 			'jsAssets',
 			'showCheckboxes',
 			'showAfterConsent',
+            'cookieName',
 			'headline',
 			'description',
 			'template',
@@ -55,9 +56,9 @@ class SiteSettings extends ActiveRecord
 	public function rules()
 	{
 		return [
-			[['headline', 'description', 'template'], 'string'],
+			[['headline', 'description', 'template', 'cookieName'], 'string'],
 			[['headline', 'description', 'template'], 'required'],
-			[['activated', 'cssAssets', 'jsAssets', 'templateAsset', 'showCheckboxes', 'showAfterConsent'], 'boolean'],
+			[['activated', 'cssAssets', 'jsAssets', 'templateAsset', 'showCheckboxes', 'showAfterConsent', 'acceptAllButton'], 'boolean'],
 			[['activated', 'headline', 'description', 'template', 'templateAsset', 'showCheckboxes', 'showAfterConsent'], 'validatePermission'],
 			['activated', 'default', 'value' => 0],
 			[['cssAssets', 'jsAssets', 'templateAsset'], 'default', 'value' => 1],
@@ -76,6 +77,8 @@ class SiteSettings extends ActiveRecord
 			'showCheckboxes' => Craft::t('cookie-consent', 'Show Checkboxes'),
 			'showAfterConsent' => Craft::t('cookie-consent', 'Show after Consent'),
 			'headline' => Craft::t('cookie-consent', 'Headline'),
+            'cookieName' => Craft::t('cookie-consent', 'Name of the consent cookie'),
+            'acceptAllButton' => Craft::t('cookie-consent', 'Add "Accept All" button'),
 			'description' => Craft::t('cookie-consent', 'Description'),
 			'template' => Craft::t('cookie-consent', 'Template')
 		];
@@ -89,6 +92,8 @@ class SiteSettings extends ActiveRecord
 			'description' => 'cookie-consent:site-settings:content',
 			'showCheckboxes' => 'cookie-consent:site-settings:content',
 			'showAfterConsent' => 'cookie-consent:site-settings:content',
+            'cookieName' => 'cookie-consent:site-settings:content',
+            'acceptAllButton' => 'cookie-consent:site-settings:content',
 			'template' => 'cookie-consent:site-settings:template',
 			'templateAsset' => 'cookie-consent:site-settings:template'
 		];

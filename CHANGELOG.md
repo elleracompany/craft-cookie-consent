@@ -1,5 +1,9 @@
 # Release Notes for Cookie Consent
 
+## 1.3.0 - 2020-05-22
+
+### Added
+- todo
 ## 1.2.8 - 2020-02-11
 
 ### Bugfix
