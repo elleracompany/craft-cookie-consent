@@ -1,43 +1,65 @@
 {% extends "cookie-consent/settings/_layout.twig" %}
 {% block content %}
     <div class="main">
-    <div class="toolbar">
-        <div class="elements"><div class="tableview">
-                <table class="data fullwidth">
-                    <thead>
-                    <tr>
-                        <th scope="col" data-attribute="uid">{{ "UID"|t('cookie-consent') }}</th>
-                        <th scope="col" data-attribute="ip">{{ "IP"|t('cookie-consent') }}</th>
-                        {% for cookieGroup in model.cookieGroups %}
-                            <th scope="col" data-attribute="cookie-{{ cookieGroup.slug }}">{{ cookieGroup.name }}</th>
-                        {% endfor %}
-                        <th scope="col" data-attribute="cookieName">{{ "Cookie Name"|t('cookie-consent') }}</th>
-                        <th scope="col" data-attribute="date">{{ "Date"|t('cookie-consent') }}</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {%  if consents is empty %}
+        <div class="toolbar">
+            <p>Prev: {{ pagination.previous }}</p>
+            <p>Next: {{ pagination.next }}</p>
+            <div class="elements"><div class="tableview">
+                    <table class="data fullwidth">
+                        <thead>
                         <tr>
-                            <td colspan="7">{{ "No consents yet :("|t('cookie-consent') }}</td>
+                            <th scope="col" data-attribute="uid">{{ "UID"|t('cookie-consent') }}</th>
+                            <th scope="col" data-attribute="ip">{{ "IP"|t('cookie-consent') }}</th>
+                            {% for cookieGroup in model.cookieGroups %}
+                                <th scope="col" data-attribute="cookie-{{ cookieGroup.slug }}">{{ cookieGroup.name }}</th>
+                            {% endfor %}
+                            <th scope="col" data-attribute="cookieName">{{ "Cookie Name"|t('cookie-consent') }}</th>
+                            <th scope="col" data-attribute="date">{{ "Date"|t('cookie-consent') }}</th>
                         </tr>
-                    {% else %}
-                        {% for consent in consents %}
-                            {% set visitorConsent = consent.data|json_decode %}
+                        </thead>
+                        <tbody>
+                        {%  if consents is empty %}
                             <tr>
-                                <td data-title="uid"><span title="{{ consent.uid }}">{{ consent.uid|slice(0, 8) }}</span></td>
-                                <td data-title="uid">{{ consent.ip == null ? '<span class="status red"></span>' : '<span class="status green"></span>' }}</td>
-                                {% for cookieGroup in model.cookieGroups %}
-                                    <td data-title="cookie-{{ cookieGroup.slug }}">{% if attribute(visitorConsent, cookieGroup.slug) %}<span class="status green"></span>{% else %}<span class="status red"></span>{% endif %}</td>
-                                {% endfor %}
-                                <td data-title="CookieName"><span title="{{ consent.cookieName }}">{{ consent.cookieName }}</span></td>
-                                <td data-title="Date"><span title="{{ consent.dateUpdated|time('long') }}">{{ consent.dateUpdated|date('short') }}</span></td>
+                                <td colspan="7">{{ "No consents yet :("|t('cookie-consent') }}</td>
                             </tr>
-                        {% endfor %}
-                    {% endif %}
-                    </tbody>
-                </table>
+                        {% else %}
+                            {% for consent in consents %}
+                                {% set visitorConsent = consent.data|json_decode %}
+                                <tr>
+                                    <td data-title="uid"><span title="{{ consent.uid }}">{{ consent.uid|slice(0, 8) }}</span></td>
+                                    <td data-title="uid">{{ consent.ip == null ? '<span class="status red"></span>' : '<span class="status green"></span>' }}</td>
+                                    {% for cookieGroup in model.cookieGroups %}
+                                        <td data-title="cookie-{{ cookieGroup.slug }}">{% if attribute(visitorConsent, cookieGroup.slug) %}<span class="status green"></span>{% else %}<span class="status red"></span>{% endif %}</td>
+                                    {% endfor %}
+                                    <td data-title="CookieName"><span title="{{ consent.cookieName }}">{{ consent.cookieName }}</span></td>
+                                    <td data-title="Date"><span title="{{ consent.dateUpdated|time('long') }}">{{ consent.dateUpdated|date('short') }}</span></td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
+
+            <div id="footer">
+                <div id="count-container" class="light">
+                    <div class="flex pagination">
+                        {% if pagination.previous is not null %}
+                            <a href="{{ pagination.previous }}" class="page-link" data-icon="leftangle"> </a>
+                        {% endif %}
+                        {% if pagination.next is not null %}
+                            <a href="{{ pagination.next }}" class="page-link" data-icon="rightangle"> </a>
+                        {% endif %}
+                        <div class="page-info">{{ pagination.from }}-{{ pagination.to }} of {{ pagination.total }} elements</div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
+
+{% endblock %}
+
+{% block actionButton %}
 
 {% endblock %}

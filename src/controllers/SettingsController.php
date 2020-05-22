@@ -58,12 +58,16 @@ class SettingsController extends Controller
 	 * Render the view for consent entries
 	 *
 	 * @param string|null       $siteHandle
+     * @param integer|null      $page
 	 *
 	 * @return \yii\web\Response
 	 * @throws \yii\web\ForbiddenHttpException
 	 */
-	public function actionConsent(string $siteHandle = null)
+	public function actionConsent(string $siteHandle = null, $page = null)
 	{
+	    $pageSize = 20;
+	    if($page == null) $page = 1;
+
 		$this->requirePermission('cookie-consent:site-settings:view-consents');
 
 		Craft::$app->getRequest();
@@ -72,12 +76,47 @@ class SettingsController extends Controller
 		];
 		$this->_prepVariables($variables);
 		$variables['currentPage'] = 'consent';
-		$variables['consents'] = Consent::find()->where(['site_id' => $variables['currentSiteId']])->orderBy('dateUpdated DESC')->all();
+		$variables['consents'] = Consent::find()->where(['site_id' => $variables['currentSiteId']])->orderBy('dateUpdated DESC')->limit($pageSize)->offset(($page-1)*$pageSize)->all();
+		$total = Consent::find()->where(['site_id' => $variables['currentSiteId']])->count();
+		$count = count($variables['consents']);
+		$from = (($page-1)*$pageSize)+1;
+		$to = (($page-1)*$pageSize)+$count;
+		$variables['pagination'] = [
+		    'pageSize' => $pageSize,
+            'currentPage' => $page,
+            'from' => $from,
+            'to' => $to,
+            'previous' => $from > 1 ? "/admin/cookie-consent/site/{$siteHandle}/consent/".($page-1) : null,
+            'next' => $to < $total ? "/admin/cookie-consent/site/{$siteHandle}/consent/".($page+1) : null,
+            'current' => $count,
+            'total' => $total
+        ];
 		$variables['title'] = Craft::t('cookie-consent', 'Consents');
 		$this->_prepSiteSettingsPermissionVariables($variables);
 
 		return $this->renderTemplate('cookie-consent/settings/consent', $variables);
 	}
+
+    /**
+     * Render the view for consent retention
+     *
+     * @param string|null       $siteHandle
+     *
+     * @return \yii\web\Response
+     */
+    public function actionRetention(string $siteHandle = null)
+    {
+        Craft::$app->getRequest();
+        $variables = [
+            'currentSiteHandle' => $siteHandle,
+        ];
+        $this->_prepVariables($variables);
+        $variables['currentPage'] = 'retention';
+        $variables['title'] = Craft::t('cookie-consent', 'Consent Retention');
+        $this->_prepSiteSettingsPermissionVariables($variables);
+
+        return $this->renderTemplate('cookie-consent/settings/retention', $variables);
+    }
 
 	/**
 	 * Save site settings
