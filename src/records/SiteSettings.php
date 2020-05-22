@@ -55,6 +55,9 @@ class SiteSettings extends ActiveRecord
 		return CookieConsent::SITE_SETTINGS_TABLE;
 	}
 
+    /**
+     * @inheritDoc
+     */
 	public function rules()
 	{
 		return [
@@ -68,6 +71,9 @@ class SiteSettings extends ActiveRecord
 		];
 	}
 
+    /**
+     * @inheritDoc
+     */
 	public function attributeLabels()
 	{
 		return [
@@ -86,6 +92,9 @@ class SiteSettings extends ActiveRecord
 		];
 	}
 
+    /**
+     * @return array
+     */
 	public function permissions()
 	{
 		return [
@@ -100,6 +109,11 @@ class SiteSettings extends ActiveRecord
 			'templateAsset' => 'cookie-consent:site-settings:template'
 		];
 	}
+
+    /**
+     * @param $attribute
+     * @param $params
+     */
 	public function validatePermission($attribute, $params)
 	{
 		$attribute_to_permission = $this->permissions();
@@ -108,6 +122,9 @@ class SiteSettings extends ActiveRecord
 		}
 	}
 
+    /**
+     * @return mixed
+     */
 	public function getLastUpdate()
 	{
 		$dates = [];
@@ -140,6 +157,9 @@ class SiteSettings extends ActiveRecord
 		return $this->hasMany(CookieGroup::class, ['site_id' => 'site_id'])->orderBy('id');
 	}
 
+    /**
+     * @return array
+     */
 	public function getRequiredCookieGroups() : array
 	{
 		$required = [];
@@ -147,6 +167,9 @@ class SiteSettings extends ActiveRecord
 		return $required;
 	}
 
+    /**
+     * @return ActiveQueryInterface
+     */
 	public function getSite(): ActiveQueryInterface
 	{
 		return $this->hasOne(Site::class, ['id' => 'site_id']);
