@@ -32,10 +32,13 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     let acceptAllLink = document.getElementById("elc-accept-all-link");
-    if (acceptAllLink.addEventListener) {
-        acceptAllLink.addEventListener("click", submitAllConsent);
-    } else if (form.attachEvent) {
-        acceptAllLink.attachEvent("onclick", submitAllConsent);
+    if(acceptAllLink !== null)
+    {
+        if (acceptAllLink.addEventListener) {
+            acceptAllLink.addEventListener("click", submitAllConsent);
+        } else if (form.attachEvent) {
+            acceptAllLink.attachEvent("onclick", submitAllConsent);
+        }
     }
 
     let tabLink = document.getElementById("elc-tab-link");
