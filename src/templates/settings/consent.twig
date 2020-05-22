@@ -11,6 +11,7 @@
                         {% for cookieGroup in model.cookieGroups %}
                             <th scope="col" data-attribute="cookie-{{ cookieGroup.slug }}">{{ cookieGroup.name }}</th>
                         {% endfor %}
+                        <th scope="col" data-attribute="cookieName">{{ "Cookie Name"|t('cookie-consent') }}</th>
                         <th scope="col" data-attribute="date">{{ "Date"|t('cookie-consent') }}</th>
                     </tr>
                     </thead>
@@ -28,6 +29,7 @@
                                 {% for cookieGroup in model.cookieGroups %}
                                     <td data-title="cookie-{{ cookieGroup.slug }}">{% if attribute(visitorConsent, cookieGroup.slug) %}<span class="status green"></span>{% else %}<span class="status red"></span>{% endif %}</td>
                                 {% endfor %}
+                                <td data-title="CookieName"><span title="{{ consent.cookieName }}">{{ consent.cookieName }}</span></td>
                                 <td data-title="Date"><span title="{{ consent.dateUpdated|time('long') }}">{{ consent.dateUpdated|date('short') }}</span></td>
                             </tr>
                         {% endfor %}

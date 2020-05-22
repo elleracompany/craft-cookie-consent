@@ -21,6 +21,7 @@ class ConsentController extends Controller
 	{
 		$save_ip = false;
 		$post = Craft::$app->request->post();
+		/** @var $site  SiteSettings */
 		$site = SiteSettings::find()->where(['site_id' => $post['site_id']])->with('cookieGroups')->one();
 		$consent = [];
 
@@ -34,13 +35,14 @@ class ConsentController extends Controller
 		$consentRecord = new Consent();
 		$consentRecord->site_id = $post['site_id'];
 		$consentRecord->ip = $save_ip ? Craft::$app->request->getUserIP() : null;
+        $consentRecord->cookieName = $site->cookieName;
 		$consentRecord->data = json_encode($consent);
 		$consentRecord->save();
 
 		Craft::$app->response->format = Response::FORMAT_JSON;
 
 		$cookie = new Cookie([
-		    'name' => 'cookie-consent',
+		    'name' => $site->cookieName,
             'value' => json_encode(array_merge(['consent_uid' => $consentRecord->uid],$consent)),
             'expire' => strtotime('+1 year', time())
         ]);

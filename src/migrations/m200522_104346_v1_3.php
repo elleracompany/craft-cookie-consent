@@ -25,6 +25,11 @@ class m200522_104346_v1_3 extends Migration
 			'acceptAllButton',
 			$this->boolean()->notNull()->defaultValue(false)
 		);
+        $this->addColumn(
+            CookieConsent::CONSENT_TABLE,
+            'cookieName',
+            $this->string()->defaultValue('cookie-consent')
+        );
 	}
 	/**
 	 * @inheritdoc

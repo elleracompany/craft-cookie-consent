@@ -17,6 +17,8 @@ use yii\web\NotFoundHttpException;
  * @property boolean	$templateAsset
  * @property boolean	$showCheckboxes
  * @property boolean	$showAfterConsent
+ * @property boolean    $acceptAllButton
+ * @property string     $cookieName
  * @property integer 	$site_id
  * @property string 	$headline
  * @property string 	$description
@@ -60,7 +62,7 @@ class SiteSettings extends ActiveRecord
 			[['headline', 'description', 'template'], 'required'],
 			[['activated', 'cssAssets', 'jsAssets', 'templateAsset', 'showCheckboxes', 'showAfterConsent', 'acceptAllButton'], 'boolean'],
 			[['activated', 'headline', 'description', 'template', 'templateAsset', 'showCheckboxes', 'showAfterConsent'], 'validatePermission'],
-			['activated', 'default', 'value' => 0],
+			[['activated', 'acceptAllButton'], 'default', 'value' => 0],
 			[['cssAssets', 'jsAssets', 'templateAsset'], 'default', 'value' => 1],
 			['site_id', 'integer']
 		];
