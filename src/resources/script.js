@@ -17,11 +17,25 @@ document.addEventListener('DOMContentLoaded', function () {
         hideDetailLink.attachEvent("onclick", toggleExpand);
     }
 
-    let form = document.getElementById("elc-cookie-consent-form");
-    if (form.addEventListener) {
-        form.addEventListener("submit", submitConsent);
+    let saveLink = document.getElementById("elc-save-link");
+    if (saveLink.addEventListener) {
+        saveLink.addEventListener("click", submitConsent);
     } else if (form.attachEvent) {
-        form.attachEvent("onsubmit", submitConsent);
+        saveLink.attachEvent("onclick", submitConsent);
+    }
+
+    let acceptLink = document.getElementById("elc-accept-link");
+    if (acceptLink.addEventListener) {
+        acceptLink.addEventListener("click", submitConsent);
+    } else if (acceptLink.attachEvent) {
+        acceptLink.attachEvent("onclick", submitConsent);
+    }
+
+    let acceptAllLink = document.getElementById("elc-accept-all-link");
+    if (acceptAllLink.addEventListener) {
+        acceptAllLink.addEventListener("click", submitAllConsent);
+    } else if (form.attachEvent) {
+        acceptAllLink.attachEvent("onclick", submitAllConsent);
     }
 
     let tabLink = document.getElementById("elc-tab-link");
@@ -49,6 +63,39 @@ function submitConsent(event) {
     xhr.open('POST', form.dataset.url);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.send(data);
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            if (xhr.status !== 200) console.log('Error: ' + xhr.status);
+        }
+    }
+}
+
+function submitAllConsent(event) {
+
+    event.preventDefault();
+
+    let form = document.querySelector('#elc-cookie-consent-form');
+
+    for (let i = 0; i < form.elements.length; i++ ) {
+
+        if (form.elements[i].type == 'checkbox') {
+
+            if (form.elements[i].checked == false) {
+                form.elements[i].checked = true;
+            }
+        }
+    }
+
+    let data = serialize(form);
+    document.getElementById("elc-cookie-consent").classList.toggle('elc-hidden');
+    let cookieTab = document.getElementById("elc-cookie-tab");
+    if(typeof cookieTab !== 'undefined' && cookieTab !== null) document.getElementById("elc-cookie-tab").classList.toggle('elc-hidden');
+
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', form.dataset.url);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.send(data.concat('&acceptAll=true'));
 
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
@@ -88,7 +135,7 @@ var serialize = function (form) {
         var field = form.elements[i];
 
         // Don't serialize fields without a name, submits, buttons, file and reset inputs, and disabled fields
-        if (!field.name || field.disabled || field.type === 'file' || field.type === 'reset' || field.type === 'submit' || field.type === 'button') continue;
+        if (!field.name || field.disabled || field.type === 'file' || field.type === 'reset' || field.type === 'button') continue;
 
         // If a multi-select, get all selections
         if (field.type === 'select-multiple') {

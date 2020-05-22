@@ -160,6 +160,11 @@ class Variables extends Component
 		return (bool) $this->settings->showAfterConsent;
 	}
 
+    public function showAcceptAllButton()
+    {
+        return (bool) $this->settings->acceptAllButton;
+    }
+
 	public function getUid()
 	{
 		return $this->consent_string->consent_uid;
