@@ -4,6 +4,7 @@
 
 ### Added
 - Option to choose cookie name for the plugins consent (#21)
+- Option to add a "Accept All" button (#19)
 
 ### Updated
 - Changed default setting to have all groups toggled off (#19)
