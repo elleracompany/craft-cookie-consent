@@ -3,7 +3,8 @@
 ## 1.3.0 - 2020-05-22
 
 ### Added
-- todo
+- Option to choose cookie name for the plugins consent (#21)
+
 ## 1.2.8 - 2020-02-11
 
 ### Bugfix
