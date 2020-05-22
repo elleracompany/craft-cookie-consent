@@ -20,7 +20,6 @@
             <li><a href="{{ cpUrl() }}/cookie-consent/site/{{ currentSiteHandle }}/consent"{{ currentPage == 'consent' ? ' class="sel"' : ''}}>{{ "View consents"|t('cookie-consent') }}</a></li>
             <li class="heading"><span>{{ "Settings"|t('cookie-consent') }}</span></li>
             <li><a href="{{ cpUrl() }}/cookie-consent/site/{{ currentSiteHandle }}"{{ currentPage == 'site' ? ' class="sel"' : ''}}>{{ "Site Settings"|t('cookie-consent') }}</a></li>
-            <li><a href="{{ cpUrl() }}/cookie-consent/site/{{ currentSiteHandle }}/retention"{{ currentPage == 'retention' ? ' class="sel"' : ''}}>{{ "Consent Retention"|t('cookie-consent') }}</a></li>
             {% if canGroups %}
                 <li class="heading"><span>{{ "Cookie Groups"|t('cookie-consent') }}</span></li>
                 {% for cookieGroup in model.cookieGroups %}

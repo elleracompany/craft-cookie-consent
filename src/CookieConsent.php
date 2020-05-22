@@ -11,7 +11,7 @@ use craft\helpers\UrlHelper;
 use craft\web\twig\variables\CraftVariable;
 use craft\services\UserPermissions;
 use craft\events\RegisterUserPermissionsEvent;
-use craft\errors\SiteNotFoundException;
+use craft\console\Application as ConsoleApplication;
 
 /**
  * Class Plugin
@@ -147,6 +147,11 @@ class CookieConsent extends \craft\base\Plugin
 			'cookieConsent' => Variables::class,
 		]);
 
+        // Add in our console commands
+        if (Craft::$app instanceof ConsoleApplication) {
+            $this->controllerNamespace = 'elleracompany\cookieconsent\console';
+        }
+
         Craft::info(
             Craft::t(
                 'cookie-consent',
@@ -247,7 +252,6 @@ class CookieConsent extends \craft\base\Plugin
 			'cookie-consent/site/<siteHandle:{handle}>'							=> 	'cookie-consent/settings/edit-site-settings',
 			'cookie-consent/site/<siteHandle:{handle}>/consent/<page:\d+>'		=> 	'cookie-consent/settings/consent',
             'cookie-consent/site/<siteHandle:{handle}>/consent'		            => 	'cookie-consent/settings/consent',
-            'cookie-consent/site/<siteHandle:{handle}>/retention'				=> 	'cookie-consent/settings/retention',
 			'cookie-consent/group/<siteHandle:{handle}>'						=> 	'cookie-consent/settings/edit-cookie-group',
 			'cookie-consent/group/<siteHandle:{handle}>/<groupId:\d+>'			=> 	'cookie-consent/settings/edit-cookie-group',
 		];
