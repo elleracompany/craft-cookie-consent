@@ -56,6 +56,26 @@
     vertical-align: top;
     display: inline-block;
 }
+#elc-cookie-consent .elc-secondary-button-link {
+    background-color: #ffffff;
+    border-color: #0e3a5e;
+    color: #0e3a5e;
+    border-width: 1px;
+    cursor: pointer;
+    justify-content: center;
+    padding: calc(.375em - 1px) .75em;
+    text-align: center;
+    white-space: nowrap;
+    border-radius: 3px;
+    box-shadow: none;
+    font-size: 1rem;
+    height: 2.25em;
+    line-height: 1.5;
+    position: relative;
+    vertical-align: top;
+    display: inline-block;
+}
+
 #elc-cookie-consent .elc-text-link {
     text-transform: uppercase;
     color: #0e3a5e;

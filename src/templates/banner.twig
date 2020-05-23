@@ -49,8 +49,13 @@
             <a href="#" id="elc-detail-link" class="elc-text-link">{{ "Details"|t('cookie-consent') }}</a>
             <a href="#" id="elc-hide-detail-link" class="elc-text-link">{{ "Hide Details"|t('cookie-consent') }}</a>
 
-            <input id="elc-accept-link" class="elc-button-link" type="submit" value="{{ "OK"|t('cookie-consent') }}">
-            <input id="elc-save-link" class="elc-button-link" type="submit" value="{{ "Save"|t('cookie-consent') }}">
+            <input id="elc-save-link" class="{% if craft.cookieConsent.showAcceptAllButton == 1 %}elc-secondary-button-link{% else %}elc-button-link{% endif %}" type="submit" value="{{ "Save"|t('cookie-consent') }}">
+            {% if craft.cookieConsent.showAcceptAllButton == 1 %}
+                <input id="elc-accept-link" class="elc-secondary-button-link" type="submit" value="{{ "Save"|t('cookie-consent') }}">
+                <input id="elc-accept-all-link" class="elc-button-link" type="submit" value="{{ "Accept All"|t('cookie-consent') }}">
+            {% else %}
+                <input id="elc-accept-link" class="elc-button-link" type="submit" value="{{ "OK"|t('cookie-consent') }}">
+            {% endif %}
         </div>
 
     </form>

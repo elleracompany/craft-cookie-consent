@@ -40,14 +40,14 @@ class Variables extends Component
         if($consent)
         {
             $cookie = new Cookie([
-                'name' => 'cookie-consent',
+                'name' => $this->settings->cookieName,
                 'value' => $consent,
                 'expire' => strtotime('+1 year', time())
             ]);
 
             Craft::$app->response->cookies->add($cookie);
         }
-		else $consent = Craft::$app->request->cookies->get('cookie-consent');
+		else $consent = Craft::$app->request->cookies->get($this->settings->cookieName);
 
 		$this->consent = $consent !== null;
 		$this->consent_string = json_decode($consent);
@@ -159,6 +159,11 @@ class Variables extends Component
 	{
 		return (bool) $this->settings->showAfterConsent;
 	}
+
+    public function showAcceptAllButton()
+    {
+        return (bool) $this->settings->acceptAllButton;
+    }
 
 	public function getUid()
 	{

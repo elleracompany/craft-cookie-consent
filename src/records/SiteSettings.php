@@ -17,6 +17,8 @@ use yii\web\NotFoundHttpException;
  * @property boolean	$templateAsset
  * @property boolean	$showCheckboxes
  * @property boolean	$showAfterConsent
+ * @property boolean    $acceptAllButton
+ * @property string     $cookieName
  * @property integer 	$site_id
  * @property string 	$headline
  * @property string 	$description
@@ -36,6 +38,7 @@ class SiteSettings extends ActiveRecord
 			'jsAssets',
 			'showCheckboxes',
 			'showAfterConsent',
+            'cookieName',
 			'headline',
 			'description',
 			'template',
@@ -52,19 +55,25 @@ class SiteSettings extends ActiveRecord
 		return CookieConsent::SITE_SETTINGS_TABLE;
 	}
 
+    /**
+     * @inheritDoc
+     */
 	public function rules()
 	{
 		return [
-			[['headline', 'description', 'template'], 'string'],
+			[['headline', 'description', 'template', 'cookieName'], 'string'],
 			[['headline', 'description', 'template'], 'required'],
-			[['activated', 'cssAssets', 'jsAssets', 'templateAsset', 'showCheckboxes', 'showAfterConsent'], 'boolean'],
+			[['activated', 'cssAssets', 'jsAssets', 'templateAsset', 'showCheckboxes', 'showAfterConsent', 'acceptAllButton'], 'boolean'],
 			[['activated', 'headline', 'description', 'template', 'templateAsset', 'showCheckboxes', 'showAfterConsent'], 'validatePermission'],
-			['activated', 'default', 'value' => 0],
+			[['activated', 'acceptAllButton'], 'default', 'value' => 0],
 			[['cssAssets', 'jsAssets', 'templateAsset'], 'default', 'value' => 1],
 			['site_id', 'integer']
 		];
 	}
 
+    /**
+     * @inheritDoc
+     */
 	public function attributeLabels()
 	{
 		return [
@@ -76,11 +85,16 @@ class SiteSettings extends ActiveRecord
 			'showCheckboxes' => Craft::t('cookie-consent', 'Show Checkboxes'),
 			'showAfterConsent' => Craft::t('cookie-consent', 'Show after Consent'),
 			'headline' => Craft::t('cookie-consent', 'Headline'),
+            'cookieName' => Craft::t('cookie-consent', 'Name of the consent cookie'),
+            'acceptAllButton' => Craft::t('cookie-consent', 'Add "Accept All" button'),
 			'description' => Craft::t('cookie-consent', 'Description'),
 			'template' => Craft::t('cookie-consent', 'Template')
 		];
 	}
 
+    /**
+     * @return array
+     */
 	public function permissions()
 	{
 		return [
@@ -89,10 +103,17 @@ class SiteSettings extends ActiveRecord
 			'description' => 'cookie-consent:site-settings:content',
 			'showCheckboxes' => 'cookie-consent:site-settings:content',
 			'showAfterConsent' => 'cookie-consent:site-settings:content',
+            'cookieName' => 'cookie-consent:site-settings:content',
+            'acceptAllButton' => 'cookie-consent:site-settings:content',
 			'template' => 'cookie-consent:site-settings:template',
 			'templateAsset' => 'cookie-consent:site-settings:template'
 		];
 	}
+
+    /**
+     * @param $attribute
+     * @param $params
+     */
 	public function validatePermission($attribute, $params)
 	{
 		$attribute_to_permission = $this->permissions();
@@ -101,6 +122,9 @@ class SiteSettings extends ActiveRecord
 		}
 	}
 
+    /**
+     * @return mixed
+     */
 	public function getLastUpdate()
 	{
 		$dates = [];
@@ -133,6 +157,9 @@ class SiteSettings extends ActiveRecord
 		return $this->hasMany(CookieGroup::class, ['site_id' => 'site_id'])->orderBy('id');
 	}
 
+    /**
+     * @return array
+     */
 	public function getRequiredCookieGroups() : array
 	{
 		$required = [];
@@ -140,6 +167,9 @@ class SiteSettings extends ActiveRecord
 		return $required;
 	}
 
+    /**
+     * @return ActiveQueryInterface
+     */
 	public function getSite(): ActiveQueryInterface
 	{
 		return $this->hasOne(Site::class, ['id' => 'site_id']);

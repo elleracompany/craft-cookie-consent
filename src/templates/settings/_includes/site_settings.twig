@@ -33,6 +33,15 @@
 }) }}
 
 {{ forms.lightswitchField({
+    label: model.getAttributeLabel('acceptAllButton'),
+    instructions: 'Add an Accept All button that accepts all cookie groups regardless of the checkboxes.'|t('cookie-consent'),
+    name: "acceptAllButton",
+    disabled: not canUpdate,
+    on: model.acceptAllButton,
+    errors: model.getErrors("acceptAllButton"),
+}) }}
+
+{{ forms.lightswitchField({
     label: model.getAttributeLabel('templateAsset'),
     instructions: 'Load template.'|t('cookie-consent'),
     name: "templateAsset",
@@ -49,6 +58,16 @@
     disabled: not canChangeTemplate,
     value: model.template,
     errors: model.getErrors("template"),
+}) }}
+
+{{ forms.textField({
+    label: model.getAttributeLabel('cookieName'),
+    instructions: 'The name of the cookie stored in visitors browsers when giving consent.'|t('cookie-consent'),
+    id: "cookieName",
+    name: "cookieName",
+    disabled: not canUpdate,
+    value: model.cookieName,
+    errors: model.getErrors("cookieName"),
 }) }}
 
 {{ forms.textField({

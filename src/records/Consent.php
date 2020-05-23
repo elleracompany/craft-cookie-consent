@@ -11,6 +11,7 @@ use elleracompany\cookieconsent\CookieConsent;
  *
  * @property integer 	$site_id
  * @property string 	$ip
+ * @property string     $cookieName
  * @property string 	$data
  */
 class Consent extends ActiveRecord
@@ -23,6 +24,7 @@ class Consent extends ActiveRecord
 		$fields = [
 			'site_id',
 			'ip',
+            'cookieName',
 			'data',
 		];
 		return array_merge($fields, parent::fields());
@@ -39,7 +41,7 @@ class Consent extends ActiveRecord
 	public function rules()
 	{
 		return [
-			[['data'], 'string'],
+			[['data', 'cookieName'], 'string'],
 			[['site_id', 'data'], 'required'],
 			['site_id', 'integer']
 		];

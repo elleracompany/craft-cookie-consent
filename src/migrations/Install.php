@@ -31,6 +31,8 @@ class Install extends Migration
 				'templateAsset' => $this->boolean()->notNull()->defaultValue(true),
 				'showCheckboxes' => $this->boolean()->notNull()->defaultValue(true),
 				'showAfterConsent' => $this->boolean()->notNull()->defaultValue(true),
+                'cookieName' => $this->string()->notNull()->defaultValue('cookie-consent'),
+                'acceptAllButton' => $this->boolean()->notNull()->defaultValue(false),
 				'headline' => $this->string(255)->notNull(),
 				'description' => $this->text(),
 				'template' => $this->string()->notNull()
@@ -87,6 +89,7 @@ class Install extends Migration
 				'site_id' => $this->integer(11),
 				'ip' => $this->string(15)->defaultValue(null),
 				'data' => $this->text(),
+                'cookieName' => $this->string()->defaultValue('cookie-consent'),
 				'dateCreated' => $this->dateTime()->notNull(),
 				'dateUpdated' => $this->dateTime()->notNull(),
 			]

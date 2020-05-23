@@ -1,5 +1,20 @@
 # Release Notes for Cookie Consent
 
+## 1.3.0 - 2020-05-23
+
+> {warning} Please backup your database before updating. Also backup your database before attempting to use the console command for the fist time.
+
+> {info} If you've created custom templates for the banner you might have to update them for this version to work.
+
+### Added
+- Added option to add a "Accept All" button (#19)
+- Added console command for automatically remove old consents (#20)
+- Added option to choose cookie name for the plugins consent (#21)
+- Added crude pagination for consent overview
+
+### Updated
+- Changed default setting to have all optional groups toggled off (#19)
+
 ## 1.2.8 - 2020-02-11
 
 ### Bugfix
