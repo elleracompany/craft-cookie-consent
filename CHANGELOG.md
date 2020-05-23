@@ -1,13 +1,15 @@
 # Release Notes for Cookie Consent
 
-## 1.3.0 - 2020-05-22
+## 1.3.0 - 2020-05-23
 
 ### Added
-- Option to choose cookie name for the plugins consent (#21)
-- Option to add a "Accept All" button (#19)
+- Added option to add a "Accept All" button (#19)
+- Added console command for automatically remove old consents (#20)
+- Added option to choose cookie name for the plugins consent (#21)
+- Added crude pagination for consent overview
 
 ### Updated
-- Changed default setting to have all groups toggled off (#19)
+- Changed default setting to have all optional groups toggled off (#19)
 
 ## 1.2.8 - 2020-02-11
 
