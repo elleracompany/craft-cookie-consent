@@ -75,5 +75,25 @@ ga('send', 'pageview');
 {% endif %}
 ```
 
+## Cleaning up old consents
+You can use a console command to clear out old consents from the database.
+```bash
+./craft cookie-consent/retention/clear
+```
+
+This command has three optional parameters:
+
+| Parameter | Alternative | Default | Type | Description |
+|---|---|---|---|---|
+| -d # | --days # | 365 | Integer | Sets number of days to keep records |
+| -s # | --sid # | null | Integer | Pass a site ID to only clear consents from that site |
+| -s <handle> | --handle <handle> | null | String | Pass a site handle to only clear consents from that site |
+
+**note:** you can only pass *sid* or *handle* - not both. If a site is not specified, consents will be deleted from all sites.
+
+Example: Delete all consents older than 2 years from site with ID 1
+```bash
+./craft cookie-consent/retention/clear -sid 1 -d 730
+```
 ## Acknowledgements
 Plugin Icon designed by Trinh Ho from Flaticon

@@ -82,10 +82,10 @@ class RetentionController extends Controller
      */
     public function actionClear()
     {
-        $this->stdout("Clearing consents older than {$this->days} days ", Console::FG_YELLOW);
-
         // Check if the days parameter if set and valid
         if(!isset($this->days) || !is_numeric($this->days)) $this->days = self::DEFAULT_DAYS;
+
+        $this->stdout("Clearing consents older than {$this->days} days ", Console::FG_YELLOW);
 
         // Create the query
         $query = Consent::find();
