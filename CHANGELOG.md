@@ -1,5 +1,10 @@
 # Release Notes for Cookie Consent
 
+## 1.3.1 - 2020-05-24
+
+### Bugfix
+- Updated schema version to automatically apply migration. (#25)
+
 ## 1.3.0 - 2020-05-23
 
 > {warning} Please backup your database before updating. Also backup your database before attempting to use the console command for the fist time.
