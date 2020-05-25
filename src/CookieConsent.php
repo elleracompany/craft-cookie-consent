@@ -129,7 +129,7 @@ class CookieConsent extends \craft\base\Plugin
 	 *
 	 * @var string
 	 */
-	public $schemaVersion = '1.0.0';
+	public $schemaVersion = '1.3.0';
 
 	// Public Methods
 	// =========================================================================
