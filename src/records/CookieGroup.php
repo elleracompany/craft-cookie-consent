@@ -22,6 +22,7 @@ use yii\web\NotFoundHttpException;
  * @property string 	$name
  * @property string 	$description
  * @property string		$slug
+ * @property integer	$order
  */
 class CookieGroup extends ActiveRecord
 {
@@ -58,7 +59,8 @@ class CookieGroup extends ActiveRecord
 			'cookies',
 			'store_ip',
 			'description',
-			'site_id'
+			'site_id',
+            'order'
 		];
 		return array_merge($fields, parent::fields());
 	}
@@ -74,7 +76,8 @@ class CookieGroup extends ActiveRecord
 			'cookies' => Craft::t('cookie-consent', 'Cookies'),
 			'store_ip' => Craft::t('cookie-consent', 'Store IP'),
 			'description' => Craft::t('cookie-consent', 'Description'),
-			'site_id' => Craft::t('cookie-consent', 'Site ID')
+			'site_id' => Craft::t('cookie-consent', 'Site ID'),
+            'order' => Craft::t('cookie-consent', 'Order')
 		];
 	}
 
@@ -92,7 +95,8 @@ class CookieGroup extends ActiveRecord
 			[['name', 'slug', 'description', 'cookies'], 'string'],
 			[['site_id', 'description', 'name'], 'required'],
 			[['required', 'store_ip', 'default'], 'boolean'],
-			[['required', 'store_ip', 'default'], 'default', 'value' => 0],
+			[['required', 'store_ip', 'default', 'order'], 'default', 'value' => 0],
+            [['order'], 'integer', 'min' => 0, 'max' => 100],
 			['site_id', 'integer']
 		];
 	}

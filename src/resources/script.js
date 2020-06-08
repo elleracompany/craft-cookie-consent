@@ -119,6 +119,9 @@ function toggleTab(event)
     event.preventDefault();
     document.getElementById("elc-cookie-consent").classList.toggle('elc-hidden');
     document.getElementById("elc-cookie-tab").classList.toggle('elc-hidden');
+
+    document.getElementById("elc-cookie-consent").classList.add('elc-fullwidth');
+    document.getElementById("elc-cookie-consent").classList.remove('elc-small');
 }
 
 /*!

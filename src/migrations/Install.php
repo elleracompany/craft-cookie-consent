@@ -69,6 +69,7 @@ class Install extends Migration
 				'site_id' => $this->integer(11),
 				'dateCreated' => $this->dateTime()->notNull(),
 				'dateUpdated' => $this->dateTime()->notNull(),
+                'order' => $this->integer()
 			]
 		);
 		$this->addForeignKey(

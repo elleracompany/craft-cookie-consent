@@ -60,6 +60,16 @@
     errors: group.getErrors("description"),
 }) }}
 
+{{ forms.textField({
+    id: "order",
+    label: group.getAttributeLabel('order'),
+    instructions: 'Use a number between 0 and 100 to set the order of the cookie groups. Groups are ordered ascending.'|t('cookie-consent'),
+    name: "order",
+    disabled: disabled,
+    value: group.order,
+    errors: group.getErrors("order"),
+}) }}
+
 {% if not disabled %}
 {{ forms.editableTable({
     id: 'cookies',
