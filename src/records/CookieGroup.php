@@ -96,7 +96,7 @@ class CookieGroup extends ActiveRecord
 			[['site_id', 'description', 'name'], 'required'],
 			[['required', 'store_ip', 'default'], 'boolean'],
 			[['required', 'store_ip', 'default', 'order'], 'default', 'value' => 0],
-            [['order', 'integer', 'min' => 0, 'max' => 100]],
+            [['order'], 'integer', 'min' => 0, 'max' => 100],
 			['site_id', 'integer']
 		];
 	}
