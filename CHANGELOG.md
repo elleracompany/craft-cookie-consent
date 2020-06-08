@@ -4,6 +4,7 @@
 
 ### Enhancement
 - Added order field for cookie groups (#28)
+- Opening expanded cookie banner when revisiting consent (#24)
 
 ## 1.3.2 - 2020-06-08
 
