@@ -1,5 +1,10 @@
 # Release Notes for Cookie Consent
 
+## 1.4.0 - 2020-06-08
+
+### Enhancement
+- 
+
 ## 1.3.2 - 2020-06-08
 
 ### Bugfix
