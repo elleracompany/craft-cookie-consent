@@ -154,7 +154,7 @@ class SiteSettings extends ActiveRecord
 	 */
 	public function getCookieGroups(): ActiveQueryInterface
 	{
-		return $this->hasMany(CookieGroup::class, ['site_id' => 'site_id'])->orderBy('id');
+		return $this->hasMany(CookieGroup::class, ['site_id' => 'site_id'])->orderBy('order, id');
 	}
 
     /**
