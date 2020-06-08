@@ -1,5 +1,10 @@
 # Release Notes for Cookie Consent
 
+## 1.3.2 - 2020-06-08
+
+### Bugfix
+- Fixed hardcoded cpTrigger in consent view pagination (#31)
+
 ## 1.3.1 - 2020-05-24
 
 ### Bugfix

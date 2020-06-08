@@ -79,6 +79,9 @@ class SettingsController extends Controller
 		$variables['consents'] = Consent::find()->where(['site_id' => $variables['currentSiteId']])->orderBy('dateUpdated DESC')->limit($pageSize)->offset(($page-1)*$pageSize)->all();
 		$total = Consent::find()->where(['site_id' => $variables['currentSiteId']])->count();
 		$count = count($variables['consents']);
+
+		$cpTrigger = Craft::$app->config->general->cpTrigger;
+
 		$from = (($page-1)*$pageSize)+1;
 		$to = (($page-1)*$pageSize)+$count;
 		$variables['pagination'] = [
@@ -86,11 +89,12 @@ class SettingsController extends Controller
             'currentPage' => $page,
             'from' => $from,
             'to' => $to,
-            'previous' => $from > 1 ? "/admin/cookie-consent/site/{$siteHandle}/consent/".($page-1) : null,
-            'next' => $to < $total ? "/admin/cookie-consent/site/{$siteHandle}/consent/".($page+1) : null,
+            'previous' => $from > 1 ? "/{$cpTrigger}/cookie-consent/site/{$siteHandle}/consent/".($page-1) : null,
+            'next' => $to < $total ? "/{$cpTrigger}/cookie-consent/site/{$siteHandle}/consent/".($page+1) : null,
             'current' => $count,
             'total' => $total
         ];
+
 		$variables['title'] = Craft::t('cookie-consent', 'Consents');
 		$this->_prepSiteSettingsPermissionVariables($variables);
 
