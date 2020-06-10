@@ -27,7 +27,7 @@
                                     <td data-title="uid"><span title="{{ consent.uid }}">{{ consent.uid|slice(0, 8) }}</span></td>
                                     <td data-title="uid">{{ consent.ip == null ? '<span class="status red"></span>' : '<span class="status green"></span>' }}</td>
                                     {% for cookieGroup in model.cookieGroups %}
-                                        <td data-title="cookie-{{ cookieGroup.slug }}">{% if attribute(visitorConsent, cookieGroup.slug) %}<span class="status green"></span>{% else %}<span class="status red"></span>{% endif %}</td>
+                                        <td data-title="cookie-{{ cookieGroup.slug }}">{% if attribute(visitorConsent, cookieGroup.slug) is defined and attribute(visitorConsent, cookieGroup.slug) %}<span class="status green"></span>{% else %}<span class="status red"></span>{% endif %}</td>
                                     {% endfor %}
                                     <td data-title="CookieName"><span title="{{ consent.cookieName }}">{{ consent.cookieName }}</span></td>
                                     <td data-title="Date"><span title="{{ consent.dateUpdated|time('long') }}">{{ consent.dateUpdated|date('short') }}</span></td>

@@ -1,5 +1,10 @@
 # Release Notes for Cookie Consent
 
+## 1.4.1 - 2020-06-10
+
+### Enhancement
+- Fixed a bug in the admin consent view when adding cookie groups after consents have been given (#35)
+
 ## 1.4.0 - 2020-06-08
 
 ### Enhancement
