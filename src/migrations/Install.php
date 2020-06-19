@@ -35,7 +35,9 @@ class Install extends Migration
                 'acceptAllButton' => $this->boolean()->notNull()->defaultValue(false),
 				'headline' => $this->string(255)->notNull(),
 				'description' => $this->text(),
-				'template' => $this->string()->notNull()
+				'template' => $this->string()->notNull(),
+                'refresh' => $this->integer()->notNull()->defaultValue(false),
+                'refresh_time' => $this->integer()->notNull()->defaultValue(500)
 			]
 		);
 		$this->addPrimaryKey(
