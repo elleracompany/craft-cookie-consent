@@ -105,3 +105,36 @@
     on: model.showAfterConsent,
     errors: model.getErrors("showAfterConsent"),
 }) }}
+
+{{ forms.lightswitchField({
+    label: model.getAttributeLabel('showAfterConsent'),
+    instructions: 'Show a small box in the corner for users to update consent settings.'|t('cookie-consent'),
+    name: "showAfterConsent",
+    disabled: not canUpdate,
+    on: model.showAfterConsent,
+    errors: model.getErrors("showAfterConsent"),
+}) }}
+
+<div class="field">
+    <div style="padding-right: 5%; display: inline-block; width: 45%;">
+        {{ forms.lightswitchField({
+            label: model.getAttributeLabel('refresh'),
+            instructions: 'Refresh the site after a user accepts or updates their cookie consent.'|t('cookie-consent'),
+            name: "refresh",
+            disabled: not canUpdate,
+            on: model.refresh,
+            errors: model.getErrors("refresh"),
+        }) }}
+    </div>
+    <div style="display: inline-block; width: 45%;">
+        {{ forms.textField({
+            label: model.getAttributeLabel('refresh_time'),
+            instructions: 'Delay in milliseconds before the refresh.'|t('cookie-consent'),
+            id: "refresh_time",
+            name: "refresh_time",
+            disabled: not canUpdate,
+            value: model.refresh_time,
+            errors: model.getErrors("refresh_time"),
+        }) }}
+    </div>
+</div>

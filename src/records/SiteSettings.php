@@ -18,11 +18,13 @@ use yii\web\NotFoundHttpException;
  * @property boolean	$showCheckboxes
  * @property boolean	$showAfterConsent
  * @property boolean    $acceptAllButton
+ * @property boolean    $refresh
  * @property string     $cookieName
- * @property integer 	$site_id
  * @property string 	$headline
  * @property string 	$description
  * @property string		$template
+ * @property integer 	$site_id
+ * @property integer    $refresh_time
  */
 class SiteSettings extends ActiveRecord
 {
@@ -42,7 +44,10 @@ class SiteSettings extends ActiveRecord
 			'headline',
 			'description',
 			'template',
-			'templateAsset'
+			'templateAsset',
+            'acceptAllButton',
+            'refresh',
+            'refresh_time'
 		];
 		return array_merge($fields, parent::fields());
 	}
@@ -63,11 +68,11 @@ class SiteSettings extends ActiveRecord
 		return [
 			[['headline', 'description', 'template', 'cookieName'], 'string'],
 			[['headline', 'description', 'template'], 'required'],
-			[['activated', 'cssAssets', 'jsAssets', 'templateAsset', 'showCheckboxes', 'showAfterConsent', 'acceptAllButton'], 'boolean'],
+			[['activated', 'cssAssets', 'jsAssets', 'templateAsset', 'showCheckboxes', 'showAfterConsent', 'acceptAllButton', 'refresh'], 'boolean'],
 			[['activated', 'headline', 'description', 'template', 'templateAsset', 'showCheckboxes', 'showAfterConsent'], 'validatePermission'],
-			[['activated', 'acceptAllButton'], 'default', 'value' => 0],
+			[['activated', 'acceptAllButton', 'refresh'], 'default', 'value' => 0],
 			[['cssAssets', 'jsAssets', 'templateAsset'], 'default', 'value' => 1],
-			['site_id', 'integer']
+			[['site_id', 'refresh_time'], 'integer']
 		];
 	}
 
@@ -88,7 +93,9 @@ class SiteSettings extends ActiveRecord
             'cookieName' => Craft::t('cookie-consent', 'Name of the consent cookie'),
             'acceptAllButton' => Craft::t('cookie-consent', 'Add "Accept All" button'),
 			'description' => Craft::t('cookie-consent', 'Description'),
-			'template' => Craft::t('cookie-consent', 'Template')
+			'template' => Craft::t('cookie-consent', 'Template'),
+            'refresh' => Craft::t('cookie-consent', 'Automatic Refresh'),
+            'refresh_time' => Craft::t('cookie-consent', 'Refresh Time')
 		];
 	}
 
