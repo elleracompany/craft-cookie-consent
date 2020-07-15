@@ -18,7 +18,7 @@ class m200619_074354_v1_4_2 extends Migration
         $this->addColumn(
             CookieConsent::SITE_SETTINGS_TABLE,
             'refresh',
-            $this->integer()->notNull()->defaultValue(false)
+            $this->boolean()->notNull()->defaultValue(false)
         );
         $this->addColumn(
             CookieConsent::SITE_SETTINGS_TABLE,

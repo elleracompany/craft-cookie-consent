@@ -17,6 +17,8 @@ use craft\console\Application as ConsoleApplication;
  * Class Plugin
  *
  * @package elleracompany\cookieconsent
+ *
+ * @property Variables $cookieConsent
  */
 class CookieConsent extends \craft\base\Plugin
 {
@@ -51,7 +53,7 @@ class CookieConsent extends \craft\base\Plugin
 	/**
 	 * Default banner description
 	 */
-	const DEFAULT_DESCRIPTION = 'We use cookies to personalise content and ads, and to analyse our traffic and improve our service. You consent to cookies if you continue to use our website.';
+	const DEFAULT_DESCRIPTION = 'We use cookies to personalize content and ads, and to analyze our traffic and improve our service.';
 
 	/**
 	 * Default cookie groups
@@ -166,7 +168,6 @@ class CookieConsent extends \craft\base\Plugin
 				$this->cookieConsent->loadCss();
 				$this->cookieConsent->loadJs();
 				if($this->cookieConsent->renderTemplate()) Craft::$app->view->hook('before-body-end', function(array &$context) {
-					$settings = $this->getSettings();
 					return $this->renderPluginTemplate($this->cookieConsent->getTemplate());
 				});
 			}
