@@ -1,4 +1,11 @@
 # Release Notes for Cookie Consent
+## 1.4.3 - 2020-07-15
+
+### Bugfix
+- Fixed a type in the last migration resulting in failed migration on postgres (#40)
+
+### Enhancement
+- Updated README.md
 
 ## 1.4.2 - 2020-06-19
 

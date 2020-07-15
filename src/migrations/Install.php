@@ -36,7 +36,7 @@ class Install extends Migration
 				'headline' => $this->string(255)->notNull(),
 				'description' => $this->text(),
 				'template' => $this->string()->notNull(),
-                'refresh' => $this->integer()->notNull()->defaultValue(false),
+                'refresh' => $this->boolean()->notNull()->defaultValue(false),
                 'refresh_time' => $this->integer()->notNull()->defaultValue(500)
 			]
 		);
