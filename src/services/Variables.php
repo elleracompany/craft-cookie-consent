@@ -35,22 +35,25 @@ class Variables extends Component
 	{
 		$this->settings = SiteSettings::find()->where(['site_id' => Craft::$app->getSites()->currentSite->id])->with('cookieGroups')->one();
 
-        $consent = Craft::$app->session->get('cookieConsent');
-
-        if($consent)
+		if(isset($this->settings->activated) && $this->settings->activated == 1)
         {
-            $cookie = new Cookie([
-                'name' => $this->settings->cookieName,
-                'value' => $consent,
-                'expire' => strtotime('+1 year', time())
-            ]);
+            $consent = Craft::$app->session->get('cookieConsent');
 
-            Craft::$app->response->cookies->add($cookie);
+            if($consent)
+            {
+                $cookie = new Cookie([
+                    'name' => $this->settings->cookieName,
+                    'value' => $consent,
+                    'expire' => strtotime('+1 year', time())
+                ]);
+
+                Craft::$app->response->cookies->add($cookie);
+            }
+            else $consent = Craft::$app->request->cookies->get($this->settings->cookieName);
+
+            $this->consent = $consent !== null;
+            $this->consent_string = json_decode($consent);
         }
-		else $consent = Craft::$app->request->cookies->get($this->settings->cookieName);
-
-		$this->consent = $consent !== null;
-		$this->consent_string = json_decode($consent);
 
 		parent::init();
 	}
