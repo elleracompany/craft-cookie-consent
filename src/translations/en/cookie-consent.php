@@ -24,6 +24,8 @@ return [
 	'Add new cookie group' => '',
 	'Are you sure you want to delete this group?' => '',
 	'Details' => '',
+	'Save' => '',
+	'Accept All' => '',
 	'Hide Details' => '',
 	'OK' => '',
 	'Activate Banner' => '',
