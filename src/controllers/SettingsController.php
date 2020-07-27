@@ -3,6 +3,7 @@
 namespace elleracompany\cookieconsent\controllers;
 
 use Craft;
+use craft\models\Site;
 use craft\web\Controller;
 use elleracompany\cookieconsent\CookieConsent;
 use elleracompany\cookieconsent\records\Consent;
@@ -311,7 +312,9 @@ class SettingsController extends Controller
 	{
 		if(empty($variables['currentSiteHandle']))
 		{
-			$variables['site'] = Craft::$app->getSites()->currentSite;
+            /* @var $site Site */
+            $site = Craft::$app->getSites()->getEditableSites()[0];
+            $variables['site'] = $site;
 			$variables['currentSiteId'] = $variables['site']->id;
 			$variables['currentSiteHandle'] = $variables['site']->handle;
 		}
