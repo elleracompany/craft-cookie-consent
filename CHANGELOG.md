@@ -4,6 +4,7 @@
 
 ### Bugfix
 - Fixed a bug in the consent-checker where it used some unset settings before the plugin were activated. (#38)
+- Visiting the readme page now retains the current site you're on. (#39)
 
 ## 1.4.3 - 2020-07-15
 

@@ -13,11 +13,11 @@ use craft\helpers\UrlHelper;
 
 class SettingsController extends Controller
 {
-	public function actionIndex()
+	public function actionIndex(string $siteHandle = null)
 	{
 		$variables = [
 			'content' => file_get_contents(dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR.'README.md'),
-			'currentPage' => 'readme',
+            'currentSiteHandle' => $siteHandle,
 			'site' => Craft::$app->getSites()->currentSite
 		];
 		$this->_prepVariables($variables);

@@ -16,7 +16,7 @@
     <nav>
         <ul>
             <li class="heading"><span>{{ "Information"|t('cookie-consent') }}</span></li>
-            <li><a href="{{ cpUrl() }}/cookie-consent"{{ currentPage == 'readme' ? ' class="sel"' : ''}}>{{ "Readme"|t('cookie-consent') }}</a></li>
+            <li><a href="{{ cpUrl() }}/cookie-consent/{{ currentSiteHandle }}"{{ currentPage == 'readme' ? ' class="sel"' : ''}}>{{ "Readme"|t('cookie-consent') }}</a></li>
             <li><a href="{{ cpUrl() }}/cookie-consent/site/{{ currentSiteHandle }}/consent"{{ currentPage == 'consent' ? ' class="sel"' : ''}}>{{ "View consents"|t('cookie-consent') }}</a></li>
             <li class="heading"><span>{{ "Settings"|t('cookie-consent') }}</span></li>
             <li><a href="{{ cpUrl() }}/cookie-consent/site/{{ currentSiteHandle }}"{{ currentPage == 'site' ? ' class="sel"' : ''}}>{{ "Site Settings"|t('cookie-consent') }}</a></li>
