@@ -25,6 +25,7 @@ return [
 	'Are you sure you want to delete this group?' => 'Er du sikker på at du vil slette denne cookie-gruppa?',
 	'Details' => 'Detaljer',
 	'Save' => 'Lagre',
+	'Accept All' => 'Godta alle',
 	'Hide Details' => 'Skjul detaljer',
 	'OK' => 'OK',
 	'Activate Banner' => 'Aktivere banner',
