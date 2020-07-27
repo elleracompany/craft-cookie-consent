@@ -3,7 +3,7 @@
 ## 1.4.4 - 2020-07-22
 
 ### Bugfix
-- Fixed a bug in the consent-checker where it used some unset settings before the plugin were activated.
+- Fixed a bug in the consent-checker where it used some unset settings before the plugin were activated. (#38)
 
 ## 1.4.3 - 2020-07-15
 
