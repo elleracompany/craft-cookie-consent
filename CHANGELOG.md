@@ -2,6 +2,10 @@
 
 ## 1.5.0 - 2020-11-26
 
+### Enhancement
+- Added hooks for after-body-start to reflect the best position for the template rendering. before-body-end will still work as of this version. (#52)
+
+
 ### Bugfixes
 - Updated the ip column in consents to 39 characters to allow IPv6 (#51)
 
