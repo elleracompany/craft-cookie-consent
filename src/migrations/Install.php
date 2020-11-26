@@ -37,7 +37,8 @@ class Install extends Migration
 				'description' => $this->text(),
 				'template' => $this->string()->notNull(),
                 'refresh' => $this->boolean()->notNull()->defaultValue(false),
-                'refresh_time' => $this->integer()->notNull()->defaultValue(500)
+                'refresh_time' => $this->integer()->notNull()->defaultValue(500),
+                'dateInvalidated' => $this->dateTime()->notNull()->defaultValue('2019-05-14 00:00:00')
 			]
 		);
 		$this->addPrimaryKey(

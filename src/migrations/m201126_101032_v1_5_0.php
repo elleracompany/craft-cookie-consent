@@ -20,6 +20,11 @@ class m200619_074354_v1_4_2 extends Migration
             'ip',
             $this->string(39)->defaultValue(null)
         );
+	    $this->addColumn(
+	        CookieConsent::SITE_SETTINGS_TABLE,
+            'dateInvalidated',
+            $this->dateTime()->notNull()->defaultValue('2019-05-14 00:00:00')
+        );
 	}
 	/**
 	 * @inheritdoc

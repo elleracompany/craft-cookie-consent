@@ -3,6 +3,7 @@
 namespace elleracompany\cookieconsent\controllers;
 
 use Craft;
+use craft\helpers\Db;
 use craft\models\Site;
 use craft\web\Controller;
 use elleracompany\cookieconsent\CookieConsent;
@@ -160,6 +161,17 @@ class SettingsController extends Controller
 		}
 		return null;
 	}
+
+	public function actionInvalidateConsents(string $siteHandle)
+    {
+        $site = Craft::$app->sites->getSiteByHandle($siteHandle);
+        $record = SiteSettings::findOne($site->id);
+        $record->dateInvalidated = Db::prepareDateForDb(new \DateTime());
+        if(!$record->save()) Craft::$app->getSession()->setError(Craft::t('cookie-consent', 'Couldn’t invalidate the consents.'));
+        else Craft::$app->getSession()->setNotice(Craft::t('cookie-consent', 'Consents invalidated.'));
+
+        return $this->redirect(UrlHelper::cpUrl('cookie-consent/site/'.$siteHandle));
+    }
 
 	/**
 	 * Render the view for editing a CookieGroup

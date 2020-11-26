@@ -5,10 +5,13 @@ namespace elleracompany\cookieconsent\records;
 
 use Craft;
 use craft\db\ActiveRecord;
+use craft\helpers\Db;
 use craft\records\Site;
 use elleracompany\cookieconsent\CookieConsent;
 use yii\db\ActiveQueryInterface;
 use yii\web\NotFoundHttpException;
+use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 
 /**
  * @property boolean 	$activated
@@ -25,6 +28,7 @@ use yii\web\NotFoundHttpException;
  * @property string		$template
  * @property integer 	$site_id
  * @property integer    $refresh_time
+ * @property string     $dateInvalidated
  */
 class SiteSettings extends ActiveRecord
 {
@@ -47,10 +51,23 @@ class SiteSettings extends ActiveRecord
 			'templateAsset',
             'acceptAllButton',
             'refresh',
-            'refresh_time'
+            'refresh_time',
+            'dateInvalidated'
 		];
 		return array_merge($fields, parent::fields());
 	}
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::class,
+                'createdAtAttribute' => 'dateInvalidated',
+                'updatedAtAttribute' => null,
+                'value' => Db::prepareDateForDb(new \DateTime())
+            ],
+        ];
+    }
 
 	/**
 	 * @inheritdoc
@@ -66,7 +83,7 @@ class SiteSettings extends ActiveRecord
 	public function rules()
 	{
 		return [
-			[['headline', 'description', 'template', 'cookieName'], 'string'],
+			[['headline', 'description', 'template', 'cookieName', 'dateInvalidated'], 'string'],
 			[['headline', 'description', 'template'], 'required'],
 			[['activated', 'cssAssets', 'jsAssets', 'templateAsset', 'showCheckboxes', 'showAfterConsent', 'acceptAllButton', 'refresh'], 'boolean'],
 			[['activated', 'headline', 'description', 'template', 'templateAsset', 'showCheckboxes', 'showAfterConsent'], 'validatePermission'],

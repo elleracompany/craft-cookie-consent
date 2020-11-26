@@ -4,6 +4,8 @@
 namespace elleracompany\cookieconsent\services;
 
 use Craft;
+use craft\helpers\Db;
+use elleracompany\cookieconsent\records\Consent;
 use elleracompany\cookieconsent\records\SiteSettings;
 use yii\base\Component;
 use yii\web\Cookie;
@@ -53,6 +55,16 @@ class Variables extends Component
 
             $this->consent = $consent !== null;
             $this->consent_string = json_decode($consent);
+
+            if($this->consent)
+            {
+                $consentRecord = Consent::findOne($this->consent_string->consent_uid);
+                if(!$consentRecord || strtotime($consentRecord->dateUpdated) < strtotime($this->settings->dateInvalidated)) {
+                    $this->consent = false;
+                    $this->consent_string = null;
+                }
+            }
+
         }
 
 		parent::init();
