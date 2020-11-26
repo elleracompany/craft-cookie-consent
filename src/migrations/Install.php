@@ -90,7 +90,7 @@ class Install extends Migration
 			[
 				'uid'         => $this->uid(),
 				'site_id' => $this->integer(11),
-				'ip' => $this->string(15)->defaultValue(null),
+				'ip' => $this->string(39)->defaultValue(null),
 				'data' => $this->text(),
                 'cookieName' => $this->string()->defaultValue('cookie-consent'),
 				'dateCreated' => $this->dateTime()->notNull(),

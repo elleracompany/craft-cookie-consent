@@ -1,5 +1,10 @@
 # Release Notes for Cookie Consent
 
+## 1.5.0 - 2020-11-26
+
+### Bugfixes
+- Updated the ip column in consents to 39 characters to allow IPv6 (#51)
+
 ## 1.4.4 - 2020-07-22
 
 ### Bugfix
