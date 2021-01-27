@@ -11,7 +11,6 @@ use elleracompany\cookieconsent\CookieConsent;
 use yii\db\ActiveQueryInterface;
 use yii\web\NotFoundHttpException;
 use yii\behaviors\TimestampBehavior;
-use yii\db\Expression;
 
 /**
  * @property boolean 	$activated

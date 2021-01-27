@@ -162,6 +162,12 @@ class SettingsController extends Controller
 		return null;
 	}
 
+    /**
+     * @param string $siteHandle
+     * @return \yii\web\Response
+     * @throws \craft\errors\MissingComponentException
+     * @throws \yii\web\BadRequestHttpException
+     */
 	public function actionInvalidateConsents(string $siteHandle)
     {
         $site = Craft::$app->sites->getSiteByHandle($siteHandle);
