@@ -1,5 +1,10 @@
 # Release Notes for Cookie Consent
 
+## 1.4.5 - 2021-01-27
+
+### Bugfix
+- Updated the migrations to add primary keys on table creation. (#58)
+
 ## 1.4.4 - 2020-07-22
 
 ### Bugfix
