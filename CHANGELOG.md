@@ -1,5 +1,10 @@
 # Release Notes for Cookie Consent
 
+## 1.4.6 - 2021-02-24
+
+### Bugfix
+- Fixed a typo that made install migration fail in some versions of PHP (#63)
+
 ## 1.4.5 - 2021-01-27
 
 ### Bugfix
