@@ -90,8 +90,8 @@ class Install extends Migration
                 'cookieName' => $this->string()->defaultValue('cookie-consent'),
 				'dateCreated' => $this->dateTime()->notNull(),
 				'dateUpdated' => $this->dateTime()->notNull(),
-                'PRIMARY KEY(uid)',
-			],
+                'PRIMARY KEY(uid)'
+			]
 		);
 		$this->addForeignKey(
 			'fk_cookie_consent_consent_belong_to_site',
