@@ -43,4 +43,6 @@ return [
 	'Headline' => '',
 	'Template' => '',
 	'Default' => '',
+	'Save' => '',
+        'Accept All' => 'Alle akzeptieren',
 ];
