@@ -20,7 +20,7 @@
                 <div class="elc-cookie-group">
                     <div class="elc-row elc-cookie-headline">
                         <input type="checkbox" id="elc-checkbox-{{loop.index}}" class="elc-cookie-checkbox" name="group-{{ group.slug }}"{{ group.required == 1 ? ' disabled="disabled"' : "" }}{{ ((craft.cookieConsent.consentGiven != 1 and group.default == 1) or craft.cookieConsent.getConsent(group.slug)) ? " checked" : "" }}>
-                        <label class="elc-cookie-name" for="elc-checkbox-{{loop.index}}">{{ group.name }}{% if group.required == 1 %} <small>({{ "Required"|t }})</small>{% endif %}</label>
+                        <label class="elc-cookie-name" for="elc-checkbox-{{loop.index}}">{{ group.name }}{% if group.required == 1 %} <small>({{ "Required"|t('cookie-consent') }})</small>{% endif %}</label>
                     </div>
                     <div class="elc-row elc-cookie-description">
                         {{ group.description }}
@@ -28,16 +28,16 @@
                     {% for cookie in group.cookies|json_decode %}
                         <div class="elc-cookie">
                             <div class="elc-cookie-field">
-                                <strong>{{ "Name"|t }}</strong>: {{ cookie.name }}
+                                <strong>{{ "Name"|t('cookie-consent') }}</strong>: {{ cookie.name }}
                             </div>
                             <div class="elc-cookie-field">
-                                <strong>{{ "Description"|t }}</strong>: {{ cookie.description }}
+                                <strong>{{ "Description"|t('cookie-consent') }}</strong>: {{ cookie.description }}
                             </div>
                             <div class="elc-cookie-field">
-                                <strong>{{ "Provider"|t }}</strong>: {{ cookie.provider }}
+                                <strong>{{ "Provider"|t('cookie-consent') }}</strong>: {{ cookie.provider }}
                             </div>
                             <div class="elc-cookie-field">
-                                <strong>{{ "Expiry"|t }}</strong>: {{ cookie.expiry }}
+                                <strong>{{ "Expiry"|t('cookie-consent') }}</strong>: {{ cookie.expiry }}
                             </div>
                         </div>
                     {% endfor %}
