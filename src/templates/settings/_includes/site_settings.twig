@@ -106,15 +106,6 @@
     errors: model.getErrors("showAfterConsent"),
 }) }}
 
-{{ forms.lightswitchField({
-    label: model.getAttributeLabel('showAfterConsent'),
-    instructions: 'Show a small box in the corner for users to update consent settings.'|t('cookie-consent'),
-    name: "showAfterConsent",
-    disabled: not canUpdate,
-    on: model.showAfterConsent,
-    errors: model.getErrors("showAfterConsent"),
-}) }}
-
 <div class="field">
     <div style="padding-right: 5%; display: inline-block; width: 45%;">
         {{ forms.lightswitchField({
