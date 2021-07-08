@@ -50,6 +50,7 @@ class SettingsController extends Controller
 		$this->_prepVariables($variables);
 		$variables['currentPage'] = 'site';
 		$variables['title'] = Craft::t('cookie-consent', 'Site Settings');
+        $variables['invalidate_link'] = "/" . Craft::$app->config->general->cpTrigger . "/cookie-consent/site/{$siteHandle}/invalidate";
 		$this->_checkSiteEditPermission($variables['currentSiteId']);
 		$this->_prepSiteSettingsPermissionVariables($variables);
 
