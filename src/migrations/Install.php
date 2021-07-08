@@ -21,7 +21,7 @@ class Install extends Migration
 		$this->createTable(
 			CookieConsent::SITE_SETTINGS_TABLE,
 			[
-				'site_id' => $this->integer(11),
+				'site_id' => $this->primaryKey(),
 				'dateCreated' => $this->dateTime()->notNull(),
 				'dateUpdated' => $this->dateTime()->notNull(),
 				'uid'         => $this->uid(),
@@ -40,11 +40,6 @@ class Install extends Migration
                 'refresh_time' => $this->integer()->notNull()->defaultValue(500),
                 'dateInvalidated' => $this->dateTime()->notNull()->defaultValue('2019-05-14 00:00:00')
 			]
-		);
-		$this->addPrimaryKey(
-			'pk_cookie_consent_site_settings',
-			CookieConsent::SITE_SETTINGS_TABLE,
-			'site_id'
 		);
 		$this->addForeignKey(
 			'fk_cookie_consent_setting_belong_to_site',
@@ -96,12 +91,8 @@ class Install extends Migration
                 'cookieName' => $this->string()->defaultValue('cookie-consent'),
 				'dateCreated' => $this->dateTime()->notNull(),
 				'dateUpdated' => $this->dateTime()->notNull(),
+                'PRIMARY KEY(uid)'
 			]
-		);
-		$this->addPrimaryKey(
-			'pk_cookie_consent_consent',
-			CookieConsent::CONSENT_TABLE,
-			'uid'
 		);
 		$this->addForeignKey(
 			'fk_cookie_consent_consent_belong_to_site',

@@ -2,7 +2,8 @@
 {% block content %}
     <div class="main">
         <div class="toolbar">
-            <div class="elements"><div class="tableview">
+            <div class="elements">
+                <div class="tableview">
                     <table class="data fullwidth">
                         <thead>
                         <tr>
@@ -36,23 +37,27 @@
                         {% endif %}
                         </tbody>
                     </table>
-                </div>
-            </div>
 
-            <div id="footer">
-                <div id="count-container" class="light">
-                    <div class="flex pagination">
-                        {% if pagination.previous is not null %}
-                            <a href="{{ pagination.previous }}" class="page-link" data-icon="leftangle"> </a>
-                        {% endif %}
-                        {% if pagination.next is not null %}
-                            <a href="{{ pagination.next }}" class="page-link" data-icon="rightangle"> </a>
-                        {% endif %}
-                        <div class="page-info">{{ pagination.from }}-{{ pagination.to }} of {{ pagination.total }} elements</div>
+                    <div id="footer">
+                        <div id="count-container" class="light">
+                            <div class="flex pagination">
+                                {% if pagination.previous is not null %}
+                                    <a href="{{ pagination.previous }}" class="page-link" data-icon="leftangle"> </a>
+                                {% endif %}
+                                {% if pagination.next is not null %}
+                                    <a href="{{ pagination.next }}" class="page-link" data-icon="rightangle"> </a>
+                                {% endif %}
+                                <div class="page-info">{{ pagination.from }}-{{ pagination.to }} of {{ pagination.total }} elements</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
 
+        <div class="flex" style="align-items: center; margin-top: 50px;">
+            <a href="#" class="btn submit">Invalidate Consents</a>
+            <p style="margin-top: 0 !important; margin-bottom: 7px !important">Last invalidated: {{ model.dateInvalidated }}</p>
         </div>
     </div>
 

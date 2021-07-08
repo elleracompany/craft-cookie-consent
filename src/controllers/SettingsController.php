@@ -98,6 +98,7 @@ class SettingsController extends Controller
         ];
 
 		$variables['title'] = Craft::t('cookie-consent', 'Consents');
+
 		$this->_prepSiteSettingsPermissionVariables($variables);
 
 		return $this->renderTemplate('cookie-consent/settings/consent', $variables);

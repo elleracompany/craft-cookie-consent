@@ -8,7 +8,7 @@ use elleracompany\cookieconsent\CookieConsent;
 /**
  * m201126_101032_v1_5_0
  */
-class m200619_074354_v1_4_2 extends Migration
+class m201126_101032_v1_5_0 extends Migration
 {
 	/**
 	 * @inheritdoc

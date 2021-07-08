@@ -2,12 +2,24 @@
 
 ## 1.5.0 - 2020-11-26
 
+### Added
+- Added invalidation logic. TODO: Button and permissions
+
 ### Enhancement
 - Added hooks for after-body-start to reflect the best position for the template rendering. before-body-end will still work as of this version. (#52)
 
-
 ### Bugfixes
 - Updated the ip column in consents to 39 characters to allow IPv6 (#51)
+
+## 1.4.6 - 2021-02-24
+
+### Bugfix
+- Fixed a typo that made install migration fail in some versions of PHP (#63)
+
+## 1.4.5 - 2021-01-27
+
+### Bugfix
+- Updated the migrations to add primary keys on table creation. (#58)
 
 ## 1.4.4 - 2020-07-22
 
