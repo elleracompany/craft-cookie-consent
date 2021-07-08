@@ -1,6 +1,6 @@
 # Release Notes for Cookie Consent
 
-## 1.5.0 - 2020-11-26
+## 1.5.0 - 2021-07-08
 
 ### Added
 - Added invalidation logic. TODO: Permissions
