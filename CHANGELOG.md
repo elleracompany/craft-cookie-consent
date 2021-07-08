@@ -3,13 +3,15 @@
 ## 1.5.0 - 2020-11-26
 
 ### Added
-- Added invalidation logic. TODO: Button and permissions
+- Added invalidation logic. TODO: Permissions
 
 ### Enhancement
 - Added hooks for after-body-start to reflect the best position for the template rendering. before-body-end will still work as of this version. (#52)
 
 ### Bugfixes
 - Updated the ip column in consents to 39 characters to allow IPv6 (#51)
+- Removed duplicate settings field (@mikewink)
+- Added missing translations (@mikewink)
 
 ## 1.4.6 - 2021-02-24
 
