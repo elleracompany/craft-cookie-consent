@@ -5,6 +5,9 @@
 ### Added
 - Added ability to modify slug of cookie groups (#68)
 
+### Enhancement
+- Changed the heading from H1 to H3 in the default template (#67)
+
 ## 1.5.0 - 2021-07-08
 
 ### Added
