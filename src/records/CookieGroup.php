@@ -37,7 +37,7 @@ class CookieGroup extends ActiveRecord
 				'attribute' => 'slugattribute',
 				'slugAttribute' => 'slug',
 				'ensureUnique' => true,
-				'immutable' => true,
+				'immutable' => false,
 				'uniqueSlugGenerator' => function ($baseSlug, $iteration, $model)
 				{
 					return $baseSlug.'-'.$iteration;
@@ -93,7 +93,7 @@ class CookieGroup extends ActiveRecord
 	{
 		return [
 			[['name', 'slug', 'description', 'cookies'], 'string'],
-			[['site_id', 'description', 'name'], 'required'],
+			[['site_id', 'description', 'name', 'slug'], 'required'],
 			[['required', 'store_ip', 'default'], 'boolean'],
 			[['required', 'store_ip', 'default', 'order'], 'default', 'value' => 0],
             [['order'], 'integer', 'min' => 0, 'max' => 100],
