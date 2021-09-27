@@ -84,6 +84,7 @@ class SiteSettings extends ActiveRecord
 		return [
 			[['headline', 'description', 'template', 'cookieName', 'dateInvalidated'], 'string'],
 			[['headline', 'description', 'template'], 'required'],
+            [['refresh_time'], 'default', 'value'=> 500],
 			[['activated', 'cssAssets', 'jsAssets', 'templateAsset', 'showCheckboxes', 'showAfterConsent', 'acceptAllButton', 'refresh'], 'boolean'],
 			[['activated', 'headline', 'description', 'template', 'templateAsset', 'showCheckboxes', 'showAfterConsent'], 'validatePermission'],
 			[['activated', 'acceptAllButton', 'refresh'], 'default', 'value' => 0],

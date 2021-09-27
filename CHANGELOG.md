@@ -8,6 +8,9 @@
 ### Enhancement
 - Changed the heading from H1 to H3 in the default template (#67)
 
+### Bugfixes
+- Made refresh_time default to 500ms if left blank (#66)
+
 ## 1.5.0 - 2021-07-08
 
 ### Added
