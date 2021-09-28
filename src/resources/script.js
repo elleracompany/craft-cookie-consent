@@ -71,6 +71,7 @@ function submitConsent(event) {
 
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
+            addWindowObject()
             if (xhr.status !== 200) console.log('Error: ' + xhr.status);
             else if (form.hasAttribute("data-refresh") && form.dataset.refresh === "true" && form.hasAttribute("data-refreshtime")) {
                 refresh(form.dataset.refreshtime)
