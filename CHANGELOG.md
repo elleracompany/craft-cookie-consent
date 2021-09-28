@@ -11,7 +11,6 @@
 
 ### Bugfixes
 - Made refresh_time default to 500ms if left blank (#66)
-- Removed return true on consent-update in the controller (#56)
 
 ## 1.5.0 - 2021-07-08
 
