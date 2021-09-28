@@ -1,6 +1,6 @@
 # Release Notes for Cookie Consent
 
-## 1.6.0 - 2021-07-08
+## 1.6.0 - 2021-09-28
 
 ### Added
 - Added ability to modify slug of cookie groups (#68)
