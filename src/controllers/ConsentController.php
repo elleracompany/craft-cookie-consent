@@ -51,8 +51,6 @@ class ConsentController extends Controller
         ]);
 
 		Craft::$app->response->cookies->add($cookie);
-
-		return true;
 	}
 
     public function actionShow()
