@@ -1,5 +1,17 @@
 # Release Notes for Cookie Consent
 
+## 1.6.0 - 2021-07-08
+
+### Added
+- Added ability to modify slug of cookie groups (#68)
+- Added a javascript object window.ccc that contains all consents for a user (#65)
+
+### Enhancement
+- Changed the heading from H1 to H3 in the default template (#67)
+
+### Bugfixes
+- Made refresh_time default to 500ms if left blank (#66)
+
 ## 1.5.0 - 2021-07-08
 
 ### Added

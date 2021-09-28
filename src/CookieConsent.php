@@ -165,6 +165,7 @@ class CookieConsent extends \craft\base\Plugin
 
 		if(!Craft::$app->request->isCpRequest && !Craft::$app->request->isConsoleRequest) {
 			if($this->cookieConsent->render()) {
+                $this->installSiteEventListeners();
 				$this->cookieConsent->loadCss();
 				$this->cookieConsent->loadJs();
 				if($this->cookieConsent->renderTemplate()) {
@@ -246,6 +247,24 @@ class CookieConsent extends \craft\base\Plugin
 		);
 	}
 
+    /**
+     * Install Site Event Listeners
+     */
+    protected function installSiteEventListeners()
+    {
+        Event::on(
+            UrlManager::class,
+            UrlManager::EVENT_REGISTER_SITE_URL_RULES,
+            function (RegisterUrlRulesEvent $event) {
+                Craft::debug('Loaded CookieConsent Site Routes', 'cookie-consent');
+                $event->rules = array_merge(
+                    $event->rules,
+                    $this->customSiteRoutes()
+                );
+            }
+        );
+    }
+
 	/**
 	 * Return the custom Control Panel routes
 	 *
@@ -264,6 +283,18 @@ class CookieConsent extends \craft\base\Plugin
             'cookie-consent/<siteHandle:{handle}>' 								=>	'cookie-consent/settings/index',
 		];
 	}
+
+    /**
+     * Return the custom Control Panel routes
+     *
+     * @return array
+     */
+    protected function customSiteRoutes(): array
+    {
+        return [
+            'cookie-consent/show' 													=>	'cookie-consent/consent/show',
+        ];
+    }
 
 	/**
 	 * Returns the custom Control Panel user permissions.

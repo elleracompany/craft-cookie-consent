@@ -1,5 +1,5 @@
 <section id="elc-cookie-consent" class="elc-small{% if craft.cookieConsent.consentGiven == 1 %} elc-hidden{% endif %}">
-    <form id="elc-cookie-consent-form" action="" data-url="{{ actionUrl() }}" {{ craft.cookieConsent.getRefreshDataAttr }} method="post" accept-charset="UTF-8">
+    <form id="elc-cookie-consent-form" action="" data-url="{{ actionUrl() }}" {{ craft.cookieConsent.getRefreshDataAttr }} data-show="{{ siteUrl() }}/cookie-consent/show" method="post" accept-charset="UTF-8">
 
         <input type="hidden" name="action" value="cookie-consent/consent/update">
         <input type="hidden" name="site_id" value="{{ currentSite.id }}">
@@ -11,7 +11,7 @@
         {{ csrfInput() }}
 
         <header class="elc-header">
-            <h1 class="elc-primary-heading">{{ craft.cookieConsent.headline }}</h1>
+            <h3 class="elc-primary-heading">{{ craft.cookieConsent.headline }}</h3>
             <p class="elc-header-description">{{ craft.cookieConsent.description }}</p>
         </header>
 
@@ -49,12 +49,12 @@
             <a href="#" id="elc-detail-link" class="elc-text-link">{{ "Details"|t('cookie-consent') }}</a>
             <a href="#" id="elc-hide-detail-link" class="elc-text-link">{{ "Hide Details"|t('cookie-consent') }}</a>
 
-            <input id="elc-save-link" class="{% if craft.cookieConsent.showAcceptAllButton == 1 %}elc-secondary-button-link{% else %}elc-button-link{% endif %}" type="submit" value="{{ "Save"|t('cookie-consent') }}">
+            <button id="elc-save-link" class="{% if craft.cookieConsent.showAcceptAllButton == 1 %}elc-secondary-button-link{% else %}elc-button-link{% endif %}" type="submit">{{ "Save"|t('cookie-consent') }}</button>
             {% if craft.cookieConsent.showAcceptAllButton == 1 %}
-                <input id="elc-accept-link" class="elc-secondary-button-link" type="submit" value="{{ "Save"|t('cookie-consent') }}">
-                <input id="elc-accept-all-link" class="elc-button-link" type="submit" value="{{ "Accept All"|t('cookie-consent') }}">
+                <button id="elc-accept-link" class="elc-secondary-button-link" type="submit">{{ "Save"|t('cookie-consent') }}</button>
+                <button id="elc-accept-all-link" class="elc-button-link" type="submit">{{ "Accept All"|t('cookie-consent') }}</button>
             {% else %}
-                <input id="elc-accept-link" class="elc-button-link" type="submit" value="{{ "OK"|t('cookie-consent') }}">
+                <button id="elc-accept-link" class="elc-button-link" type="submit">{{ "OK"|t('cookie-consent') }}</button>
             {% endif %}
         </div>
 
@@ -65,3 +65,4 @@
     <a href="#" id="elc-tab-link">{{ "COOKIES"|t('cookie-consent') }}</a>
 </div>
 {% endif %}
+

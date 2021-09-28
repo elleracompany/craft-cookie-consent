@@ -8,6 +8,7 @@ use craft\web\Response;
 use elleracompany\cookieconsent\records\Consent;
 use elleracompany\cookieconsent\records\SiteSettings;
 use yii\web\Cookie;
+use elleracompany\cookieconsent\CookieConsent;
 
 class ConsentController extends Controller
 {
@@ -51,6 +52,12 @@ class ConsentController extends Controller
 
 		Craft::$app->response->cookies->add($cookie);
 
-		return true;
+        return true;
 	}
+
+    public function actionShow()
+    {
+        Craft::$app->response->format = Response::FORMAT_JSON;
+        return CookieConsent::getInstance()->cookieConsent->getConsents();
+    }
 }
