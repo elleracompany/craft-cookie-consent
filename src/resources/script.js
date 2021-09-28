@@ -49,6 +49,8 @@ document.addEventListener('DOMContentLoaded', function () {
             tabLink.attachEvent("onclick", toggleTab);
         }
     }
+
+    addWindowObject()
 });
 
 function submitConsent(event) {
@@ -134,6 +136,32 @@ function toggleTab(event)
 
     document.getElementById("elc-cookie-consent").classList.add('elc-fullwidth');
     document.getElementById("elc-cookie-consent").classList.remove('elc-small');
+}
+
+function addWindowObject()
+{
+    let form = document.querySelector('#elc-cookie-consent-form');
+    if (typeof form.dataset.show !== 'undefined')
+    {
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', form.dataset.show);
+        xhr.send();
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status !== 200) {
+                    console.log('Error: ' + xhr.status);
+                    window.ccc = {}
+                }
+                else {
+                    if(xhr.response === 'null') {
+                        window.ccc = {}
+                    }
+                    else window.ccc = JSON.parse(xhr.response)
+                }
+            }
+        }
+    }
 }
 
 /*!

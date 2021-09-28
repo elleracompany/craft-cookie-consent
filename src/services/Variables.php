@@ -190,6 +190,11 @@ class Variables extends Component
 		return isset($this->consent_string->$slug) ? $this->consent_string->$slug == 'on' : in_array($slug, $this->settings->getRequiredCookieGroups());
 	}
 
+    public function getConsents()
+    {
+        return $this->consent_string;
+    }
+
 	public function getRefreshDataAttr()
     {
         if($this->settings->refresh) return "data-refresh=true data-refreshTime={$this->settings->refresh_time}";

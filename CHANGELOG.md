@@ -4,6 +4,7 @@
 
 ### Added
 - Added ability to modify slug of cookie groups (#68)
+- Added a javascript object window.ccc that contains all consents for a user (#65)
 
 ### Enhancement
 - Changed the heading from H1 to H3 in the default template (#67)

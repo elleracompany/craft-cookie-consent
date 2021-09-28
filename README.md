@@ -107,5 +107,13 @@ Example: Delete all consents older than 2 years from site with ID 1
 ```bash
 ./craft cookie-consent/retention/clear -sid 1 -d 730
 ```
+
+## The window.ccc object
+As of version 1.6.0, a new object window.ccc has been added to the default template.
+
+This object contains key-value pairs of consents and their status.
+
+The object will be created if the default javascript file is loaded, and a form with the ID #elc-cookie-consent-form exists and has the `data-show`-attribute has the url to the consent show endpoint(/cookie-consent/show)
+
 ## Acknowledgements
 Plugin Icon designed by Trinh Ho from Flaticon
