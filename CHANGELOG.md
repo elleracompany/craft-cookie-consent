@@ -1,5 +1,10 @@
 # Release Notes for Cookie Consent
 
+## 1.6.1 - 2021-10-18
+
+### Bugfixes
+- Fixed javascript for custom templates where some elements are missing (#56)
+
 ## 1.6.0 - 2021-09-28
 
 ### Added

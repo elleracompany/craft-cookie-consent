@@ -4,49 +4,63 @@ document.addEventListener('DOMContentLoaded', function () {
      * attachEvent:     For IE 8 and earlier versions
      */
     let detailLink = document.getElementById("elc-detail-link");
-    if (detailLink.addEventListener) {
-        detailLink.addEventListener("click", toggleExpand);
-    } else if (detailLink.attachEvent) {
-        detailLink.attachEvent("onclick", toggleExpand);
+    console.log(detailLink)
+    if (typeof detailLink !== "undefined" && detailLink !== null) {
+        if (detailLink.addEventListener) {
+            detailLink.addEventListener("click", toggleExpand);
+        } else if (detailLink.attachEvent) {
+            detailLink.attachEvent("onclick", toggleExpand);
+        }
     }
 
     let hideDetailLink = document.getElementById("elc-hide-detail-link");
-    if (hideDetailLink.addEventListener) {
-        hideDetailLink.addEventListener("click", toggleExpand);
-    } else if (hideDetailLink.attachEvent) {
-        hideDetailLink.attachEvent("onclick", toggleExpand);
+    if (typeof hideDetailLink !== "undefined" && hideDetailLink !== null) {
+        if (hideDetailLink.addEventListener) {
+            hideDetailLink.addEventListener("click", toggleExpand);
+        } else if (hideDetailLink.attachEvent) {
+            hideDetailLink.attachEvent("onclick", toggleExpand);
+        }
     }
 
     let saveLink = document.getElementById("elc-save-link");
-    if (saveLink.addEventListener) {
-        saveLink.addEventListener("click", submitConsent);
-    } else if (form.attachEvent) {
-        saveLink.attachEvent("onclick", submitConsent);
+    if (typeof saveLink !== "undefined" && saveLink !== null) {
+        if (saveLink.addEventListener) {
+            saveLink.addEventListener("click", submitConsent);
+        } else if (form.attachEvent) {
+            saveLink.attachEvent("onclick", submitConsent);
+        }
     }
 
     let acceptLink = document.getElementById("elc-accept-link");
-    if (acceptLink.addEventListener) {
-        acceptLink.addEventListener("click", submitConsent);
-    } else if (acceptLink.attachEvent) {
-        acceptLink.attachEvent("onclick", submitConsent);
+    if (typeof acceptLink !== "undefined" && acceptLink !== null) {
+        if (acceptLink.addEventListener) {
+            acceptLink.addEventListener("click", submitConsent);
+        } else if (acceptLink.attachEvent) {
+            acceptLink.attachEvent("onclick", submitConsent);
+        }
     }
 
+
     let acceptAllLink = document.getElementById("elc-accept-all-link");
-    if(acceptAllLink !== null)
-    {
-        if (acceptAllLink.addEventListener) {
-            acceptAllLink.addEventListener("click", submitAllConsent);
-        } else if (form.attachEvent) {
-            acceptAllLink.attachEvent("onclick", submitAllConsent);
+    if (typeof acceptAllLink !== "undefined" && acceptAllLink !== null) {
+        if(acceptAllLink !== null)
+        {
+            if (acceptAllLink.addEventListener) {
+                acceptAllLink.addEventListener("click", submitAllConsent);
+            } else if (form.attachEvent) {
+                acceptAllLink.attachEvent("onclick", submitAllConsent);
+            }
         }
     }
 
     let tabLink = document.getElementById("elc-tab-link");
-    if (typeof tabLink !== 'undefined' && tabLink !== null) {
-        if (tabLink.addEventListener) {
-            tabLink.addEventListener("click", toggleTab);
-        } else if (tabLink.attachEvent) {
-            tabLink.attachEvent("onclick", toggleTab);
+    if (typeof tabLink !== "undefined" && tabLink !== null) {
+        if (typeof tabLink !== 'undefined' && tabLink !== null) {
+            if (tabLink.addEventListener) {
+                tabLink.addEventListener("click", toggleTab);
+            } else if (tabLink.attachEvent) {
+                tabLink.attachEvent("onclick", toggleTab);
+            }
         }
     }
 
