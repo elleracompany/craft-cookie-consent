@@ -12,7 +12,7 @@ use elleracompany\cookieconsent\CookieConsent;
 
 class ConsentController extends Controller
 {
-	protected $allowAnonymous = true;
+	protected array|int|bool $allowAnonymous = true;
 	/**
 	 * Ajax Cookie Consent Store endpoint
 	 *

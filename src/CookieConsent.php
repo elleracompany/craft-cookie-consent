@@ -123,7 +123,7 @@ class CookieConsent extends \craft\base\Plugin
 	 *
 	 * @var bool
 	 */
-	public $hasCpSection = true;
+	public bool $hasCpSection = true;
 
 	/**
 	 * Schema version
@@ -131,7 +131,7 @@ class CookieConsent extends \craft\base\Plugin
 	 *
 	 * @var string
 	 */
-	public $schemaVersion = '1.5.0';
+	public string $schemaVersion = '1.5.0';
 
 	// Public Methods
 	// =========================================================================
@@ -184,7 +184,7 @@ class CookieConsent extends \craft\base\Plugin
 	/**
 	 * @inheritdoc
 	 */
-	public function getSettingsResponse()
+	public function getSettingsResponse(): mixed
 	{
 		// Just redirect to the plugin settings page
 		Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('cookie-consent'));

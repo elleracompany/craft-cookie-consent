@@ -56,7 +56,7 @@ class SiteSettings extends ActiveRecord
 		return array_merge($fields, parent::fields());
 	}
 
-    public function behaviors()
+    public function behaviors(): array
     {
         return [
             [

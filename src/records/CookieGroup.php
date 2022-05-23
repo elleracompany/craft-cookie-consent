@@ -29,7 +29,7 @@ class CookieGroup extends ActiveRecord
 	/**
 	 * @inheritdoc
 	 */
-	public function behaviors()
+	public function behaviors(): array
 	{
 		$behaviors = [
 			[
@@ -106,7 +106,7 @@ class CookieGroup extends ActiveRecord
 		return $this->site->handle.'-'.$this->name;
 	}
 
-	public function beforeSave($insert)
+	public function beforeSave($insert): bool
 	{
 		$this->stringifyCookies();
 		return parent::beforeSave($insert);
