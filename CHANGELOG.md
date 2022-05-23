@@ -1,5 +1,10 @@
 # Release Notes for Cookie Consent
 
+## 4.0.0 - 2022-05-23
+
+### Updated
+- Now supports Craft 4
+
 ## 1.6.1 - 2021-10-18
 
 ### Bugfixes
