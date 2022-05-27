@@ -273,14 +273,13 @@ class CookieConsent extends \craft\base\Plugin
 	protected function customAdminCpRoutes(): array
 	{
 		return [
-			'cookie-consent' 													=>	'cookie-consent/settings/index',
-			'cookie-consent/site/<siteHandle:{handle}>'							=> 	'cookie-consent/settings/edit-site-settings',
-			'cookie-consent/site/<siteHandle:{handle}>/consent/<page:\d+>'		=> 	'cookie-consent/settings/consent',
-            'cookie-consent/site/<siteHandle:{handle}>/consent'		            => 	'cookie-consent/settings/consent',
-            'cookie-consent/site/<siteHandle:{handle}>/invalidate'		        => 	'cookie-consent/settings/invalidate-consents',
-			'cookie-consent/group/<siteHandle:{handle}>'						=> 	'cookie-consent/settings/edit-cookie-group',
-			'cookie-consent/group/<siteHandle:{handle}>/<groupId:\d+>'			=> 	'cookie-consent/settings/edit-cookie-group',
-            'cookie-consent/<siteHandle:{handle}>' 								=>	'cookie-consent/settings/index',
+			'cookie-consent' 								=>	'cookie-consent/settings/index',
+			'cookie-consent/site'							=> 	'cookie-consent/settings/edit-site-settings',
+			'cookie-consent/site/consent/<page:\d+>'		=> 	'cookie-consent/settings/consent',
+            'cookie-consent/site/consent'		            => 	'cookie-consent/settings/consent',
+            'cookie-consent/site/invalidate'		        => 	'cookie-consent/settings/invalidate-consents',
+			'cookie-consent/group'						    => 	'cookie-consent/settings/edit-cookie-group',
+			'cookie-consent/group/<groupId:\d+>'			=> 	'cookie-consent/settings/edit-cookie-group',
 		];
 	}
 

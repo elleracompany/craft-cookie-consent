@@ -15,43 +15,40 @@ use craft\helpers\UrlHelper;
 
 class SettingsController extends Controller
 {
-	public function actionIndex(string $siteHandle = null)
+	public function actionIndex()
 	{
 		$variables = [
 			'content' => file_get_contents(dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR.'README.md'),
-            'currentSiteHandle' => $siteHandle,
-			'site' => Craft::$app->getSites()->currentSite
 		];
 		$this->_prepVariables($variables);
 		$variables['currentPage'] = 'readme';
 		$variables['title'] = Craft::t('cookie-consent', 'Readme');
 		$this->_prepSiteSettingsPermissionVariables($variables);
+
 		return $this->renderTemplate('cookie-consent/settings/index', $variables);
 	}
 
 	/**
 	 * Render the view for editing SiteSettings
 	 *
-	 * @param string|null       $siteHandle
 	 * @param SiteSettings|null $model
 	 *
 	 * @return \yii\web\Response
 	 * @throws \yii\web\ForbiddenHttpException
 	 */
-	public function actionEditSiteSettings(string $siteHandle = null, SiteSettings $model = null)
+	public function actionEditSiteSettings(SiteSettings $model = null)
 	{
 		$this->requirePermission('cookie-consent:site-settings');
 
 		Craft::$app->getRequest();
 		$variables = [
-			'currentSiteHandle' => $siteHandle,
 			'model' => $model
 		];
 		$this->_prepVariables($variables);
 		$variables['currentPage'] = 'site';
 		$variables['title'] = Craft::t('cookie-consent', 'Site Settings');
-        $variables['invalidate_link'] = "/" . Craft::$app->config->general->cpTrigger . "/cookie-consent/site/{$siteHandle}/invalidate";
-		$this->_checkSiteEditPermission($variables['currentSiteId']);
+        $variables['invalidate_link'] = "/" . Craft::$app->config->general->cpTrigger . "/cookie-consent/site/invalidate?site=".$variables['currentSiteHandle'];
+		$this->_checkSiteEditPermission(Craft::$app->getSites()->currentSite->id);
 		$this->_prepSiteSettingsPermissionVariables($variables);
 
 		return $this->renderTemplate('cookie-consent/settings/site', $variables);
@@ -59,14 +56,13 @@ class SettingsController extends Controller
 
 	/**
 	 * Render the view for consent entries
-	 *
-	 * @param string|null       $siteHandle
+     *
      * @param integer|null      $page
 	 *
 	 * @return \yii\web\Response
 	 * @throws \yii\web\ForbiddenHttpException
 	 */
-	public function actionConsent(string $siteHandle = null, $page = null)
+	public function actionConsent($page = null)
 	{
 	    $pageSize = 20;
 	    if($page == null) $page = 1;
@@ -75,7 +71,6 @@ class SettingsController extends Controller
 
 		Craft::$app->getRequest();
 		$variables = [
-			'currentSiteHandle' => $siteHandle,
 		];
 		$this->_prepVariables($variables);
 		$variables['currentPage'] = 'consent';
@@ -92,8 +87,8 @@ class SettingsController extends Controller
             'currentPage' => $page,
             'from' => $from,
             'to' => $to,
-            'previous' => $from > 1 ? "/{$cpTrigger}/cookie-consent/site/{$siteHandle}/consent/".($page-1) : null,
-            'next' => $to < $total ? "/{$cpTrigger}/cookie-consent/site/{$siteHandle}/consent/".($page+1) : null,
+            'previous' => $from > 1 ? "/{$cpTrigger}/cookie-consent/site/consent/".($page-1) : null,
+            'next' => $to < $total ? "/{$cpTrigger}/cookie-consent/site/consent/".($page+1) : null,
             'current' => $count,
             'total' => $total
         ];
@@ -108,15 +103,12 @@ class SettingsController extends Controller
     /**
      * Render the view for consent retention
      *
-     * @param string|null       $siteHandle
-     *
      * @return \yii\web\Response
      */
-    public function actionRetention(string $siteHandle = null)
+    public function actionRetention()
     {
         Craft::$app->getRequest();
         $variables = [
-            'currentSiteHandle' => $siteHandle,
         ];
         $this->_prepVariables($variables);
         $variables['currentPage'] = 'retention';
@@ -165,26 +157,23 @@ class SettingsController extends Controller
 	}
 
     /**
-     * @param string $siteHandle
      * @return \yii\web\Response
      * @throws \craft\errors\MissingComponentException
      * @throws \yii\web\BadRequestHttpException
      */
-	public function actionInvalidateConsents(string $siteHandle)
+	public function actionInvalidateConsents()
     {
-        $site = Craft::$app->sites->getSiteByHandle($siteHandle);
-        $record = SiteSettings::findOne($site->id);
+        $record = SiteSettings::findOne(Craft::$app->getSites()->getSiteByHandle(Craft::$app->request->get('site'))->id);
         $record->dateInvalidated = Db::prepareDateForDb(new \DateTime());
         if(!$record->save()) Craft::$app->getSession()->setError(Craft::t('cookie-consent', 'Couldn’t invalidate the consents.'));
         else Craft::$app->getSession()->setNotice(Craft::t('cookie-consent', 'Consents invalidated.'));
 
-        return $this->redirect(UrlHelper::cpUrl('cookie-consent/site/'.$siteHandle));
+        return $this->redirect(UrlHelper::cpUrl('cookie-consent/site'));
     }
 
 	/**
 	 * Render the view for editing a CookieGroup
 	 *
-	 * @param string|null      $siteHandle
 	 * @param string|null      $groupId
 	 * @param CookieGroup|null $group
 	 *
@@ -192,16 +181,16 @@ class SettingsController extends Controller
 	 * @throws NotFoundHttpException
 	 * @throws \yii\web\ForbiddenHttpException
 	 */
-	public function actionEditCookieGroup(string $siteHandle = null, string $groupId = null, CookieGroup $group = null)
+	public function actionEditCookieGroup(string $groupId = null, CookieGroup $group = null)
 	{
 		Craft::$app->getRequest();
 		$variables = [
-			'currentSiteHandle' => $siteHandle,
 			'groupId' => $groupId,
 			'group' => $group
 		];
+        $this->_prepVariables($variables);
 		$this->_prepEditGroupVariables($variables);
-		$this->_checkSiteEditPermission($variables['currentSiteId']);
+		$this->_checkSiteEditPermission(Craft::$app->getSites()->currentSite->id);
 		$this->_prepGroupPermissionVariables($variables);
 
 		return $this->renderTemplate('cookie-consent/settings/group', $variables);
@@ -269,29 +258,6 @@ class SettingsController extends Controller
 	}
 
 	/**
-	 * Return a siteId from a siteHandle
-	 *
-	 * @param string $siteHandle
-	 *
-	 * @return int
-	 * @throws NotFoundHttpException
-	 */
-	protected function getSiteIdFromHandle($siteHandle) : int
-	{
-		if ($siteHandle !== null) {
-			$site = Craft::$app->getSites()->getSiteByHandle($siteHandle);
-			if (!$site) {
-				throw new NotFoundHttpException('Invalid site handle: '.$siteHandle);
-			}
-			$siteId = $site->id;
-		} else {
-			$siteId = Craft::$app->getSites()->currentSite->id;
-		}
-
-		return $siteId;
-	}
-
-	/**
 	 * Populate SiteSettings record with
 	 * default data
 	 *
@@ -330,18 +296,16 @@ class SettingsController extends Controller
 	 */
 	private function _prepVariables(array &$variables)
 	{
-		if(empty($variables['currentSiteHandle']))
-		{
-            /* @var $site Site */
-            $site = Craft::$app->getSites()->getEditableSites()[0];
-            $variables['site'] = $site;
-			$variables['currentSiteId'] = $variables['site']->id;
-			$variables['currentSiteHandle'] = $variables['site']->handle;
-		}
-		else {
-			$variables['site'] = Craft::$app->sites->getSiteByHandle($variables['currentSiteHandle']);
-			$variables['currentSiteId'] = $variables['site']->id;
-		}
+        $siteHandle = Craft::$app->request->get('site');
+        /* @var $site Site */
+        if($siteHandle) $site = Craft::$app->getSites()->getSiteByHandle($siteHandle);
+        else $site =Craft::$app->getSites()->primarySite;
+
+        $variables['site'] = $site;
+        $variables['currentSiteId'] = $variables['site']->id;
+        $variables['currentSiteHandle'] = $variables['site']->handle;
+        $variables['cpTrigger'] = Craft::$app->config->general->cpTrigger;
+
 		if (empty($variables['model'])) {
 			$variables['model'] = SiteSettings::findOne($variables['currentSiteId']);
 			if (!$variables['model']) {
@@ -373,16 +337,6 @@ class SettingsController extends Controller
 	 */
 	private function _prepEditGroupVariables(array &$variables)
 	{
-		if(empty($variables['currentSiteHandle']))
-		{
-			$variables['site'] = Craft::$app->getSites()->currentSite;
-			$variables['currentSiteId'] = $variables['site']->id;
-			$variables['currentSiteHandle'] = $variables['site']->handle;
-		}
-		else {
-			$variables['site'] = Craft::$app->sites->getSiteByHandle($variables['currentSiteHandle']);
-			$variables['currentSiteId'] = $variables['site']->id;
-		}
 		if (empty($variables['group'])) {
 			if (!empty($variables['groupId'])) {
 				$variables['group'] = CookieGroup::findOne([

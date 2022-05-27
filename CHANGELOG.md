@@ -1,5 +1,10 @@
 # Release Notes for Cookie Consent
 
+## 4.0.1 - 2022-05-27
+
+### Bugfix
+- Updated to match new Craft4 multisite cp Routing
+
 ## 4.0.0 - 2022-05-23
 
 ### Updated
