@@ -123,7 +123,7 @@ class CookieGroup extends ActiveRecord
 		if($this->site_id)
 		{
 			$site = Craft::$app->sites->getSiteById($this->site_id);
-			if($site) return 'cookie-consent/group/'.$site->handle.'/'.$this->id;
+			if($site) return 'cookie-consent/group/'.$this->id;
 		}
 		Craft::$app->getSession()->setError(Craft::t('cookie-consent', 'Could not get return url.'));
 		return 'cookie-consent';
