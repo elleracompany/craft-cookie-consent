@@ -1,5 +1,10 @@
 # Release Notes for Cookie Consent
 
+## 4.0.3 - 2022-06-21
+
+### Enhancement
+- Switching between sites in multisite installs no longer sends you to the readme-page (#85)
+
 ## 4.0.2 - 2022-06-21
 
 ### Bugfix
