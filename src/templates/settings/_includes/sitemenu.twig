@@ -18,10 +18,7 @@
                     <ul class="padded">
                         {% for siteId in groupSiteIds %}
                             {% set site = craft.app.sites.getSiteById(siteId) %}
-                            {% set url = urlFormat is defined ? url(urlFormat|replace({
-                                '{id}': siteId,
-                                '{handle}': site.handle
-                            })) %}
+                            {% set url = '?site=' ~ site.handle %}
                             <li><a{% if selectedSiteId and siteId == selectedSiteId %} class="sel"{% endif %} data-site-id="{{ siteId }}"{% if url %} href="{{ url }}"{% endif %}>{{ site.name|t('site') }}</a></li>
                         {% endfor %}
                     </ul>

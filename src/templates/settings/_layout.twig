@@ -5,10 +5,7 @@
 
 {% block contextMenu %}
     {% if craft.app.getIsMultiSite() %}
-        {% set urlFormat = url("cookie-consent?site={handle}") %}
-        {% include "cookie-consent/settings/_includes/sitemenu.twig" with {
-            urlFormat: urlFormat
-        }  %}
+        {% include "cookie-consent/settings/_includes/sitemenu.twig" %}
     {% endif %}
 {% endblock %}
 

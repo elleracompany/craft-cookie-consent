@@ -190,6 +190,7 @@ class SettingsController extends Controller
 		];
         $this->_prepVariables($variables);
 		$this->_prepEditGroupVariables($variables);
+        if($variables['currentSiteId'] !== $variables['group']->site_id) return $this->redirect(UrlHelper::cpUrl('cookie-consent?site=' . $variables['currentSiteHandle']));
 		$this->_checkSiteEditPermission(Craft::$app->getSites()->currentSite->id);
 		$this->_prepGroupPermissionVariables($variables);
 
