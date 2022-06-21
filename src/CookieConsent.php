@@ -242,7 +242,10 @@ class CookieConsent extends \craft\base\Plugin
 			UserPermissions::class,
 			UserPermissions::EVENT_REGISTER_PERMISSIONS,
 			function (RegisterUserPermissionsEvent $event) {
-				$event->permissions[Craft::t('cookie-consent', self::PLUGIN_NAME)] = $this->customAdminCpPermissions();
+				$event->permissions[] = [
+                    'heading' => Craft::t('cookie-consent', self::PLUGIN_NAME),
+                    'permissions' => $this->customAdminCpPermissions()
+                ];
 			}
 		);
 	}

@@ -1,5 +1,10 @@
 # Release Notes for Cookie Consent
 
+## 4.0.2 - 2022-06-21
+
+### Bugfix
+- Updated permissions to Craft 4 syntax (#86)
+
 ## 4.0.1 - 2022-05-27
 
 ### Bugfix
