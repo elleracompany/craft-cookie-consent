@@ -1,5 +1,10 @@
 # Release Notes for Cookie Consent
 
+## 4.0.4 - 2022-09-30
+
+### Enhancement
+- Added add, reorder and delete on cookie table (PR #93 from mikewink), fixing #90 and #91.
+
 ## 4.0.3 - 2022-06-21
 
 ### Enhancement
