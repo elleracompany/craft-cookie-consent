@@ -12,7 +12,7 @@
 
         <header class="elc-header">
             <h3 class="elc-primary-heading">{{ craft.cookieConsent.headline }}</h3>
-            <p class="elc-header-description">{{ craft.cookieConsent.description }}</p>
+            <p class="elc-header-description">{{ craft.cookieConsent.description|raw }}</p>
         </header>
 
         <div id="elc-cookie-consent-settings"{% if craft.cookieConsent.hideCheckboxes %} class="elc-hide-when-small"{% endif %}>
@@ -23,7 +23,7 @@
                         <label class="elc-cookie-name" for="elc-checkbox-{{loop.index}}">{{ group.name }}{% if group.required == 1 %} <small>({{ "Required"|t }})</small>{% endif %}</label>
                     </div>
                     <div class="elc-row elc-cookie-description">
-                        {{ group.description }}
+                        {{ group.description|raw }}
                     </div>
                     {% for cookie in group.cookies|json_decode %}
                         <div class="elc-cookie">
