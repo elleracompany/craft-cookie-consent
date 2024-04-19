@@ -2,7 +2,7 @@
     <form id="elc-cookie-consent-form" action="" data-url="{{ actionUrl() }}" {{ craft.cookieConsent.getRefreshDataAttr }} data-show="{{ siteUrl() }}/cookie-consent/show" method="post" accept-charset="UTF-8">
 
         <input type="hidden" name="action" value="cookie-consent/consent/update">
-        <input type="hidden" name="site_id" value="{{ currentSite.id }}">
+        <input type="hidden" name="site_id" value="{{ selectedSite.id }}">
 
         {% if craft.cookieConsent.consentGiven == 1 %}
             <input type="hidden" name="uid" value="{{ craft.cookieConsent.getUid }}">

@@ -1,7 +1,7 @@
 {% import "_includes/forms" as forms %}
 
 <input type="hidden" name="action" value="cookie-consent/settings/save-site-settings">
-<input type="hidden" name="site_id" value="{{ currentSiteId }}">
+<input type="hidden" name="site_id" value="{{ selectedSite.id }}">
 
 {{ csrfInput() }}
 

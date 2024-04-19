@@ -1,12 +1,42 @@
-{% extends "_layouts/cp" %}
+{% extends '_layouts/cp.twig' %}
+
+{% set crumbs = (crumbs ?? [])|merge([{
+    label: title,
+    url: currentPage
+}]) %}
+
+{% if craft.app.getIsMultiSite() %}
+    {% if selectableSites is not defined %}
+        {% if siteIds is defined %}
+            {% set selectableSites = craft.app.sites.getEditableSites()|filter(s => s.id in siteIds) %}
+        {% else %}
+            {% set selectableSites = craft.app.sites.getEditableSites() %}
+        {% endif %}
+    {% endif %}
+
+    {% if selectedSite is not defined %}
+        {% if selectedSite.id is defined %}
+            {% set selectedSite = craft.app.sites.getSiteById(selectedSite.id) %}
+        {% elseif requestedSite and requestedSite in selectableSites %}
+            {% set selectedSite = requestedSite %}
+        {% else %}
+            {% set selectedSite = selectableSites|length ? selectableSites|first : craft.app.sites.getPrimarySite() %}
+        {% endif %}
+    {% endif %}
+
+    {% set crumbs = (crumbs ?? [])|unshift({
+        id: 'site-crumb',
+        icon: 'world',
+        label: selectedSite.name|t('site'),
+        menu: {
+            items: siteMenuItems(selectableSites, selectedSite),
+            label: 'Select site'|t('site')
+        }
+    }) %}
+{% endif %}
+
 {% block head %}
     {{ parent() }}
-{% endblock %}
-
-{% block contextMenu %}
-    {% if craft.app.getIsMultiSite() %}
-        {% include "cookie-consent/settings/_includes/sitemenu.twig" %}
-    {% endif %}
 {% endblock %}
 
 {% block sidebar %}
