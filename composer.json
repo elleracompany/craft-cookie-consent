@@ -31,5 +31,14 @@
     "class": "elleracompany\\cookieconsent\\CookieConsent"
   },
   "prefer-stable": true,
-  "minimum-stability": "dev"
+  "minimum-stability": "dev",
+  "require-dev": {
+    "craftcms/phpstan": "dev-main"
+  },
+  "config": {
+    "allow-plugins": {
+      "yiisoft/yii2-composer": true,
+      "craftcms/plugin-installer": true
+    }
+  }
 }
