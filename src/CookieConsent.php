@@ -2,8 +2,12 @@
 namespace elleracompany\cookieconsent;
 
 use Craft;
+use craft\web\Response;
 use craft\web\View;
 use elleracompany\cookieconsent\services\Variables;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 use yii\base\Event;
 use craft\web\UrlManager;
 use craft\events\RegisterUrlRulesEvent;
@@ -12,6 +16,8 @@ use craft\web\twig\variables\CraftVariable;
 use craft\services\UserPermissions;
 use craft\events\RegisterUserPermissionsEvent;
 use craft\console\Application as ConsoleApplication;
+use yii\base\Exception;
+use yii\base\InvalidRouteException;
 
 /**
  * Class Plugin
@@ -25,39 +31,12 @@ class CookieConsent extends \craft\base\Plugin
 	// Constants
 	// =========================================================================
 
-	/**
-	 * Database Table name for SiteSettings records
-	 */
 	const SITE_SETTINGS_TABLE = '{{%cookie_consent_site_settings}}';
-
-	/**
-	 * Database Table name for Cookie Group records
-	 */
 	const COOKIE_GROUP_TABLE = '{{%cookie_consent_group}}';
-
-	/**
-	 * Database Table name for Cookie Consent records
-	 */
 	const CONSENT_TABLE = '{{%cookie_consent_consent}}';
-
-	/**
-	 * Default banner template location
-	 */
 	const DEFAULT_TEMPLATE = 'cookie-consent/banner';
-
-	/**
-	 * Default banner headline
-	 */
 	const DEFAULT_HEADLINE = 'This website uses cookies';
-
-	/**
-	 * Default banner description
-	 */
 	const DEFAULT_DESCRIPTION = 'We use cookies to personalize content and ads, and to analyze our traffic and improve our service.';
-
-	/**
-	 * Default cookie groups
-	 */
 	const DEFAULT_GROUPS = [
 		[
 			'required' => true,
@@ -109,37 +88,16 @@ class CookieConsent extends \craft\base\Plugin
 			'cookies' => []
 		]
 	];
-
-	/**
-	 * Plugin name
-	 */
 	const PLUGIN_NAME = 'Cookie Banner';
 
 	// Properties
 	// =========================================================================
-
-	/**
-	 * Enable CpNav
-	 *
-	 * @var bool
-	 */
 	public bool $hasCpSection = true;
-
-	/**
-	 * Schema version
-	 * For applying migrations etc.
-	 *
-	 * @var string
-	 */
 	public string $schemaVersion = '1.5.0';
 
 	// Public Methods
 	// =========================================================================
-
-	/**
-	 * Plugin Initiator
-	 */
-	public function init()
+	public function init(): void
 	{
 		parent::init();
 		Event::on(CraftVariable::class, CraftVariable::EVENT_INIT, function(Event $e) {
@@ -178,11 +136,8 @@ class CookieConsent extends \craft\base\Plugin
 		else $this->installCpEventListeners();
 	}
 
-	/**
-	 * @inheritdoc
-	 */
-	public function getSettingsResponse(): mixed
-	{
+	public function getSettingsResponse(): Response
+    {
 		// Just redirect to the plugin settings page
 		return Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('cookie-consent'));
 	}
@@ -192,17 +147,16 @@ class CookieConsent extends \craft\base\Plugin
      * and JS/CSS files.
      *
      * https://docs.craftcms.com/v3/extend/updating-plugins.html#rendering-templates
-     *
      * @param $path
      * @param array $params
      * @return string
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
-     * @throws \yii\base\Exception
+     * @throws Exception
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
-	public function renderPluginTemplate($path, $params = [])
-	{
+	public function renderPluginTemplate($path, array $params = []): string
+    {
 		if($path == 'cookie-consent/banner')
 		{
 			$oldMode = Craft::$app->view->getTemplateMode();
@@ -218,11 +172,7 @@ class CookieConsent extends \craft\base\Plugin
 
 	// Private Methods
 	// =========================================================================
-
-	/**
-	 * Install CP Event Listeners
-	 */
-	protected function installCpEventListeners()
+	protected function installCpEventListeners(): void
 	{
 		Event::on(
 			UrlManager::class,
@@ -247,10 +197,7 @@ class CookieConsent extends \craft\base\Plugin
 		);
 	}
 
-    /**
-     * Install Site Event Listeners
-     */
-    protected function installSiteEventListeners()
+    protected function installSiteEventListeners(): void
     {
         Event::on(
             UrlManager::class,
@@ -265,11 +212,6 @@ class CookieConsent extends \craft\base\Plugin
         );
     }
 
-	/**
-	 * Return the custom Control Panel routes
-	 *
-	 * @return array
-	 */
 	protected function customAdminCpRoutes(): array
 	{
 		return [
@@ -283,23 +225,12 @@ class CookieConsent extends \craft\base\Plugin
 		];
 	}
 
-    /**
-     * Return the custom Control Panel routes
-     *
-     * @return array
-     */
     protected function customSiteRoutes(): array
     {
         return [
             'cookie-consent/show' 													=>	'cookie-consent/consent/show',
         ];
     }
-
-	/**
-	 * Returns the custom Control Panel user permissions.
-	 *
-	 * @return array
-	 */
 	protected function customAdminCpPermissions(): array
 	{
 		return [
