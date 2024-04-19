@@ -187,7 +187,7 @@ class CookieConsent extends \craft\base\Plugin
 	public function getSettingsResponse(): mixed
 	{
 		// Just redirect to the plugin settings page
-		Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('cookie-consent'));
+		return Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('cookie-consent'));
 	}
 
     /**
