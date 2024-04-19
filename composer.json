@@ -1,7 +1,7 @@
 {
   "name": "elleracompany/craft-cookie-consent",
-  "description": "GDPR Compliant Cookie Consent Plugin",
-  "version": "4.0.4",
+  "description": "Craft Cookie Consent Plugin",
+  "version": "5.0.0",
   "type": "craft-plugin",
   "keywords": ["cookies", "consent", "gdpr"],
   "license": "proprietary",
@@ -16,7 +16,7 @@
   },
   "require": {
     "ext-json": "*",
-    "craftcms/cms": "^4.0"
+    "craftcms/cms": "^5.0"
   },
   "autoload": {
     "psr-4": {
@@ -24,12 +24,21 @@
     }
   },
   "extra": {
-    "name": "GDPR Cookie Consent",
+    "name": "Cookie Consent",
     "handle": "cookie-consent",
     "documentationUrl": "https://github.com/elleracompany/craft-cookie-consent/blob/master/README.md",
     "changelogUrl": "https://github.com/elleracompany/craft-cookie-consent/blob/master/CHANGELOG.md",
     "class": "elleracompany\\cookieconsent\\CookieConsent"
   },
   "prefer-stable": true,
-  "minimum-stability": "dev"
+  "minimum-stability": "dev",
+  "require-dev": {
+    "craftcms/phpstan": "dev-main"
+  },
+  "config": {
+    "allow-plugins": {
+      "yiisoft/yii2-composer": true,
+      "craftcms/plugin-installer": true
+    }
+  }
 }

@@ -12,11 +12,6 @@ You need to add this line right after your start-body-tag in the relevant layout
 
 `{% hook 'after-body-start' %}`
 
-~~To give you full control over where the plugin is rendering the consent template, you need to add this line before your end-body-tag in the relevant layout file(s):~~
-`{% hook 'before-body-end' %}`
-
-**Note:** *Both hooks will work as of v1.5.0, but please do not use both. Before-body-end will likely be deprecated in a future update.*
-
 ## Activate the plugin for your site
 Navigate to the plugin inside your Control Panel. If you have the correct permissions, it should be visible in the menu.
 
