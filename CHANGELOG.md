@@ -1,4 +1,8 @@
 # Release Notes for Cookie Consent
+## 5.0.0 - 2024-04-19
+
+### Deprecated
+- before-body-end hook deprecated. Use after-body-start.
 
 ## 4.0.4 - 2022-09-30
 
