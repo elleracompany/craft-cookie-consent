@@ -64,7 +64,7 @@ class SettingsController extends Controller
 	 */
 	public function actionConsent($page = null)
 	{
-	    $pageSize = 20;
+	    $pageSize = 10;
 	    if($page == null) $page = 1;
 
 		$this->requirePermission('cookie-consent:site-settings:view-consents');

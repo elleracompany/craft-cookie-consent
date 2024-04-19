@@ -14,16 +14,6 @@
         {% endif %}
     {% endif %}
 
-    {% if selectedSite is not defined %}
-        {% if selectedSite.id is defined %}
-            {% set selectedSite = craft.app.sites.getSiteById(selectedSite.id) %}
-        {% elseif requestedSite and requestedSite in selectableSites %}
-            {% set selectedSite = requestedSite %}
-        {% else %}
-            {% set selectedSite = selectableSites|length ? selectableSites|first : craft.app.sites.getPrimarySite() %}
-        {% endif %}
-    {% endif %}
-
     {% set crumbs = (crumbs ?? [])|unshift({
         id: 'site-crumb',
         icon: 'world',
@@ -60,7 +50,7 @@
     </nav>
     {% if not model.isNewRecord and canCreate %}
     <div class="buttons">
-        <a href="{{ cpUrl('cookie-consent/group') }}" class="btn add icon">{{ "Add new cookie group"|t('cookie-consent') }}</a>
+        <a href="{{ cpUrl('cookie-consent/group') }}" class="btn add icon">{{ "New group"|t('cookie-consent') }}</a>
     </div>
     {% endif %}
 {% endblock %}
