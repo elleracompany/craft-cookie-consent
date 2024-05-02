@@ -253,9 +253,7 @@ class SettingsController extends Controller
 		]);
 		if(!$group) throw new NotFoundHttpException('Cookie group not found');
 		if($group->delete()) Craft::$app->getSession()->setNotice(Craft::t('cookie-consent', 'Cookie group deleted.'));;
-		return $this->redirect(UrlHelper::cpUrl('cookie-consent/site/'.
-			Craft::$app->getSites()->getSiteById(Craft::$app->request->getParam('site_id'))->handle
-		));
+		return $this->redirect(UrlHelper::cpUrl('cookie-consent/site'));
 	}
 
 	/**
