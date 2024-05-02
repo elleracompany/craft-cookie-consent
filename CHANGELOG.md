@@ -1,4 +1,9 @@
 # Release Notes for Cookie Consent
+## 5.0.1 - 2024-05-02
+
+### Bugfix
+- Wrong redirect URL after deletion of cookie group (#109)
+
 ## 5.0.0 - 2024-04-19
 
 ### Deprecated
