@@ -1,4 +1,9 @@
 # Release Notes for Cookie Consent
+## 5.0.2 - 2024-09-09
+
+### Bugfix
+- Permission slug mismatch / typo (cookie-consent:cookie-groups:create-new) (#112)
+
 ## 5.0.1 - 2024-05-02
 
 ### Bugfix
