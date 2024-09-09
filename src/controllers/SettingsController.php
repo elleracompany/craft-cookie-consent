@@ -215,7 +215,7 @@ class SettingsController extends Controller
 			'id' => is_numeric($id) ? $id : null
 		]);
 		if(!$record) {
-			$this->requirePermission('cookie-consent:cookie-groups:create');
+			$this->requirePermission('cookie-consent:cookie-groups:create-new');
 			$record = new CookieGroup();
 		}
 		else $this->requirePermission('cookie-consent:cookie-groups:edit');
