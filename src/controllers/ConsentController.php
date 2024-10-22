@@ -47,7 +47,8 @@ class ConsentController extends Controller
 		$cookie = new Cookie([
 		    'name' => $site->cookieName,
             'value' => json_encode(array_merge(['consent_uid' => $consentRecord->uid],$consent)),
-            'expire' => strtotime('+1 year', time())
+            'expire' => strtotime('+1 year', time()),
+			'secure' => true,
         ]);
 
 		Craft::$app->response->cookies->add($cookie);
