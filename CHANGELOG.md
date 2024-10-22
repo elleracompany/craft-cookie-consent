@@ -1,8 +1,8 @@
 # Release Notes for Cookie Consent
-## Unreleased
+## 5.0.3 - 2024-10-22
 
 ### Enhancement
-- Set secure flag for cookie [#101](https://github.com/elleracompany/craft-cookie-consent/issues/101)
+- Set secure flag for cookie [#101](https://github.com/elleracompany/craft-cookie-consent/issues/101)(@white-lukas)
 
 ## 5.0.2 - 2024-09-09
 
