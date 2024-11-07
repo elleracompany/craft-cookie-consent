@@ -1,4 +1,10 @@
 # Release Notes for Cookie Consent
+
+## 5.0.4 - 2024-11-07
+
+### Updated
+-  Dependabot - dependency vulnerability alert (composer.lock). Dependencies in composer.json seems ok, no need for a .lock file so that was removed.
+
 ## 5.0.3 - 2024-10-22
 
 ### Enhancement
