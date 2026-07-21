@@ -1,5 +1,7 @@
 # Release Notes for Cookie Consent
 
+## 5.1.1 - Unreleased
+
 ## 5.1.0 - 2026-07-21
 
 ### Added
