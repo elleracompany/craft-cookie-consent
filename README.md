@@ -122,5 +122,21 @@ window.addEventListener('ccc-loaded', function (event) {
 
 This is especially useful together with static page caches (e.g. Blitz), where conditionally rendering scripts server-side with `craft.cookieConsent.getConsent()` would get baked into the cached page.
 
+## Embedding the consent form on a specific page
+As of version 5.1.0 the plugin's templates are registered as site templates, so you can embed the consent form directly in any of your own templates — for example on a privacy or cookie policy page where visitors should be able to review and update their consent:
+
+```twig
+{% include 'cookie-consent/banner' %}
+```
+
+If you only want the consent form on specific pages, disable "Load Template" in the site settings so the floating banner isn't injected on every page. Note that the plugin's JS/CSS assets are only loaded automatically while the banner would be shown — if you've disabled "Show after Consent", register the asset bundles yourself in the template where you embed the form:
+
+```twig
+{% do view.registerAssetBundle('elleracompany\\cookieconsent\\JSAssets') %}
+{% do view.registerAssetBundle('elleracompany\\cookieconsent\\CSSAssets') %}
+```
+
+Don't embed the form on a page where the floating banner is also rendered — the two copies would share element IDs.
+
 ## Acknowledgements
 Plugin Icon designed by Trinh Ho from Flaticon

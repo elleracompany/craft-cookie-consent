@@ -3,6 +3,7 @@
 ## 5.1.0 - 2026-07-21
 
 ### Added
+- The plugin's templates are now registered as site templates, so the consent form can be embedded on a specific page (e.g. a privacy policy page) with `{% include 'cookie-consent/banner' %}` ([#57](https://github.com/elleracompany/craft-cookie-consent/issues/57)). See the README for details. This also means you can override the plugin templates from your site's `templates/cookie-consent/` folder.
 - The consent cookie's lifetime is now configurable per site via the new "Consent cookie expiry (days)" setting — previously hardcoded to one year ([#121](https://github.com/elleracompany/craft-cookie-consent/issues/121)). Defaults to 365 days (schema version 1.7.0).
 
 ### Improved

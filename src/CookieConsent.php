@@ -10,6 +10,7 @@ use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 use yii\base\Event;
 use craft\web\UrlManager;
+use craft\events\RegisterTemplateRootsEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\helpers\UrlHelper;
 use craft\web\twig\variables\CraftVariable;
@@ -103,6 +104,16 @@ class CookieConsent extends \craft\base\Plugin
         Event::on(CraftVariable::class, CraftVariable::EVENT_INIT, function(Event $e) {
             $e->sender->set('cookieConsent', Variables::class);
         });
+        // Make the plugin templates available to site templates, so the
+        // banner can be embedded on a specific page (e.g. a privacy page)
+        // with {% include 'cookie-consent/banner' %} (#57)
+        Event::on(
+            View::class,
+            View::EVENT_REGISTER_SITE_TEMPLATE_ROOTS,
+            function(RegisterTemplateRootsEvent $event) {
+                $event->roots['cookie-consent'] = $this->getBasePath() . DIRECTORY_SEPARATOR . 'templates';
+            }
+        );
         $this->setComponents([
             'cookieConsent' => Variables::class,
         ]);
