@@ -1,7 +1,7 @@
 {
   "name": "elleracompany/craft-cookie-consent",
   "description": "Craft Cookie Consent Plugin",
-  "version": "5.1.1",
+  "version": "5.2.0",
   "type": "craft-plugin",
   "keywords": ["cookies", "consent", "gdpr"],
   "license": "proprietary",

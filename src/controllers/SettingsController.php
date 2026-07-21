@@ -226,6 +226,9 @@ class SettingsController extends Controller
             $this->requirePermission('cookie-consent:cookie-groups:edit');
         }
         $record->load(Craft::$app->request->post(), '');
+        // The checkbox group posts an empty string when every box is
+        // unchecked (via its hidden input) - normalize that to "no signals"
+        $record->consent_signals = Craft::$app->request->post('consent_signals') ?: [];
 
         $this->_checkSiteEditPermission((int) $record->site_id);
 
@@ -301,6 +304,7 @@ class SettingsController extends Controller
             $m->name = $group['name'];
             $m->description = $group['description'];
             $m->cookies = $group['cookies'];
+            $m->consent_signals = $group['consent_signals'];
             $m->save();
         }
     }

@@ -1,5 +1,14 @@
 # Release Notes for Cookie Consent
 
+## 5.2.0 - 2026-07-21
+
+### Added
+- Built-in support for Google Consent Mode v2 ([#106](https://github.com/elleracompany/craft-cookie-consent/issues/106)). Each cookie group can be mapped to the Google consent signals it grants (`ad_storage`, `ad_user_data`, `ad_personalization`, `analytics_storage`, `functionality_storage`, `personalization_storage`, `security_storage`), and a new `{{ craft.cookieConsent.consentModeScript() }}` Twig variable outputs the `gtag('consent', 'default', ...)` snippet for the top of your `<head>` — place it before your gtag.js/GTM snippet (works with SEOmatic's tracking scripts out of the box). Consent updates are pushed automatically when the visitor's stored consent loads and immediately when they submit or change their consent in the banner. The feature is off by default and enabled per site, with settings for the data layer name, `wait_for_update`, `ads_data_redaction` and `url_passthrough`. Everything rendered server-side is visitor-independent, so pages stay compatible with static caching (schema version 1.8.0). See the README for setup.
+- New installs map the default cookie groups to the matching consent signals automatically (Statistics → `analytics_storage`, Marketing → `ad_storage`/`ad_user_data`/`ad_personalization`, Necessary → `functionality_storage`/`security_storage`).
+
+### Improved
+- The plugin's site routes (the consent `show` endpoint) are now registered whenever the plugin is activated for the site, not only while the banner is rendered, so the consent state can be fetched on pages where the banner is hidden.
+
 ## 5.1.1 - 2026-07-21
 
 ### Bugfix

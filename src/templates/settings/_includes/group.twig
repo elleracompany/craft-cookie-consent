@@ -29,6 +29,20 @@
     disabled: disabled,
     on: group.default,
 }) }}
+
+{% set gcmOptions = [] %}
+{% for signal in constant('elleracompany\\cookieconsent\\CookieConsent::GCM_SIGNALS') %}
+    {% set gcmOptions = gcmOptions|merge([{ label: signal, value: signal }]) %}
+{% endfor %}
+{{ forms.checkboxGroupField({
+    label: group.getAttributeLabel('consent_signals'),
+    instructions: 'The Google Consent Mode v2 signals this group grants when the visitor accepts it. Only used when Consent Mode is enabled in the site settings. Typically: analytics_storage for a statistics group; ad_storage, ad_user_data and ad_personalization for a marketing group.'|t('cookie-consent'),
+    name: "consent_signals",
+    options: gcmOptions,
+    values: group.getSignals(),
+    disabled: disabled,
+    errors: group.getErrors("consent_signals"),
+}) }}
 {% if not group.isNewRecord %}
 {{ forms.textField({
     id: "slug",

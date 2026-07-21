@@ -20,6 +20,11 @@ use yii\behaviors\TimestampBehavior;
  * @property boolean $showCheckboxes
  * @property boolean $showAfterConsent
  * @property boolean    $acceptAllButton
+ * @property boolean    $enableConsentMode
+ * @property string     $gcmDataLayerName
+ * @property integer    $gcmWaitForUpdate
+ * @property boolean    $gcmAdsDataRedaction
+ * @property boolean    $gcmUrlPassthrough
  * @property boolean    $refresh
  * @property string     $cookieName
  * @property integer    $cookieExpiry
@@ -53,6 +58,11 @@ class SiteSettings extends ActiveRecord
             'template',
             'templateAsset',
             'acceptAllButton',
+            'enableConsentMode',
+            'gcmDataLayerName',
+            'gcmWaitForUpdate',
+            'gcmAdsDataRedaction',
+            'gcmUrlPassthrough',
             'refresh',
             'refresh_time',
             'dateInvalidated'
@@ -86,14 +96,18 @@ class SiteSettings extends ActiveRecord
     public function rules(): array
     {
         return [
-            [['headline', 'description', 'template', 'cookieName', 'dateInvalidated'], 'string'],
+            [['headline', 'description', 'template', 'cookieName', 'gcmDataLayerName', 'dateInvalidated'], 'string'],
             [['headline', 'description', 'template'], 'required'],
             [['refresh_time'], 'default', 'value'=> 500],
             [['cookieExpiry'], 'default', 'value' => 365],
             [['cookieExpiry'], 'integer', 'min' => 1],
-            [['activated', 'cssAssets', 'jsAssets', 'templateAsset', 'showCheckboxes', 'showAfterConsent', 'acceptAllButton', 'refresh'], 'boolean'],
+            [['gcmDataLayerName'], 'default', 'value' => 'dataLayer'],
+            [['gcmDataLayerName'], 'match', 'pattern' => '/^[a-zA-Z_$][a-zA-Z0-9_$]*$/', 'message' => Craft::t('cookie-consent', 'The data layer name must be a valid JavaScript variable name.')],
+            [['gcmWaitForUpdate'], 'default', 'value' => 2000],
+            [['gcmWaitForUpdate'], 'integer', 'min' => 0],
+            [['activated', 'cssAssets', 'jsAssets', 'templateAsset', 'showCheckboxes', 'showAfterConsent', 'acceptAllButton', 'enableConsentMode', 'gcmAdsDataRedaction', 'gcmUrlPassthrough', 'refresh'], 'boolean'],
             [['activated', 'headline', 'description', 'template', 'templateAsset', 'showCheckboxes', 'showAfterConsent'], 'validatePermission'],
-            [['activated', 'acceptAllButton', 'refresh'], 'default', 'value' => 0],
+            [['activated', 'acceptAllButton', 'enableConsentMode', 'gcmAdsDataRedaction', 'gcmUrlPassthrough', 'refresh'], 'default', 'value' => 0],
             [['cssAssets', 'jsAssets', 'templateAsset'], 'default', 'value' => 1],
             [['site_id', 'refresh_time', 'cookieExpiry'], 'integer']
         ];
@@ -116,6 +130,11 @@ class SiteSettings extends ActiveRecord
             'cookieName' => Craft::t('cookie-consent', 'Name of the consent cookie'),
             'cookieExpiry' => Craft::t('cookie-consent', 'Consent cookie expiry (days)'),
             'acceptAllButton' => Craft::t('cookie-consent', 'Add "Accept All" button'),
+            'enableConsentMode' => Craft::t('cookie-consent', 'Enable Google Consent Mode v2'),
+            'gcmDataLayerName' => Craft::t('cookie-consent', 'Data layer name'),
+            'gcmWaitForUpdate' => Craft::t('cookie-consent', 'Wait for update (ms)'),
+            'gcmAdsDataRedaction' => Craft::t('cookie-consent', 'Redact ads data'),
+            'gcmUrlPassthrough' => Craft::t('cookie-consent', 'URL passthrough'),
             'description' => Craft::t('cookie-consent', 'Description'),
             'template' => Craft::t('cookie-consent', 'Template'),
             'refresh' => Craft::t('cookie-consent', 'Automatic Refresh'),
@@ -139,6 +158,11 @@ class SiteSettings extends ActiveRecord
             'cookieName' => 'cookie-consent:site-settings:content',
             'cookieExpiry' => 'cookie-consent:site-settings:content',
             'acceptAllButton' => 'cookie-consent:site-settings:content',
+            'enableConsentMode' => 'cookie-consent:site-settings:content',
+            'gcmDataLayerName' => 'cookie-consent:site-settings:content',
+            'gcmWaitForUpdate' => 'cookie-consent:site-settings:content',
+            'gcmAdsDataRedaction' => 'cookie-consent:site-settings:content',
+            'gcmUrlPassthrough' => 'cookie-consent:site-settings:content',
             'template' => 'cookie-consent:site-settings:template',
             'templateAsset' => 'cookie-consent:site-settings:template'
         ];

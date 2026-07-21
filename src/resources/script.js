@@ -138,6 +138,7 @@ function addWindowObject() {
         })
         .then(function (consents) {
             window.ccc = consents === null ? {} : consents;
+            updateConsentMode(form, consents);
             window.dispatchEvent(new CustomEvent('ccc-loaded', {detail: window.ccc}));
         })
         .catch(function (error) {
@@ -145,4 +146,45 @@ function addWindowObject() {
             window.ccc = {};
             window.dispatchEvent(new CustomEvent('ccc-loaded', {detail: window.ccc}));
         });
+}
+
+/*
+ * Push a Google Consent Mode v2 update reflecting the visitor's consent.
+ * The form's data-gcm attribute (rendered when consent mode is enabled in
+ * the site settings) holds the data layer name and the map of cookie group
+ * slugs to the consent signals each group grants. A signal is granted when
+ * any consented group grants it.
+ */
+function updateConsentMode(form, consents) {
+    if (typeof form.dataset.gcm === 'undefined' || consents === null || typeof consents.consent_uid === 'undefined') {
+        return;
+    }
+
+    let config;
+    try {
+        config = JSON.parse(form.dataset.gcm);
+    } catch (error) {
+        console.error('Cookie consent: invalid consent mode configuration', error);
+        return;
+    }
+
+    const state = {};
+    for (const slug in config.map) {
+        // 'on' covers consent cookies written by versions before 5.x
+        const granted = consents[slug] === true || consents[slug] === 'on';
+        for (const signal of config.map[slug]) {
+            if (granted || state[signal] !== 'granted') {
+                state[signal] = granted ? 'granted' : 'denied';
+            }
+        }
+    }
+    if (Object.keys(state).length === 0) {
+        return;
+    }
+
+    const dataLayer = window[config.dataLayer] = window[config.dataLayer] || [];
+    // gtag.js expects consent commands as an arguments object, not an array
+    (function () {
+        dataLayer.push(arguments);
+    })('consent', 'update', state);
 }
