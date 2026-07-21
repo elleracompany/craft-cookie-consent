@@ -28,6 +28,8 @@ use yii\behaviors\TimestampBehavior;
  * @property integer $site_id
  * @property integer    $refresh_time
  * @property string     $dateInvalidated
+ * @property-read CookieGroup[] $cookieGroups
+ * @property-read Site $site
  */
 class SiteSettings extends ActiveRecord
 {
@@ -159,7 +161,7 @@ class SiteSettings extends ActiveRecord
         if (isset($this->dateUpdated)) {
             $dates[] = strtotime($this->dateUpdated);
         }
-        foreach ($this->getCookieGroups() as $group) {
+        foreach ($this->cookieGroups as $group) {
             if (isset($group->dateUpdated)) {
                 $dates[] = strtotime($group->dateUpdated);
             }

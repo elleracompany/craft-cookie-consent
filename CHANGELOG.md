@@ -10,6 +10,7 @@
 - The consent submission endpoint now requires a POST request, validates `site_id`, returns a JSON object (`success`, `uid`, `consent`) instead of a bare `true`, and sets `SameSite=Lax` on the consent cookie. Submitting for a site without settings now returns a 400 response instead of causing a PHP error.
 
 ### Internal
+- PHPStan level raised from 0 to 4 and the codebase passes cleanly; relation magic properties are now documented with `@property-read` annotations.
 - The CP Readme page now resolves the README through the plugin's base path and no longer errors if the file is missing.
 - Normalized code style across the plugin: consistent 4-space indentation (tabs removed), braces on all conditionals, and an `.editorconfig` added.
 - Added parameter and return type declarations throughout (fixing PHP 8.4 implicit-nullable deprecation warnings), replaced the deprecated `SluggableBehavior::className()` call and string class names with `::class` constants, and corrected copy-pasted docblocks in the record classes. `SiteSettings::getLastUpdate()` no longer errors when there is nothing to compare.
@@ -22,6 +23,7 @@
 - "Invalidate Consents" now requires a POST request with a CSRF token and the `cookie-consent:site-settings` permission (plus site edit permission on multisite installs). Previously any logged-in CP user could invalidate all consents via a GET request. The button now asks for confirmation, and an unknown site no longer causes a PHP error.
 
 ### Bugfix
+- The "Last updated" date shown by `craft.cookieConsent.updated` now takes cookie group changes into account as intended. The previous code iterated over the relation query object instead of the related records, so group updates never affected the date.
 - The "Required", "Name", "Description", "Provider" and "Expiry" strings in the banner template were translated with the `site` category instead of `cookie-consent`, so the plugin's bundled translations (e.g. Norwegian) were never used for them.
 - The banner no longer errors when a cookie group has no cookies JSON stored.
 - An unknown `?site=` handle in the CP settings pages now falls back to the primary site instead of causing a PHP error.

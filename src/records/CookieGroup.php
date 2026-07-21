@@ -23,6 +23,8 @@ use yii\web\NotFoundHttpException;
  * @property string $description
  * @property string $slug
  * @property integer $order
+ * @property-read Site $site
+ * @property-read SiteSettings $siteSettings
  */
 class CookieGroup extends ActiveRecord
 {

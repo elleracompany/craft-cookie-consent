@@ -120,7 +120,7 @@ class SettingsController extends Controller
         }
         $record->load(Craft::$app->request->post(), '');
         foreach (['activated', 'jsAssets', 'cssAssets', 'templateAsset', 'showCheckboxes', 'showAfterConsent'] as $lightswitch) {
-            $record->$lightswitch = (int) $record->$lightswitch;
+            $record->$lightswitch = (bool) $record->$lightswitch;
         }
         if ($record->save()) {
             Craft::$app->getSession()->setNotice(Craft::t('cookie-consent', 'Settings saved.'));
