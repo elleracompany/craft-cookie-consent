@@ -116,7 +116,9 @@ function toggleTab(event) {
 
 /*
  * Expose the current consent state as window.ccc so site scripts can
- * check what the visitor has consented to.
+ * check what the visitor has consented to. Dispatches a 'ccc-loaded'
+ * event on window once the state is available, with the consent state
+ * as the event detail.
  */
 function addWindowObject() {
     const form = document.querySelector('#elc-cookie-consent-form');
@@ -133,9 +135,11 @@ function addWindowObject() {
         })
         .then(function (consents) {
             window.ccc = consents === null ? {} : consents;
+            window.dispatchEvent(new CustomEvent('ccc-loaded', {detail: window.ccc}));
         })
         .catch(function (error) {
             console.error('Cookie consent: could not fetch consent state', error);
             window.ccc = {};
+            window.dispatchEvent(new CustomEvent('ccc-loaded', {detail: window.ccc}));
         });
 }

@@ -110,5 +110,17 @@ This object contains key-value pairs of consents and their status.
 
 The object will be created if the default javascript file is loaded, and a form with the ID #elc-cookie-consent-form exists and has the `data-show`-attribute has the url to the consent show endpoint(/cookie-consent/show)
 
+As of version 5.1.0, a `ccc-loaded` event is dispatched on `window` whenever the consent state has been (re)loaded — both on page load and after the visitor submits or updates their consent. The consent state is available as the event's `detail`, so site scripts can react to consent without polling or reloading the page:
+
+```js
+window.addEventListener('ccc-loaded', function (event) {
+    if (event.detail['marketing']) {
+        // Load marketing scripts (GTM, pixels, ...) here
+    }
+});
+```
+
+This is especially useful together with static page caches (e.g. Blitz), where conditionally rendering scripts server-side with `craft.cookieConsent.getConsent()` would get baked into the cached page.
+
 ## Acknowledgements
 Plugin Icon designed by Trinh Ho from Flaticon
