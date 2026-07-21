@@ -5,6 +5,9 @@
 ### Improved
 - The consent submission endpoint now requires a POST request, validates `site_id`, returns a JSON object (`success`, `uid`, `consent`) instead of a bare `true`, and sets `SameSite=Lax` on the consent cookie. Submitting for a site without settings now returns a 400 response instead of causing a PHP error.
 
+### Removed
+- Removed the unreachable `settings/retention` CP action: it had no route and referenced a template that never existed. Consent retention is handled by the `cookie-consent/retention/clear` console command (see README).
+
 ### Security
 - "Invalidate Consents" now requires a POST request with a CSRF token and the `cookie-consent:site-settings` permission (plus site edit permission on multisite installs). Previously any logged-in CP user could invalidate all consents via a GET request. The button now asks for confirmation, and an unknown site no longer causes a PHP error.
 

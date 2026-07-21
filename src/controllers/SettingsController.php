@@ -99,24 +99,6 @@ class SettingsController extends Controller
 		return $this->renderTemplate('cookie-consent/settings/consent', $variables);
 	}
 
-    /**
-     * Render the view for consent retention
-     *
-     * @return \yii\web\Response
-     */
-    public function actionRetention()
-    {
-        Craft::$app->getRequest();
-        $variables = [
-        ];
-        $this->_prepVariables($variables);
-        $variables['currentPage'] = 'retention';
-        $variables['title'] = Craft::t('cookie-consent', 'Consent Retention');
-        $this->_prepSiteSettingsPermissionVariables($variables);
-
-        return $this->renderTemplate('cookie-consent/settings/retention', $variables);
-    }
-
 	/**
 	 * Save site settings
 	 *
