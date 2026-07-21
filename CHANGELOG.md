@@ -17,6 +17,7 @@
 - The consent submission endpoint now requires a POST request, validates `site_id`, returns a JSON object (`success`, `uid`, `consent`) instead of a bare `true`, and sets `SameSite=Lax` on the consent cookie. Submitting for a site without settings now returns a 400 response instead of causing a PHP error.
 
 ### Internal
+- Documentation: added README sections on working with static caching / Blitz ([#115](https://github.com/elleracompany/craft-cookie-consent/issues/115), [#120](https://github.com/elleracompany/craft-cookie-consent/issues/120)), Google Consent Mode v2 ([#106](https://github.com/elleracompany/craft-cookie-consent/issues/106)), and embedding the consent form on a specific page.
 - Added recommended composer.json metadata: plugin description, developer name/URL/email and issue tracker/docs support links.
 - Site-permission and required-group lookups now use strict `in_array()` comparisons per the Craft coding guidelines, and `getConsent()` requires a string slug.
 - PHPStan level raised from 0 to 4 and the codebase passes cleanly; relation magic properties are now documented with `@property-read` annotations.
