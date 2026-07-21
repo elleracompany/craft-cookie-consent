@@ -103,6 +103,11 @@ class Install extends Migration
 			'CASCADE',
 			'CASCADE'
 		);
+		$this->createIndex(
+			'idx_cookie_consent_consent_site_date',
+			CookieConsent::CONSENT_TABLE,
+			['site_id', 'dateUpdated']
+		);
 		return true;
 	}
 

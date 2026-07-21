@@ -3,6 +3,7 @@
 ## 5.1.0 - 2026-07-21
 
 ### Improved
+- Added a database index on the consent table (`site_id`, `dateUpdated`), speeding up the CP consent list and the retention command on large tables (schema version 1.6.0).
 - The banner form's refresh settings are now rendered as proper quoted `data-refresh`/`data-refreshtime` attributes via the new `craft.cookieConsent.refreshEnabled` and `craft.cookieConsent.refreshTime` variables. `getRefreshDataAttr()` (which returned a raw unescaped HTML string) is deprecated but still works for custom templates.
 - Modernized the banner script: removed IE8-era `attachEvent` fallbacks and the hand-rolled form serializer, replaced `XMLHttpRequest` with `fetch()`, merged the duplicated save/accept-all submit paths, and errors are now reported with `console.error`. Loading the JS asset without the banner template no longer throws. The script now requires a browser with `fetch` support (all browsers since ~2017).
 - The `cookie-consent/retention/clear` console command now deletes consents with a single query instead of loading every record into memory, returns proper exit codes, writes errors to stderr, and aborts with an error when `--sid` or `--handle` doesn't match a site. Previously an unknown site was silently ignored and consents were cleared for **all** sites.
