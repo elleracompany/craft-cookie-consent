@@ -3,6 +3,7 @@
 ## 5.1.0 - 2026-07-21
 
 ### Improved
+- The `cookie-consent/retention/clear` console command now deletes consents with a single query instead of loading every record into memory, returns proper exit codes, writes errors to stderr, and aborts with an error when `--sid` or `--handle` doesn't match a site. Previously an unknown site was silently ignored and consents were cleared for **all** sites.
 - The consent submission endpoint now requires a POST request, validates `site_id`, returns a JSON object (`success`, `uid`, `consent`) instead of a bare `true`, and sets `SameSite=Lax` on the consent cookie. Submitting for a site without settings now returns a 400 response instead of causing a PHP error.
 
 ### Internal
