@@ -51,7 +51,10 @@ function submit(acceptAll) {
     withCsrf(form, data, function (payload) {
         fetch(form.dataset.url, {
             method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Accept': 'application/json'
+            },
             body: payload
         }).then(function (response) {
             addWindowObject();

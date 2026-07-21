@@ -71,6 +71,13 @@ class ConsentController extends Controller
             'sameSite' => Cookie::SAME_SITE_LAX,
         ]));
 
+        // Graceful fallback when the banner form is submitted natively
+        // (JS disabled or not yet bound): return to the originating page
+        // instead of rendering raw JSON (#116)
+        if (!$request->getAcceptsJson()) {
+            return $this->redirect($request->getReferrer() ?: '/');
+        }
+
         return $this->asJson([
             'success' => true,
             'uid' => $consentRecord->uid,
