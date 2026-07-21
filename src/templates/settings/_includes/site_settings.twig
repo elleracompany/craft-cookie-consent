@@ -134,5 +134,5 @@
     <button type="button" class="btn submit formsubmit"
             data-action="cookie-consent/settings/invalidate-consents"
             data-confirm="{{ 'Are you sure you want to invalidate all consents for this site?'|t('cookie-consent') }}">{{ 'Invalidate Consents'|t('cookie-consent') }}</button>
-    <p style="margin-top: 0 !important; margin-bottom: 7px !important">Last invalidated: {{ model.dateInvalidated }}</p>
+    <p style="margin-top: 0 !important; margin-bottom: 7px !important">{{ "Last invalidated:"|t('cookie-consent') }} {{ model.dateInvalidated }}</p>
 </div>
