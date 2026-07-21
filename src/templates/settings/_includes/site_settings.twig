@@ -71,6 +71,18 @@
 }) }}
 
 {{ forms.textField({
+    label: model.getAttributeLabel('cookieExpiry'),
+    instructions: 'Number of days before the consent cookie expires and the visitor is asked for consent again. Defaults to 365.'|t('cookie-consent'),
+    id: "cookieExpiry",
+    name: "cookieExpiry",
+    type: "number",
+    min: 1,
+    disabled: not canUpdate,
+    value: model.cookieExpiry,
+    errors: model.getErrors("cookieExpiry"),
+}) }}
+
+{{ forms.textField({
     label: model.getAttributeLabel('headline'),
     id: "headline",
     name: "headline",
@@ -131,6 +143,8 @@
 </div>
 
 <div class="flex" style="align-items: center; margin-top: 50px;">
-    <a href="{{ invalidate_link }}" class="btn submit">Invalidate Consents</a>
-    <p style="margin-top: 0 !important; margin-bottom: 7px !important">Last invalidated: {{ model.dateInvalidated }}</p>
+    <button type="button" class="btn submit formsubmit"
+            data-action="cookie-consent/settings/invalidate-consents"
+            data-confirm="{{ 'Are you sure you want to invalidate all consents for this site?'|t('cookie-consent') }}">{{ 'Invalidate Consents'|t('cookie-consent') }}</button>
+    <p style="margin-top: 0 !important; margin-bottom: 7px !important">{{ "Last invalidated:"|t('cookie-consent') }} {{ model.dateInvalidated }}</p>
 </div>

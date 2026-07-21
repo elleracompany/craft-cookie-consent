@@ -1,203 +1,196 @@
 <?php
 
-
 namespace elleracompany\cookieconsent\services;
 
 use Craft;
-use craft\helpers\Db;
+use elleracompany\cookieconsent\CookieConsent;
 use elleracompany\cookieconsent\records\Consent;
 use elleracompany\cookieconsent\records\SiteSettings;
 use yii\base\Component;
-use yii\web\Cookie;
 
 class Variables extends Component
 {
-	/**
-	 * Current site settings
-	 * @var SiteSettings|null
-	 */
-	private $settings;
+    /**
+     * Current site settings
+     */
+    private ?SiteSettings $settings = null;
 
-	/**
-	 * User consent
-	 * @var bool
-	 */
-	private $consent;
+    /**
+     * User consent
+     */
+    private bool $consent = false;
 
-	/**
-	 * User consent content
-	 * @var string
-	 */
-	private $consent_string;
+    /**
+     * Decoded consent cookie payload
+     */
+    private ?object $consentData = null;
 
-	/**
-	 * Initiate the plugin for this site
-	 */
-	public function init()
-	{
-		$this->settings = SiteSettings::find()->where(['site_id' => Craft::$app->getSites()->currentSite->id])->with('cookieGroups')->one();
+    /**
+     * Initiate the plugin for this site
+     */
+    public function init(): void
+    {
+        /** @var SiteSettings|null $settings */
+        $settings = SiteSettings::find()->where(['site_id' => Craft::$app->getSites()->currentSite->id])->with('cookieGroups')->one();
+        $this->settings = $settings;
 
-		if(isset($this->settings->activated) && $this->settings->activated == 1)
-        {
-            $consent = Craft::$app->session->get('cookieConsent');
+        if ($this->settings && $this->settings->activated) {
+            $cookie = Craft::$app->request->cookies->getValue($this->settings->cookieName);
 
-            if($consent)
-            {
-                $cookie = new Cookie([
-                    'name' => $this->settings->cookieName,
-                    'value' => $consent,
-                    'expire' => strtotime('+1 year', time())
-                ]);
+            $decoded = $cookie !== null ? json_decode($cookie) : null;
+            $this->consentData = is_object($decoded) ? $decoded : null;
+            $this->consent = isset($this->consentData->consent_uid);
 
-                Craft::$app->response->cookies->add($cookie);
-            }
-            else $consent = Craft::$app->request->cookies->get($this->settings->cookieName);
-
-            $this->consent = $consent !== null;
-            $this->consent_string = json_decode($consent);
-
-            if($this->consent)
-            {
-                $consentRecord = Consent::findOne($this->consent_string->consent_uid);
-                if(!$consentRecord || strtotime($consentRecord->dateUpdated) < strtotime($this->settings->dateInvalidated)) {
+            if ($this->consent) {
+                $consentRecord = Consent::findOne($this->consentData->consent_uid);
+                if (!$consentRecord || strtotime($consentRecord->dateUpdated) < strtotime($this->settings->dateInvalidated)) {
                     $this->consent = false;
-                    $this->consent_string = null;
+                    $this->consentData = null;
                 }
             }
-
         }
 
-		parent::init();
-	}
-
-	/**
-	 * Is the banner active on this site?
-	 *
-	 * @return bool
-	 */
-	public function activated() : bool
-	{
-		return is_object($this->settings) && isset($this->settings->activated) ? (bool) $this->settings->activated : false;
-	}
-
-	/**
-	 * Should we render anything?
-	 *
-	 * @return bool
-	 */
-	public function render() : bool
-	{
-		return $this->activated() && (!$this->consent || $this->settings->showAfterConsent);
-	}
-
-	/**
-	 * Should we render anything?
-	 *
-	 * @return bool
-	 */
-	public function hideCheckboxes() : bool
-	{
-		return ! (bool) $this->settings->showCheckboxes;
-	}
-
-	/**
-	 * Should we render the banner?
-	 *
-	 * @return bool
-	 */
-	public function renderTemplate() : bool
-	{
-		return $this->settings->templateAsset == 1;
-	}
-
-	/**
-	 * Get Description
-	 *
-	 * @return string
-	 */
-	public function description() : string
-	{
-		return $this->settings->description;
-	}
-	/**
-	 * Get Description
-	 *
-	 * @return string
-	 */
-	public function updated() : string
-	{
-		return $this->settings->getLastUpdate();
-	}
-
-	/**
-	 * Get Headline
-	 *
-	 * @return string
-	 */
-	public function headline() : string
-	{
-		return $this->settings->headline;
-	}
-
-	public function getTemplate() : string
-	{
-		return $this->settings->template;
-	}
-
-	/**
-	 * @throws \yii\base\InvalidConfigException
-	 */
-	public function loadCss()
-	{
-		if($this->settings->cssAssets) Craft::$app->view->registerAssetBundle("elleracompany\\cookieconsent\\CSSAssets");
-	}
-
-	/**
-	 * @throws \yii\base\InvalidConfigException
-	 */
-	public function loadJs()
-	{
-		if($this->settings->jsAssets) Craft::$app->view->registerAssetBundle("elleracompany\\cookieconsent\\JSAssets");
-	}
-
-	public function groups()
-	{
-		return $this->settings ? $this->settings->cookieGroups : [];
-	}
-
-	public function consentGiven()
-	{
-		return $this->consent;
-	}
-
-	public function showAfterConsent()
-	{
-		return (bool) $this->settings->showAfterConsent;
-	}
-
-    public function showAcceptAllButton()
-    {
-        return (bool) $this->settings->acceptAllButton;
+        parent::init();
     }
 
-	public function getUid()
-	{
-		return $this->consent_string->consent_uid;
-	}
-
-	public function getConsent($slug)
-	{
-		return isset($this->consent_string->$slug) ? $this->consent_string->$slug == 'on' : in_array($slug, $this->settings->getRequiredCookieGroups());
-	}
-
-    public function getConsents()
+    /**
+     * Is the banner active on this site?
+     */
+    public function activated(): bool
     {
-        return $this->consent_string;
+        return (bool) $this->settings?->activated;
     }
 
-	public function getRefreshDataAttr()
+    /**
+     * Should we render anything?
+     */
+    public function render(): bool
     {
-        if($this->settings->refresh) return "data-refresh=true data-refreshTime={$this->settings->refresh_time}";
+        return $this->activated() && (!$this->consent || $this->settings->showAfterConsent);
+    }
+
+    /**
+     * Should the checkboxes be hidden until "Details" is opened?
+     */
+    public function hideCheckboxes(): bool
+    {
+        return $this->settings ? !$this->settings->showCheckboxes : false;
+    }
+
+    /**
+     * Should we render the banner?
+     */
+    public function renderTemplate(): bool
+    {
+        return (bool) $this->settings?->templateAsset;
+    }
+
+    /**
+     * Get Description
+     */
+    public function description(): string
+    {
+        return $this->settings->description ?? CookieConsent::DEFAULT_DESCRIPTION;
+    }
+
+    /**
+     * Get the timestamp of the last settings/group update
+     */
+    public function updated(): ?int
+    {
+        return $this->settings?->getLastUpdate();
+    }
+
+    /**
+     * Get Headline
+     */
+    public function headline(): string
+    {
+        return $this->settings->headline ?? CookieConsent::DEFAULT_HEADLINE;
+    }
+
+    public function getTemplate(): string
+    {
+        return $this->settings->template ?? CookieConsent::DEFAULT_TEMPLATE;
+    }
+
+    /**
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function loadCss(): void
+    {
+        if ($this->settings?->cssAssets) {
+            Craft::$app->view->registerAssetBundle(\elleracompany\cookieconsent\CSSAssets::class);
+        }
+    }
+
+    /**
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function loadJs(): void
+    {
+        if ($this->settings?->jsAssets) {
+            Craft::$app->view->registerAssetBundle(\elleracompany\cookieconsent\JSAssets::class);
+        }
+    }
+
+    public function groups(): array
+    {
+        return $this->settings ? $this->settings->cookieGroups : [];
+    }
+
+    public function consentGiven(): bool
+    {
+        return $this->consent;
+    }
+
+    public function showAfterConsent(): bool
+    {
+        return (bool) $this->settings?->showAfterConsent;
+    }
+
+    public function showAcceptAllButton(): bool
+    {
+        return (bool) $this->settings?->acceptAllButton;
+    }
+
+    public function getUid(): ?string
+    {
+        return $this->consentData->consent_uid ?? null;
+    }
+
+    public function getConsent(string $slug): bool
+    {
+        if (isset($this->consentData->$slug)) {
+            // Cookies written since 5.x store booleans; 'on' covers cookies from older versions
+            return $this->consentData->$slug === true || $this->consentData->$slug === 'on';
+        }
+        return $this->settings ? in_array($slug, $this->settings->getRequiredCookieGroups(), true) : false;
+    }
+
+    public function getConsents(): ?object
+    {
+        return $this->consentData;
+    }
+
+    public function refreshEnabled(): bool
+    {
+        return (bool) $this->settings?->refresh;
+    }
+
+    public function refreshTime(): int
+    {
+        return (int) ($this->settings->refresh_time ?? 0);
+    }
+
+    /**
+     * @deprecated Use refreshEnabled() and refreshTime() and build the attributes in the template instead.
+     */
+    public function getRefreshDataAttr(): string
+    {
+        if ($this->refreshEnabled()) {
+            return "data-refresh=true data-refreshTime={$this->refreshTime()}";
+        }
         return "data-refresh=false";
     }
 }

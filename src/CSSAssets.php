@@ -1,26 +1,17 @@
 <?php
 
-
 namespace elleracompany\cookieconsent;
 
 class CSSAssets extends \craft\web\AssetBundle
 {
-	public function init()
-	{
-		$this->sourcePath = '@elleracompany/cookieconsent/resources';
+    public function init(): void
+    {
+        $this->sourcePath = '@elleracompany/cookieconsent/resources';
 
-		$this->depends = [
+        $this->css = [
+            'style.css',
+        ];
 
-		];
-
-		$this->js = [
-
-		];
-
-		$this->css = [
-			'style.css',
-		];
-
-		parent::init();
-	}
+        parent::init();
+    }
 }

@@ -26,7 +26,7 @@
                                 {% set visitorConsent = consent.data|json_decode %}
                                 <tr>
                                     <td data-title="uid"><span title="{{ consent.uid }}">{{ consent.uid|slice(0, 8) }}</span></td>
-                                    <td data-title="uid">{{ consent.ip == null ? '<span class="status red"></span>' : '<span class="status green"></span>' }}</td>
+                                    <td data-title="ip">{% if consent.ip is null %}<span class="status red"></span>{% else %}<span class="status green"></span>{% endif %}</td>
                                     {% for cookieGroup in model.cookieGroups %}
                                         <td data-title="cookie-{{ cookieGroup.slug }}">{% if attribute(visitorConsent, cookieGroup.slug) is defined and attribute(visitorConsent, cookieGroup.slug) %}<span class="status green"></span>{% else %}<span class="status red"></span>{% endif %}</td>
                                     {% endfor %}
@@ -47,7 +47,7 @@
                                 {% if pagination.next is not null %}
                                     <a href="{{ pagination.next }}" class="page-link" data-icon="rightangle"> </a>
                                 {% endif %}
-                                <div class="page-info">{{ pagination.from }}-{{ pagination.to }} of {{ pagination.total }} elements</div>
+                                <div class="page-info">{{ "{from}-{to} of {total} elements"|t('cookie-consent', {from: pagination.from, to: pagination.to, total: pagination.total}) }}</div>
                             </div>
                         </div>
                     </div>

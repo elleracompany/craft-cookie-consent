@@ -1,5 +1,54 @@
 # Release Notes for Cookie Consent
 
+## 5.1.0 - 2026-07-21
+
+### Added
+- The plugin's templates are now registered as site templates, so the consent form can be embedded on a specific page (e.g. a privacy policy page) with `{% include 'cookie-consent/banner' %}` ([#57](https://github.com/elleracompany/craft-cookie-consent/issues/57)). See the README for details. This also means you can override the plugin templates from your site's `templates/cookie-consent/` folder.
+- The consent cookie's lifetime is now configurable per site via the new "Consent cookie expiry (days)" setting — previously hardcoded to one year ([#121](https://github.com/elleracompany/craft-cookie-consent/issues/121)). Defaults to 365 days (schema version 1.7.0).
+
+### Improved
+- The banner script now dispatches a `ccc-loaded` event on `window` whenever the consent state has been loaded or updated, with the consent state as the event `detail` ([#118](https://github.com/elleracompany/craft-cookie-consent/issues/118)). This lets site scripts react to consent changes (e.g. loading GTM after acceptance) without polling `window.ccc` or reloading the page — see the README for an example.
+- CP save/delete/invalidate actions now use Craft's `asSuccess()`/`asFailure()`/`asModelSuccess()`/`asModelFailure()` response helpers. Saving site settings now redirects after success (preventing form re-submission on refresh) and stays on the selected site, and a failed cookie group deletion now shows an error instead of silently redirecting.
+- The front-end banner bootstrapping (settings lookup, asset loading, template hook) is now deferred with `Craft::$app->onInit()` as recommended by the Craft plugin guide, instead of querying the database during plugin initialization.
+- Added a database index on the consent table (`site_id`, `dateUpdated`), speeding up the CP consent list and the retention command on large tables (schema version 1.6.0).
+- The banner form's refresh settings are now rendered as proper quoted `data-refresh`/`data-refreshtime` attributes via the new `craft.cookieConsent.refreshEnabled` and `craft.cookieConsent.refreshTime` variables. `getRefreshDataAttr()` (which returned a raw unescaped HTML string) is deprecated but still works for custom templates.
+- Modernized the banner script: removed IE8-era `attachEvent` fallbacks and the hand-rolled form serializer, replaced `XMLHttpRequest` with `fetch()`, merged the duplicated save/accept-all submit paths, and errors are now reported with `console.error`. Loading the JS asset without the banner template no longer throws. The script now requires a browser with `fetch` support (all browsers since ~2017).
+- The `cookie-consent/retention/clear` console command now deletes consents with a single query instead of loading every record into memory, returns proper exit codes, writes errors to stderr, and aborts with an error when `--sid` or `--handle` doesn't match a site. Previously an unknown site was silently ignored and consents were cleared for **all** sites.
+- The consent submission endpoint now requires a POST request, validates `site_id`, returns a JSON object (`success`, `uid`, `consent`) instead of a bare `true`, and sets `SameSite=Lax` on the consent cookie. Submitting for a site without settings now returns a 400 response instead of causing a PHP error.
+
+### Internal
+- Documentation: added README sections on working with static caching / Blitz ([#115](https://github.com/elleracompany/craft-cookie-consent/issues/115), [#120](https://github.com/elleracompany/craft-cookie-consent/issues/120)), Google Consent Mode v2 ([#106](https://github.com/elleracompany/craft-cookie-consent/issues/106)), and embedding the consent form on a specific page.
+- Added recommended composer.json metadata: plugin description, developer name/URL/email and issue tracker/docs support links.
+- Site-permission and required-group lookups now use strict `in_array()` comparisons per the Craft coding guidelines, and `getConsent()` requires a string slug.
+- PHPStan level raised from 0 to 4 and the codebase passes cleanly; relation magic properties are now documented with `@property-read` annotations.
+- The CP Readme page now resolves the README through the plugin's base path and no longer errors if the file is missing.
+- Normalized code style across the plugin: consistent 4-space indentation (tabs removed), braces on all conditionals, and an `.editorconfig` added.
+- Added parameter and return type declarations throughout (fixing PHP 8.4 implicit-nullable deprecation warnings), replaced the deprecated `SluggableBehavior::className()` call and string class names with `::class` constants, and corrected copy-pasted docblocks in the record classes. `SiteSettings::getLastUpdate()` no longer errors when there is nothing to compare.
+- Removed dead code: a large commented-out block and no-op request calls in the settings controller, an unused variable in the site permission check, leftover TODO stubs and empty asset arrays.
+
+### Removed
+- Removed the unreachable `settings/retention` CP action: it had no route and referenced a template that never existed. Consent retention is handled by the `cookie-consent/retention/clear` console command (see README).
+
+### Security
+- "Invalidate Consents" now requires a POST request with a CSRF token and the `cookie-consent:site-settings` permission (plus site edit permission on multisite installs). Previously any logged-in CP user could invalidate all consents via a GET request. The button now asks for confirmation, and an unknown site no longer causes a PHP error.
+
+### Bugfix
+- If the banner form is submitted natively (JS disabled or not yet loaded — seen on some iOS devices), the consent endpoint now redirects back to the originating page instead of rendering a raw response ([#116](https://github.com/elleracompany/craft-cookie-consent/issues/116)). The banner script also explicitly requests JSON.
+- Validation errors are now displayed when saving a cookie group fails ([#96](https://github.com/elleracompany/craft-cookie-consent/issues/96)). A strict int/string comparison on `site_id` made the edit page redirect to the Readme after a failed save, discarding the errors. The Name and Description fields are also marked as required in the form.
+- The "Last updated" date shown by `craft.cookieConsent.updated` now takes cookie group changes into account as intended. The previous code iterated over the relation query object instead of the related records, so group updates never affected the date.
+- The "Required", "Name", "Description", "Provider" and "Expiry" strings in the banner template were translated with the `site` category instead of `cookie-consent`, so the plugin's bundled translations (e.g. Norwegian) were never used for them.
+- Translation overhaul ([#82](https://github.com/elleracompany/craft-cookie-consent/issues/82)): all remaining hardcoded CP strings are now translatable ("Last invalidated:", the slug-change warning, the consent list pagination), the translation files now cover every string the plugin uses — around 30 missing keys added, including "Accept All" which had no Norwegian translation — and stale keys were removed.
+- The IP column in the consent list now renders its status indicator correctly instead of printing escaped HTML.
+- The banner no longer errors when a cookie group has no cookies JSON stored.
+- An unknown `?site=` handle in the CP settings pages now falls back to the primary site instead of causing a PHP error.
+- Consent list pagination links are now generated with `UrlHelper::cpUrl()` and keep the selected site. Previously they were built by string concatenation (broken with a custom `cpTrigger` setup or subdirectory installs) and always jumped back to the primary site on multisite installs.
+- Using `craft.cookieConsent.*` template variables on a site that has no Cookie Consent settings row (or a tampered/non-JSON consent cookie) no longer causes a PHP error. Every variable now falls back to a sensible default when settings are missing.
+- `craft.cookieConsent.getConsent()` compared stored consent values against the string `'on'` even though the consent cookie stores booleans; it only returned the right result through PHP's loose comparison rules. It now checks booleans strictly (still accepting `'on'` from cookies set by very old versions).
+- Activating the banner made every front-end page uncacheable: `{{ csrfInput() }}` in the banner template caused Craft to overwrite the response's cache headers with no-cache headers, and the plugin opened a PHP session (and re-sent the consent cookie) on every request. The CSRF token is now fetched via ajax when consent is submitted, and the consent state is read from the request cookie only.
+
+### Breaking
+- `{{ csrfInput() }}` was removed from the banner template. If you use a custom template based on the old one, remove `{{ csrfInput() }}` and add `data-csrf="{{ actionUrl('cookie-consent/consent/csrf') }}"` to the form tag to get the same caching fix. Custom templates that keep `{{ csrfInput() }}` continue to work, but their pages remain uncacheable.
+
 ## 5.0.4 - 2024-11-07
 
 ### Updated

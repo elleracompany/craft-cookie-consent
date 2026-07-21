@@ -1,211 +1,148 @@
 document.addEventListener('DOMContentLoaded', function () {
-    /*
-     * addEventListner: For all major browsers, except IE 8 and earlier
-     * attachEvent:     For IE 8 and earlier versions
-     */
-    let detailLink = document.getElementById("elc-detail-link");
-    if (detailLink !== null) {
-        if (detailLink.addEventListener) {
-            detailLink.addEventListener("click", toggleExpand);
-        } else if (detailLink.attachEvent) {
-            detailLink.attachEvent("onclick", toggleExpand);
-        }
-    }
+    bind('elc-detail-link', toggleExpand);
+    bind('elc-hide-detail-link', toggleExpand);
+    bind('elc-save-link', submitConsent);
+    bind('elc-accept-link', submitConsent);
+    bind('elc-accept-all-link', submitAllConsent);
+    bind('elc-tab-link', toggleTab);
 
-    let hideDetailLink = document.getElementById("elc-hide-detail-link");
-    if (hideDetailLink !== null) {
-        if (hideDetailLink.addEventListener) {
-            hideDetailLink.addEventListener("click", toggleExpand);
-        } else if (hideDetailLink.attachEvent) {
-            hideDetailLink.attachEvent("onclick", toggleExpand);
-        }
-    }
-
-    let saveLink = document.getElementById("elc-save-link");
-    if (saveLink !== null) {
-        if (saveLink.addEventListener) {
-            saveLink.addEventListener("click", submitConsent);
-        } else if (saveLink.attachEvent) {
-            saveLink.attachEvent("onclick", submitConsent);
-        }
-    }
-
-    let acceptLink = document.getElementById("elc-accept-link");
-    if (acceptLink !== null) {
-        if (acceptLink.addEventListener) {
-            acceptLink.addEventListener("click", submitConsent);
-        } else if (acceptLink.attachEvent) {
-            acceptLink.attachEvent("onclick", submitConsent);
-        }
-    }
-
-
-    let acceptAllLink = document.getElementById("elc-accept-all-link");
-    if (acceptAllLink !== null) {
-        if (acceptAllLink.addEventListener) {
-            acceptAllLink.addEventListener("click", submitAllConsent);
-        } else if (acceptAllLink.attachEvent) {
-            acceptAllLink.attachEvent("onclick", submitAllConsent);
-        }
-    }
-
-    let tabLink = document.getElementById("elc-tab-link");
-    if (tabLink !== null) {
-        if (tabLink.addEventListener) {
-            tabLink.addEventListener("click", toggleTab);
-        } else if (tabLink.attachEvent) {
-            tabLink.attachEvent("onclick", toggleTab);
-        }
-    }
-
-    addWindowObject()
+    addWindowObject();
 });
 
-function submitConsent(event) {
-
-    event.preventDefault();
-
-    let form = document.querySelector('#elc-cookie-consent-form');
-    let data = serialize(form);
-
-    document.getElementById("elc-cookie-consent").classList.toggle('elc-hidden');
-    let cookieTab = document.getElementById("elc-cookie-tab");
-    if(typeof cookieTab !== 'undefined' && cookieTab !== null) document.getElementById("elc-cookie-tab").classList.toggle('elc-hidden');
-
-    let xhr = new XMLHttpRequest();
-    xhr.open('POST', form.dataset.url);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.send(data);
-
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-            addWindowObject()
-            if (xhr.status !== 200) console.log('Error: ' + xhr.status);
-            else if (form.hasAttribute("data-refresh") && form.dataset.refresh === "true" && form.hasAttribute("data-refreshtime")) {
-                refresh(form.dataset.refreshtime)
-            }
-        }
+function bind(id, handler) {
+    const element = document.getElementById(id);
+    if (element !== null) {
+        element.addEventListener('click', handler);
     }
+}
+
+function submitConsent(event) {
+    event.preventDefault();
+    submit(false);
 }
 
 function submitAllConsent(event) {
-
     event.preventDefault();
+    submit(true);
+}
 
-    let form = document.querySelector('#elc-cookie-consent-form');
+function submit(acceptAll) {
+    const form = document.querySelector('#elc-cookie-consent-form');
 
-    for (let i = 0; i < form.elements.length; i++ ) {
-
-        if (form.elements[i].type == 'checkbox') {
-
-            if (form.elements[i].checked == false) {
-                form.elements[i].checked = true;
+    if (acceptAll) {
+        for (const field of form.elements) {
+            if (field.type === 'checkbox') {
+                field.checked = true;
             }
         }
     }
 
-    let data = serialize(form);
-    document.getElementById("elc-cookie-consent").classList.toggle('elc-hidden');
-    let cookieTab = document.getElementById("elc-cookie-tab");
-    if(typeof cookieTab !== 'undefined' && cookieTab !== null) document.getElementById("elc-cookie-tab").classList.toggle('elc-hidden');
-
-    let xhr = new XMLHttpRequest();
-    xhr.open('POST', form.dataset.url);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.send(data.concat('&acceptAll=true'));
-
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-            if (xhr.status !== 200) console.log('Error: ' + xhr.status);
-            else if (form.hasAttribute("data-refresh") && form.dataset.refresh === "true" && form.hasAttribute("data-refreshtime")) {
-                refresh(form.dataset.refreshtime)
-            }
-        }
+    let data = new URLSearchParams(new FormData(form)).toString();
+    if (acceptAll) {
+        data += '&acceptAll=true';
     }
+
+    document.getElementById('elc-cookie-consent').classList.toggle('elc-hidden');
+    const cookieTab = document.getElementById('elc-cookie-tab');
+    if (cookieTab !== null) {
+        cookieTab.classList.toggle('elc-hidden');
+    }
+
+    withCsrf(form, data, function (payload) {
+        fetch(form.dataset.url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Accept': 'application/json'
+            },
+            body: payload
+        }).then(function (response) {
+            addWindowObject();
+            if (!response.ok) {
+                console.error('Cookie consent: submit failed with status ' + response.status);
+            } else if (form.dataset.refresh === 'true' && form.dataset.refreshtime) {
+                refresh(form.dataset.refreshtime);
+            }
+        }).catch(function (error) {
+            console.error('Cookie consent: submit failed', error);
+        });
+    });
+}
+
+/*
+ * Fetch a fresh CSRF token and append it to the serialized form data.
+ * The token is not part of the rendered banner, so cached pages stay
+ * valid for every visitor; it is only requested when consent is submitted.
+ */
+function withCsrf(form, data, callback) {
+    if (typeof form.dataset.csrf === 'undefined') {
+        callback(data);
+        return;
+    }
+
+    fetch(form.dataset.csrf, {headers: {'Accept': 'application/json'}})
+        .then(function (response) {
+            if (!response.ok) {
+                throw new Error('status ' + response.status);
+            }
+            return response.json();
+        })
+        .then(function (token) {
+            callback(data + '&' + encodeURIComponent(token.name) + '=' + encodeURIComponent(token.value));
+        })
+        .catch(function (error) {
+            console.error('Cookie consent: could not fetch CSRF token', error);
+            callback(data);
+        });
 }
 
 function refresh(ms) {
-    setTimeout(function() {
+    setTimeout(function () {
         location.reload();
     }, ms);
 }
 
-function toggleExpand(event)
-{
+function toggleExpand(event) {
     event.preventDefault();
-    document.getElementById("elc-cookie-consent").classList.toggle('elc-fullwidth');
-    document.getElementById("elc-cookie-consent").classList.toggle('elc-small');
+    document.getElementById('elc-cookie-consent').classList.toggle('elc-fullwidth');
+    document.getElementById('elc-cookie-consent').classList.toggle('elc-small');
 }
 
-function toggleTab(event)
-{
+function toggleTab(event) {
     event.preventDefault();
-    document.getElementById("elc-cookie-consent").classList.toggle('elc-hidden');
-    document.getElementById("elc-cookie-tab").classList.toggle('elc-hidden');
+    document.getElementById('elc-cookie-consent').classList.toggle('elc-hidden');
+    document.getElementById('elc-cookie-tab').classList.toggle('elc-hidden');
 
-    document.getElementById("elc-cookie-consent").classList.add('elc-fullwidth');
-    document.getElementById("elc-cookie-consent").classList.remove('elc-small');
+    document.getElementById('elc-cookie-consent').classList.add('elc-fullwidth');
+    document.getElementById('elc-cookie-consent').classList.remove('elc-small');
 }
 
-function addWindowObject()
-{
-    let form = document.querySelector('#elc-cookie-consent-form');
-    if (typeof form.dataset.show !== 'undefined')
-    {
-        let xhr = new XMLHttpRequest();
-        xhr.open('GET', form.dataset.show);
-        xhr.send();
-
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4) {
-                if (xhr.status !== 200) {
-                    console.log('Error: ' + xhr.status);
-                    window.ccc = {}
-                }
-                else {
-                    if(xhr.response === 'null') {
-                        window.ccc = {}
-                    }
-                    else window.ccc = JSON.parse(xhr.response)
-                }
-            }
-        }
-    }
-}
-
-/*!
- * Serialize all form data into a query string
- * (c) 2018 Chris Ferdinandi, MIT License, https://gomakethings.com
- * @param  {Node}   form The form to serialize
- * @return {String}      The serialized form data
+/*
+ * Expose the current consent state as window.ccc so site scripts can
+ * check what the visitor has consented to. Dispatches a 'ccc-loaded'
+ * event on window once the state is available, with the consent state
+ * as the event detail.
  */
-var serialize = function (form) {
-
-    // Setup our serialized data
-    var serialized = [];
-
-    // Loop through each field in the form
-    for (var i = 0; i < form.elements.length; i++) {
-
-        var field = form.elements[i];
-
-        // Don't serialize fields without a name, submits, buttons, file and reset inputs, and disabled fields
-        if (!field.name || field.disabled || field.type === 'file' || field.type === 'reset' || field.type === 'button') continue;
-
-        // If a multi-select, get all selections
-        if (field.type === 'select-multiple') {
-            for (var n = 0; n < field.options.length; n++) {
-                if (!field.options[n].selected) continue;
-                serialized.push(encodeURIComponent(field.name) + "=" + encodeURIComponent(field.options[n].value));
-            }
-        }
-
-        // Convert field data to a query string
-        else if ((field.type !== 'checkbox' && field.type !== 'radio') || field.checked) {
-            serialized.push(encodeURIComponent(field.name) + "=" + encodeURIComponent(field.value));
-        }
+function addWindowObject() {
+    const form = document.querySelector('#elc-cookie-consent-form');
+    if (form === null || typeof form.dataset.show === 'undefined') {
+        return;
     }
 
-    return serialized.join('&');
-
-};
+    fetch(form.dataset.show, {headers: {'Accept': 'application/json'}})
+        .then(function (response) {
+            if (!response.ok) {
+                throw new Error('status ' + response.status);
+            }
+            return response.json();
+        })
+        .then(function (consents) {
+            window.ccc = consents === null ? {} : consents;
+            window.dispatchEvent(new CustomEvent('ccc-loaded', {detail: window.ccc}));
+        })
+        .catch(function (error) {
+            console.error('Cookie consent: could not fetch consent state', error);
+            window.ccc = {};
+            window.dispatchEvent(new CustomEvent('ccc-loaded', {detail: window.ccc}));
+        });
+}
