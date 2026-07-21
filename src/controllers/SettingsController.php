@@ -47,7 +47,6 @@ class SettingsController extends Controller
 		$this->_prepVariables($variables);
 		$variables['currentPage'] = 'site';
 		$variables['title'] = Craft::t('cookie-consent', 'Site Settings');
-        $variables['invalidate_link'] = "/" . Craft::$app->config->general->cpTrigger . "/cookie-consent/site/invalidate?site=".$variables['selectedSite']->handle;
 		$this->_checkSiteEditPermission($variables['selectedSite']->id);
 		$this->_prepSiteSettingsPermissionVariables($variables);
 
@@ -157,18 +156,33 @@ class SettingsController extends Controller
 	}
 
     /**
+     * Invalidate all consents for a site by bumping its dateInvalidated
+     *
      * @return \yii\web\Response
+     * @throws NotFoundHttpException
      * @throws \craft\errors\MissingComponentException
      * @throws \yii\web\BadRequestHttpException
+     * @throws \yii\web\ForbiddenHttpException
      */
 	public function actionInvalidateConsents()
     {
-        $record = SiteSettings::findOne(Craft::$app->getSites()->getSiteByHandle(Craft::$app->request->get('site'))->id);
+        $this->requirePostRequest();
+        $this->requirePermission('cookie-consent:site-settings');
+
+        $siteId = (int) Craft::$app->request->getRequiredBodyParam('site_id');
+        $this->_checkSiteEditPermission($siteId);
+
+        $record = SiteSettings::findOne($siteId);
+        if(!$record) {
+            throw new NotFoundHttpException('Settings for site not found');
+        }
+
         $record->dateInvalidated = Db::prepareDateForDb(new \DateTime());
         if(!$record->save()) Craft::$app->getSession()->setError(Craft::t('cookie-consent', 'Couldn’t invalidate the consents.'));
         else Craft::$app->getSession()->setNotice(Craft::t('cookie-consent', 'Consents invalidated.'));
 
-        return $this->redirect(UrlHelper::cpUrl('cookie-consent/site'));
+        $site = Craft::$app->getSites()->getSiteById($siteId);
+        return $this->redirect(UrlHelper::cpUrl('cookie-consent/site', $site ? ['site' => $site->handle] : []));
     }
 
 	/**
