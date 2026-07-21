@@ -40,7 +40,6 @@ class SettingsController extends Controller
 	{
 		$this->requirePermission('cookie-consent:site-settings');
 
-		Craft::$app->getRequest();
 		$variables = [
 			'model' => $model
 		];
@@ -68,9 +67,7 @@ class SettingsController extends Controller
 
 		$this->requirePermission('cookie-consent:site-settings:view-consents');
 
-		Craft::$app->getRequest();
-		$variables = [
-		];
+		$variables = [];
 		$this->_prepVariables($variables);
 		$variables['currentPage'] = 'consent';
 		$variables['consents'] = Consent::find()->where(['site_id' => $variables['selectedSite']->id])->orderBy('dateUpdated DESC')->limit($pageSize)->offset(($page-1)*$pageSize)->all();
@@ -179,7 +176,6 @@ class SettingsController extends Controller
 	 */
 	public function actionEditCookieGroup(string $groupId = null, CookieGroup $group = null)
 	{
-		Craft::$app->getRequest();
 		$variables = [
 			'groupId' => $groupId,
 			'group' => $group
@@ -248,7 +244,7 @@ class SettingsController extends Controller
 			'site_id' => Craft::$app->request->getParam('site_id')
 		]);
 		if(!$group) throw new NotFoundHttpException('Cookie group not found');
-		if($group->delete()) Craft::$app->getSession()->setNotice(Craft::t('cookie-consent', 'Cookie group deleted.'));;
+		if($group->delete()) Craft::$app->getSession()->setNotice(Craft::t('cookie-consent', 'Cookie group deleted.'));
 		return $this->redirect(UrlHelper::cpUrl('cookie-consent/site'));
 	}
 
@@ -304,51 +300,6 @@ class SettingsController extends Controller
                 $this->insertDefaultRecord($variables['model']);
             }
         }
-
-        // Old
-        /*
-        $siteHandle = Craft::$app->request->get('site');
-        /* @var $site Site */
-        /*
-        if($siteHandle) $site = Craft::$app->getSites()->getSiteByHandle($siteHandle);
-        else $site = Craft::$app->getSites()->primarySite;
-
-        $variables['selectedSite'] = $site;
-        $variables['cpTrigger'] = Craft::$app->config->general->cpTrigger;
-
-        if (Craft::$app->getIsMultiSite()) {
-            $sites = Craft::$app->getSites();
-            $variables['sitesMenuLabel'] = $site->name;
-            $variables['showSiteMenu'] = true;
-            foreach ($sites->getEditableSiteIds() as $editableSiteId) {
-                $variables['enabledSiteIds'][] = $editableSiteId;
-                $variables['siteIds'][] = $editableSiteId;
-            }
-        } else {
-            $variables['sitesMenuLabel'] = 'Cookie Consent';
-        }
-
-		if (empty($variables['model'])) {
-			$variables['model'] = SiteSettings::findOne($variables['selectedSite']->id);
-			if (!$variables['model']) {
-				$variables['model'] = new SiteSettings();
-				$variables['model']->site_id = $variables['selectedSite']->id;
-				$this->insertDefaultRecord($variables['model']);
-			}
-		}
-
-		$variables['fullPageForm'] = true;
-		$variables['crumbs'] = [
-			[
-				'label' => CookieConsent::PLUGIN_NAME,
-				'url' => UrlHelper::cpUrl('cookie-consent'),
-			],
-			[
-				'label' => $variables['selectedSite']->name,
-				'url' => UrlHelper::cpUrl('cookie-consent/site/'.$variables['selectedSite']->handle),
-			]
-		];
-        */
 	}
 
 	/**
@@ -391,11 +342,9 @@ class SettingsController extends Controller
 	private function _checkSiteEditPermission(int $siteId)
 	{
 		if (Craft::$app->getIsMultiSite()) {
-
-			$variables['editableSites'] = Craft::$app->getSites()->getEditableSiteIds();
-
-			if (!\in_array($siteId, $variables['editableSites'], false)) {
-					$this->requirePermission('editSite:'.$siteId);
+			$editableSiteIds = Craft::$app->getSites()->getEditableSiteIds();
+			if (!\in_array($siteId, $editableSiteIds, false)) {
+				$this->requirePermission('editSite:'.$siteId);
 			}
 		}
 	}

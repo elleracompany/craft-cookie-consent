@@ -5,6 +5,9 @@
 ### Improved
 - The consent submission endpoint now requires a POST request, validates `site_id`, returns a JSON object (`success`, `uid`, `consent`) instead of a bare `true`, and sets `SameSite=Lax` on the consent cookie. Submitting for a site without settings now returns a 400 response instead of causing a PHP error.
 
+### Internal
+- Removed dead code: a large commented-out block and no-op request calls in the settings controller, an unused variable in the site permission check, leftover TODO stubs and empty asset arrays.
+
 ### Removed
 - Removed the unreachable `settings/retention` CP action: it had no route and referenced a template that never existed. Consent retention is handled by the `cookie-consent/retention/clear` console command (see README).
 
