@@ -4,7 +4,7 @@ namespace elleracompany\cookieconsent;
 
 class JSAssets extends \craft\web\AssetBundle
 {
-	public function init()
+	public function init(): void
 	{
 		$this->sourcePath = '@elleracompany/cookieconsent/resources';
 

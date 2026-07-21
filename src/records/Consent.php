@@ -7,8 +7,9 @@ use craft\db\ActiveRecord;
 use elleracompany\cookieconsent\CookieConsent;
 
 /**
- * This is the model class for table "auth_item".
+ * A stored consent submission.
  *
+ * @property string 	$uid
  * @property integer 	$site_id
  * @property string 	$ip
  * @property string     $cookieName
@@ -19,7 +20,7 @@ class Consent extends ActiveRecord
 	/**
 	 * @inheritdoc
 	 */
-	public function fields()
+	public function fields(): array
 	{
 		$fields = [
 			'site_id',
@@ -38,7 +39,7 @@ class Consent extends ActiveRecord
 		return CookieConsent::CONSENT_TABLE;
 	}
 
-	public function rules()
+	public function rules(): array
 	{
 		return [
 			[['data', 'cookieName'], 'string'],

@@ -5,17 +5,17 @@ namespace elleracompany\cookieconsent\controllers;
 use Craft;
 use craft\helpers\Db;
 use craft\helpers\UrlHelper;
-use craft\models\Site;
 use craft\web\Controller;
 use elleracompany\cookieconsent\CookieConsent;
 use elleracompany\cookieconsent\records\Consent;
 use elleracompany\cookieconsent\records\CookieGroup;
 use elleracompany\cookieconsent\records\SiteSettings;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 class SettingsController extends Controller
 {
-	public function actionIndex()
+	public function actionIndex(): Response
 	{
 		$variables = [
 			'content' => file_get_contents(dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR.'README.md'),
@@ -33,10 +33,10 @@ class SettingsController extends Controller
 	 *
 	 * @param SiteSettings|null $model
 	 *
-	 * @return \yii\web\Response
+	 * @return Response
 	 * @throws \yii\web\ForbiddenHttpException
 	 */
-	public function actionEditSiteSettings(SiteSettings $model = null)
+	public function actionEditSiteSettings(?SiteSettings $model = null): Response
 	{
 		$this->requirePermission('cookie-consent:site-settings');
 
@@ -55,15 +55,15 @@ class SettingsController extends Controller
 	/**
 	 * Render the view for consent entries
      *
-     * @param integer|null      $page
+     * @param int|null $page
 	 *
-	 * @return \yii\web\Response
+	 * @return Response
 	 * @throws \yii\web\ForbiddenHttpException
 	 */
-	public function actionConsent($page = null)
+	public function actionConsent(?int $page = null): Response
 	{
 	    $pageSize = 10;
-	    if($page == null) $page = 1;
+	    if(!$page) $page = 1;
 
 		$this->requirePermission('cookie-consent:site-settings:view-consents');
 
@@ -99,17 +99,17 @@ class SettingsController extends Controller
 	/**
 	 * Save site settings
 	 *
-	 * @return null
+	 * @return Response|null
 	 * @throws NotFoundHttpException
 	 * @throws \craft\errors\MissingComponentException
 	 * @throws \yii\web\BadRequestHttpException
 	 * @throws \yii\web\ForbiddenHttpException
 	 */
-	public function actionSaveSiteSettings()
+	public function actionSaveSiteSettings(): ?Response
 	{
 		$this->requirePostRequest();
 
-		$this->_checkSiteEditPermission(Craft::$app->request->post('site_id'));
+		$this->_checkSiteEditPermission((int) Craft::$app->request->post('site_id'));
 
 		$record = SiteSettings::findOne(Craft::$app->request->post('site_id'));
 		if(!$record) {
@@ -137,13 +137,13 @@ class SettingsController extends Controller
     /**
      * Invalidate all consents for a site by bumping its dateInvalidated
      *
-     * @return \yii\web\Response
+     * @return Response
      * @throws NotFoundHttpException
      * @throws \craft\errors\MissingComponentException
      * @throws \yii\web\BadRequestHttpException
      * @throws \yii\web\ForbiddenHttpException
      */
-	public function actionInvalidateConsents()
+	public function actionInvalidateConsents(): Response
     {
         $this->requirePostRequest();
         $this->requirePermission('cookie-consent:site-settings');
@@ -167,14 +167,14 @@ class SettingsController extends Controller
 	/**
 	 * Render the view for editing a CookieGroup
 	 *
-	 * @param string|null      $groupId
+	 * @param string|null $groupId
 	 * @param CookieGroup|null $group
 	 *
-	 * @return \yii\web\Response
+	 * @return Response
 	 * @throws NotFoundHttpException
 	 * @throws \yii\web\ForbiddenHttpException
 	 */
-	public function actionEditCookieGroup(string $groupId = null, CookieGroup $group = null)
+	public function actionEditCookieGroup(?string $groupId = null, ?CookieGroup $group = null): Response
 	{
 		$variables = [
 			'groupId' => $groupId,
@@ -192,12 +192,12 @@ class SettingsController extends Controller
 	/**
 	 * Save cookie group
 	 *
-	 * @return null|\yii\web\Response
+	 * @return Response|null
 	 * @throws \craft\errors\MissingComponentException
 	 * @throws \yii\web\BadRequestHttpException
 	 * @throws \yii\web\ForbiddenHttpException
 	 */
-	public function actionSaveCookieGroup()
+	public function actionSaveCookieGroup(): ?Response
 	{
 		$this->requirePostRequest();
 
@@ -213,7 +213,7 @@ class SettingsController extends Controller
 		else $this->requirePermission('cookie-consent:cookie-groups:edit');
 		$record->load(Craft::$app->request->post(), '');
 
-		$this->_checkSiteEditPermission($record->site_id);
+		$this->_checkSiteEditPermission((int) $record->site_id);
 
 		if($record->required) $record->default = true;
 		if($record->save()) Craft::$app->getSession()->setNotice(Craft::t('cookie-consent', 'Cookie group saved.'));
@@ -235,9 +235,9 @@ class SettingsController extends Controller
 	 * @throws \yii\db\StaleObjectException
 	 * @throws \yii\web\ForbiddenHttpException
 	 */
-	public function actionDeleteCookieGroup()
+	public function actionDeleteCookieGroup(): Response
 	{
-		$this->_checkSiteEditPermission(Craft::$app->request->getParam('site_id'));
+		$this->_checkSiteEditPermission((int) Craft::$app->request->getParam('site_id'));
 		$this->requirePermission('cookie-consent:cookie-groups:delete');
 		$group = CookieGroup::findOne([
 			'id' => Craft::$app->request->getParam('id'),
@@ -254,7 +254,7 @@ class SettingsController extends Controller
 	 *
 	 * @param SiteSettings $record
 	 */
-	protected function insertDefaultRecord(SiteSettings &$record)
+	protected function insertDefaultRecord(SiteSettings $record): void
 	{
 		$record->template = CookieConsent::DEFAULT_TEMPLATE;
 		$record->headline = CookieConsent::DEFAULT_HEADLINE;
@@ -285,7 +285,7 @@ class SettingsController extends Controller
 	 *
 	 * @param array $variables
 	 */
-	private function _prepVariables(array &$variables)
+	private function _prepVariables(array &$variables): void
 	{
         $siteHandle = Craft::$app->request->get('site');
         if($siteHandle) $variables['selectedSite'] = Craft::$app->getSites()->getSiteByHandle($siteHandle);
@@ -309,7 +309,7 @@ class SettingsController extends Controller
 	 *
 	 * @throws NotFoundHttpException
 	 */
-	private function _prepEditGroupVariables(array &$variables)
+	private function _prepEditGroupVariables(array &$variables): void
 	{
 		if (empty($variables['group'])) {
 			if (!empty($variables['groupId'])) {
@@ -339,7 +339,7 @@ class SettingsController extends Controller
 	 *
 	 * @throws \yii\web\ForbiddenHttpException
 	 */
-	private function _checkSiteEditPermission(int $siteId)
+	private function _checkSiteEditPermission(int $siteId): void
 	{
 		if (Craft::$app->getIsMultiSite()) {
 			$editableSiteIds = Craft::$app->getSites()->getEditableSiteIds();
@@ -349,7 +349,7 @@ class SettingsController extends Controller
 		}
 	}
 
-	private function _prepGroupPermissionVariables(array &$variables)
+	private function _prepGroupPermissionVariables(array &$variables): void
 	{
 		$variables['canCreate'] = Craft::$app->user->checkPermission('cookie-consent:cookie-groups:create-new');
 		$variables['canEdit'] = Craft::$app->user->checkPermission('cookie-consent:cookie-groups:edit');
@@ -357,7 +357,7 @@ class SettingsController extends Controller
 		$variables['canGroups'] = Craft::$app->user->checkPermission('cookie-consent:cookie-groups');
 	}
 
-	private function _prepSiteSettingsPermissionVariables(array &$variables)
+	private function _prepSiteSettingsPermissionVariables(array &$variables): void
 	{
 		$variables['canActivate'] = Craft::$app->user->checkPermission('cookie-consent:site-settings:activate');
 		$variables['canChangeTemplate'] = Craft::$app->user->checkPermission('cookie-consent:site-settings:template');

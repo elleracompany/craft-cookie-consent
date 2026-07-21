@@ -11,14 +11,14 @@ use yii\behaviors\SluggableBehavior;
 use yii\web\NotFoundHttpException;
 
 /**
- * This is the model class for table "auth_item".
+ * Cookie group record, one row per consent category on a site.
  *
  * @property integer 	$id
  * @property boolean 	$required
  * @property boolean 	$store_ip
  * @property boolean 	$default
  * @property integer 	$site_id
- * @property integer 	$cookies
+ * @property string|array 	$cookies
  * @property string 	$name
  * @property string 	$description
  * @property string		$slug
@@ -33,7 +33,7 @@ class CookieGroup extends ActiveRecord
 	{
 		$behaviors = [
 			[
-				'class' => SluggableBehavior::className(),
+				'class' => SluggableBehavior::class,
 				'attribute' => 'slugattribute',
 				'slugAttribute' => 'slug',
 				'ensureUnique' => true,
@@ -50,7 +50,7 @@ class CookieGroup extends ActiveRecord
 	/**
 	 * @inheritdoc
 	 */
-	public function fields()
+	public function fields(): array
 	{
 		$fields = [
 			'name',
@@ -65,7 +65,7 @@ class CookieGroup extends ActiveRecord
 		return array_merge($fields, parent::fields());
 	}
 
-	public function attributeLabels()
+	public function attributeLabels(): array
 	{
 		return [
 			'id' => Craft::t('cookie-consent', 'ID'),
@@ -89,7 +89,7 @@ class CookieGroup extends ActiveRecord
 		return CookieConsent::COOKIE_GROUP_TABLE;
 	}
 
-	public function rules()
+	public function rules(): array
 	{
 		return [
 			[['name', 'slug', 'description', 'cookies'], 'string'],
@@ -101,7 +101,7 @@ class CookieGroup extends ActiveRecord
 		];
 	}
 
-	public function getSlugattribute()
+	public function getSlugattribute(): string
 	{
 		return $this->site->handle.'-'.$this->name;
 	}
@@ -118,7 +118,7 @@ class CookieGroup extends ActiveRecord
 	 * @return string
 	 * @throws \craft\errors\MissingComponentException
 	 */
-	public function getEditUrl()
+	public function getEditUrl(): string
 	{
 		if($this->site_id)
 		{
@@ -129,24 +129,24 @@ class CookieGroup extends ActiveRecord
 		return 'cookie-consent';
 	}
 
-	public function afterSave($insert, $changedAttributes)
+	public function afterSave($insert, $changedAttributes): void
 	{
 		$this->unstringifyCookies();
 		parent::afterSave($insert, $changedAttributes);
 	}
 
-	public function beforeValidate()
+	public function beforeValidate(): bool
 	{
 		$this->stringifyCookies();
 		return parent::beforeValidate();
 	}
 
-	private function stringifyCookies()
+	private function stringifyCookies(): void
 	{
  		if(is_array($this->cookies)) $this->cookies = json_encode($this->cookies);
 	}
 
-	public function unstringifyCookies()
+	public function unstringifyCookies(): void
 	{
 		if(!is_array($this->cookies)) $this->cookies = json_decode($this->cookies, true);
 	}

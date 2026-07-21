@@ -34,7 +34,7 @@ class SiteSettings extends ActiveRecord
 	/**
 	 * @inheritdoc
 	 */
-	public function fields()
+	public function fields(): array
 	{
 		$fields = [
 			'site_id',
@@ -79,7 +79,7 @@ class SiteSettings extends ActiveRecord
     /**
      * @inheritDoc
      */
-	public function rules()
+	public function rules(): array
 	{
 		return [
 			[['headline', 'description', 'template', 'cookieName', 'dateInvalidated'], 'string'],
@@ -96,7 +96,7 @@ class SiteSettings extends ActiveRecord
     /**
      * @inheritDoc
      */
-	public function attributeLabels()
+	public function attributeLabels(): array
 	{
 		return [
 			'site_id' => Craft::t('cookie-consent', 'Site ID'),
@@ -117,9 +117,11 @@ class SiteSettings extends ActiveRecord
 	}
 
     /**
-     * @return array
+     * Map of attribute name to the permission required to change it
+     *
+     * @return array<string,string>
      */
-	public function permissions()
+	public function permissions(): array
 	{
 		return [
 			'activated' => 'cookie-consent:site-settings:activate',
@@ -138,7 +140,7 @@ class SiteSettings extends ActiveRecord
      * @param $attribute
      * @param $params
      */
-	public function validatePermission($attribute, $params)
+	public function validatePermission($attribute, $params): void
 	{
 		$attribute_to_permission = $this->permissions();
 		if(in_array($attribute, array_keys($this->getDirtyAttributes())) && !Craft::$app->user->checkPermission($attribute_to_permission[$attribute])) {
@@ -147,23 +149,25 @@ class SiteSettings extends ActiveRecord
 	}
 
     /**
-     * @return mixed
+     * Timestamp of the most recent update to the settings or any cookie group
+     *
+     * @return int|null
      */
-	public function getLastUpdate()
+	public function getLastUpdate(): ?int
 	{
 		$dates = [];
 		if(isset($this->dateUpdated)) $dates[] = strtotime($this->dateUpdated);
 		foreach ($this->getCookieGroups() as $group) if(isset($group->dateUpdated)) $dates[] = strtotime($group->dateUpdated);
-		return max($dates);
+		return $dates ? max($dates) : null;
 	}
 
 	/**
 	 * Returns the URL to edit this record
 	 *
-	 * @return int|null|string
+	 * @return string
 	 * @throws NotFoundHttpException
 	 */
-	public function getEditUrl()
+	public function getEditUrl(): string
 	{
 		if($this->site_id) {
 			return 'cookie-consent/site/'.$this->getSiteHandleFromId($this->site_id);
@@ -202,12 +206,12 @@ class SiteSettings extends ActiveRecord
 	/**
 	 * Return a siteHandle from a siteId
 	 *
-	 * @param string $siteId
+	 * @param int|null $siteId
 	 *
-	 * @return int|null
+	 * @return string
 	 * @throws NotFoundHttpException
 	 */
-	protected function getSiteHandleFromId($siteId)
+	protected function getSiteHandleFromId(?int $siteId): string
 	{
 		if ($siteId !== null) {
 			$site = Craft::$app->getSites()->getSiteById($siteId);

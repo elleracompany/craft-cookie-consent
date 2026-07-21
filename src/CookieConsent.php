@@ -147,7 +147,7 @@ class CookieConsent extends \craft\base\Plugin
      * and JS/CSS files.
      *
      * https://docs.craftcms.com/v3/extend/updating-plugins.html#rendering-templates
-     * @param $path
+     * @param string $path
      * @param array $params
      * @return string
      * @throws Exception
@@ -155,7 +155,7 @@ class CookieConsent extends \craft\base\Plugin
      * @throws RuntimeError
      * @throws SyntaxError
      */
-	public function renderPluginTemplate($path, array $params = []): string
+	public function renderPluginTemplate(string $path, array $params = []): string
     {
 		if($path == 'cookie-consent/banner')
 		{
