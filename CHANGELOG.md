@@ -3,6 +3,7 @@
 ## 5.1.0 - 2026-07-21
 
 ### Improved
+- The front-end banner bootstrapping (settings lookup, asset loading, template hook) is now deferred with `Craft::$app->onInit()` as recommended by the Craft plugin guide, instead of querying the database during plugin initialization.
 - Added a database index on the consent table (`site_id`, `dateUpdated`), speeding up the CP consent list and the retention command on large tables (schema version 1.6.0).
 - The banner form's refresh settings are now rendered as proper quoted `data-refresh`/`data-refreshtime` attributes via the new `craft.cookieConsent.refreshEnabled` and `craft.cookieConsent.refreshTime` variables. `getRefreshDataAttr()` (which returned a raw unescaped HTML string) is deprecated but still works for custom templates.
 - Modernized the banner script: removed IE8-era `attachEvent` fallbacks and the hand-rolled form serializer, replaced `XMLHttpRequest` with `fetch()`, merged the duplicated save/accept-all submit paths, and errors are now reported with `console.error`. Loading the JS asset without the banner template no longer throws. The script now requires a browser with `fetch` support (all browsers since ~2017).

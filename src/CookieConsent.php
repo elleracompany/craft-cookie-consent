@@ -121,19 +121,34 @@ class CookieConsent extends \craft\base\Plugin
             __METHOD__
         );
 
-        if (!Craft::$app->request->isCpRequest && !Craft::$app->request->isConsoleRequest) {
-            if ($this->cookieConsent->render()) {
-                $this->installSiteEventListeners();
-                $this->cookieConsent->loadCss();
-                $this->cookieConsent->loadJs();
-                if ($this->cookieConsent->renderTemplate()) {
-                    Craft::$app->view->hook('after-body-start', function (array &$context) {
-                        return $this->renderPluginTemplate($this->cookieConsent->getTemplate());
-                    });
-                }
-            }
+        if (Craft::$app->request->isCpRequest) {
+            $this->installCpEventListeners();
+        } elseif (!Craft::$app->request->isConsoleRequest) {
+            // Defer the banner bootstrapping (which queries the database via the
+            // cookieConsent component) until Craft is fully initialized.
+            Craft::$app->onInit(function() {
+                $this->handleSiteRequest();
+            });
         }
-        else $this->installCpEventListeners();
+    }
+
+    /**
+     * Set up the banner for a front-end request: site routes, assets and
+     * the template hook. Only runs once Craft is fully initialized.
+     */
+    protected function handleSiteRequest(): void
+    {
+        if (!$this->cookieConsent->render()) {
+            return;
+        }
+        $this->installSiteEventListeners();
+        $this->cookieConsent->loadCss();
+        $this->cookieConsent->loadJs();
+        if ($this->cookieConsent->renderTemplate()) {
+            Craft::$app->view->hook('after-body-start', function (array &$context) {
+                return $this->renderPluginTemplate($this->cookieConsent->getTemplate());
+            });
+        }
     }
 
     public function getSettingsResponse(): Response
