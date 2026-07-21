@@ -173,10 +173,23 @@ class Variables extends Component
 		return $this->consent_string;
 	}
 
+	public function refreshEnabled(): bool
+	{
+		return (bool) $this->settings?->refresh;
+	}
+
+	public function refreshTime(): int
+	{
+		return (int) ($this->settings->refresh_time ?? 0);
+	}
+
+	/**
+	 * @deprecated Use refreshEnabled() and refreshTime() and build the attributes in the template instead.
+	 */
 	public function getRefreshDataAttr(): string
 	{
-		if ($this->settings?->refresh) {
-			return "data-refresh=true data-refreshTime={$this->settings->refresh_time}";
+		if ($this->refreshEnabled()) {
+			return "data-refresh=true data-refreshTime={$this->refreshTime()}";
 		}
 		return "data-refresh=false";
 	}

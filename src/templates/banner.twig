@@ -1,5 +1,5 @@
 <section id="elc-cookie-consent" class="elc-small{% if craft.cookieConsent.consentGiven == 1 %} elc-hidden{% endif %}">
-    <form id="elc-cookie-consent-form" action="" data-url="{{ actionUrl() }}" data-csrf="{{ actionUrl('cookie-consent/consent/csrf') }}" {{ craft.cookieConsent.getRefreshDataAttr }} data-show="{{ siteUrl() }}cookie-consent/show" method="post" accept-charset="UTF-8">
+    <form id="elc-cookie-consent-form" action="" data-url="{{ actionUrl() }}" data-csrf="{{ actionUrl('cookie-consent/consent/csrf') }}" data-refresh="{{ craft.cookieConsent.refreshEnabled ? 'true' : 'false' }}"{% if craft.cookieConsent.refreshEnabled %} data-refreshtime="{{ craft.cookieConsent.refreshTime }}"{% endif %} data-show="{{ siteUrl() }}cookie-consent/show" method="post" accept-charset="UTF-8">
 
         <input type="hidden" name="action" value="cookie-consent/consent/update">
         <input type="hidden" name="site_id" value="{{ currentSite.id }}">
@@ -18,24 +18,24 @@
                 <div class="elc-cookie-group">
                     <div class="elc-row elc-cookie-headline">
                         <input type="checkbox" id="elc-checkbox-{{loop.index}}" class="elc-cookie-checkbox" name="group-{{ group.slug }}"{{ group.required == 1 ? ' disabled="disabled"' : "" }}{{ ((craft.cookieConsent.consentGiven != 1 and group.default == 1) or craft.cookieConsent.getConsent(group.slug)) ? " checked" : "" }}>
-                        <label class="elc-cookie-name" for="elc-checkbox-{{loop.index}}">{{ group.name }}{% if group.required == 1 %} <small>({{ "Required"|t }})</small>{% endif %}</label>
+                        <label class="elc-cookie-name" for="elc-checkbox-{{loop.index}}">{{ group.name }}{% if group.required == 1 %} <small>({{ "Required"|t('cookie-consent') }})</small>{% endif %}</label>
                     </div>
                     <div class="elc-row elc-cookie-description">
                         {{ group.description }}
                     </div>
-                    {% for cookie in group.cookies|json_decode %}
+                    {% for cookie in group.cookies is not empty ? group.cookies|json_decode : [] %}
                         <div class="elc-cookie">
                             <div class="elc-cookie-field">
-                                <strong>{{ "Name"|t }}</strong>: {{ cookie.name }}
+                                <strong>{{ "Name"|t('cookie-consent') }}</strong>: {{ cookie.name }}
                             </div>
                             <div class="elc-cookie-field">
-                                <strong>{{ "Description"|t }}</strong>: {{ cookie.description }}
+                                <strong>{{ "Description"|t('cookie-consent') }}</strong>: {{ cookie.description }}
                             </div>
                             <div class="elc-cookie-field">
-                                <strong>{{ "Provider"|t }}</strong>: {{ cookie.provider }}
+                                <strong>{{ "Provider"|t('cookie-consent') }}</strong>: {{ cookie.provider }}
                             </div>
                             <div class="elc-cookie-field">
-                                <strong>{{ "Expiry"|t }}</strong>: {{ cookie.expiry }}
+                                <strong>{{ "Expiry"|t('cookie-consent') }}</strong>: {{ cookie.expiry }}
                             </div>
                         </div>
                     {% endfor %}
@@ -44,6 +44,8 @@
         </div>
 
         <div class="button-container">
+            {# elc-save-link is only visible in the expanded (fullwidth) state,
+               elc-accept-link only in the collapsed (small) state — see style.css #}
             <a href="#" id="elc-detail-link" class="elc-text-link">{{ "Details"|t('cookie-consent') }}</a>
             <a href="#" id="elc-hide-detail-link" class="elc-text-link">{{ "Hide Details"|t('cookie-consent') }}</a>
 

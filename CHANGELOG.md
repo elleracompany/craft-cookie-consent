@@ -3,6 +3,7 @@
 ## 5.1.0 - 2026-07-21
 
 ### Improved
+- The banner form's refresh settings are now rendered as proper quoted `data-refresh`/`data-refreshtime` attributes via the new `craft.cookieConsent.refreshEnabled` and `craft.cookieConsent.refreshTime` variables. `getRefreshDataAttr()` (which returned a raw unescaped HTML string) is deprecated but still works for custom templates.
 - Modernized the banner script: removed IE8-era `attachEvent` fallbacks and the hand-rolled form serializer, replaced `XMLHttpRequest` with `fetch()`, merged the duplicated save/accept-all submit paths, and errors are now reported with `console.error`. Loading the JS asset without the banner template no longer throws. The script now requires a browser with `fetch` support (all browsers since ~2017).
 - The `cookie-consent/retention/clear` console command now deletes consents with a single query instead of loading every record into memory, returns proper exit codes, writes errors to stderr, and aborts with an error when `--sid` or `--handle` doesn't match a site. Previously an unknown site was silently ignored and consents were cleared for **all** sites.
 - The consent submission endpoint now requires a POST request, validates `site_id`, returns a JSON object (`success`, `uid`, `consent`) instead of a bare `true`, and sets `SameSite=Lax` on the consent cookie. Submitting for a site without settings now returns a 400 response instead of causing a PHP error.
@@ -18,6 +19,8 @@
 - "Invalidate Consents" now requires a POST request with a CSRF token and the `cookie-consent:site-settings` permission (plus site edit permission on multisite installs). Previously any logged-in CP user could invalidate all consents via a GET request. The button now asks for confirmation, and an unknown site no longer causes a PHP error.
 
 ### Bugfix
+- The "Required", "Name", "Description", "Provider" and "Expiry" strings in the banner template were translated with the `site` category instead of `cookie-consent`, so the plugin's bundled translations (e.g. Norwegian) were never used for them.
+- The banner no longer errors when a cookie group has no cookies JSON stored.
 - Consent list pagination links are now generated with `UrlHelper::cpUrl()` and keep the selected site. Previously they were built by string concatenation (broken with a custom `cpTrigger` setup or subdirectory installs) and always jumped back to the primary site on multisite installs.
 - Using `craft.cookieConsent.*` template variables on a site that has no Cookie Consent settings row (or a tampered/non-JSON consent cookie) no longer causes a PHP error. Every variable now falls back to a sensible default when settings are missing.
 - `craft.cookieConsent.getConsent()` compared stored consent values against the string `'on'` even though the consent cookie stores booleans; it only returned the right result through PHP's loose comparison rules. It now checks booleans strictly (still accepting `'on'` from cookies set by very old versions).
