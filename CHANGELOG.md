@@ -2,6 +2,9 @@
 
 ## 5.1.0 - 2026-07-21
 
+### Added
+- The consent cookie's lifetime is now configurable per site via the new "Consent cookie expiry (days)" setting — previously hardcoded to one year ([#121](https://github.com/elleracompany/craft-cookie-consent/issues/121)). Defaults to 365 days (schema version 1.7.0).
+
 ### Improved
 - The banner script now dispatches a `ccc-loaded` event on `window` whenever the consent state has been loaded or updated, with the consent state as the event `detail` ([#118](https://github.com/elleracompany/craft-cookie-consent/issues/118)). This lets site scripts react to consent changes (e.g. loading GTM after acceptance) without polling `window.ccc` or reloading the page — see the README for an example.
 - CP save/delete/invalidate actions now use Craft's `asSuccess()`/`asFailure()`/`asModelSuccess()`/`asModelFailure()` response helpers. Saving site settings now redirects after success (preventing form re-submission on refresh) and stays on the selected site, and a failed cookie group deletion now shows an error instead of silently redirecting.

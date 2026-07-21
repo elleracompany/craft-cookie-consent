@@ -22,6 +22,7 @@ use yii\behaviors\TimestampBehavior;
  * @property boolean    $acceptAllButton
  * @property boolean    $refresh
  * @property string     $cookieName
+ * @property integer    $cookieExpiry
  * @property string $headline
  * @property string $description
  * @property string $template
@@ -46,6 +47,7 @@ class SiteSettings extends ActiveRecord
             'showCheckboxes',
             'showAfterConsent',
             'cookieName',
+            'cookieExpiry',
             'headline',
             'description',
             'template',
@@ -87,11 +89,13 @@ class SiteSettings extends ActiveRecord
             [['headline', 'description', 'template', 'cookieName', 'dateInvalidated'], 'string'],
             [['headline', 'description', 'template'], 'required'],
             [['refresh_time'], 'default', 'value'=> 500],
+            [['cookieExpiry'], 'default', 'value' => 365],
+            [['cookieExpiry'], 'integer', 'min' => 1],
             [['activated', 'cssAssets', 'jsAssets', 'templateAsset', 'showCheckboxes', 'showAfterConsent', 'acceptAllButton', 'refresh'], 'boolean'],
             [['activated', 'headline', 'description', 'template', 'templateAsset', 'showCheckboxes', 'showAfterConsent'], 'validatePermission'],
             [['activated', 'acceptAllButton', 'refresh'], 'default', 'value' => 0],
             [['cssAssets', 'jsAssets', 'templateAsset'], 'default', 'value' => 1],
-            [['site_id', 'refresh_time'], 'integer']
+            [['site_id', 'refresh_time', 'cookieExpiry'], 'integer']
         ];
     }
 
@@ -110,6 +114,7 @@ class SiteSettings extends ActiveRecord
             'showAfterConsent' => Craft::t('cookie-consent', 'Show after Consent'),
             'headline' => Craft::t('cookie-consent', 'Headline'),
             'cookieName' => Craft::t('cookie-consent', 'Name of the consent cookie'),
+            'cookieExpiry' => Craft::t('cookie-consent', 'Consent cookie expiry (days)'),
             'acceptAllButton' => Craft::t('cookie-consent', 'Add "Accept All" button'),
             'description' => Craft::t('cookie-consent', 'Description'),
             'template' => Craft::t('cookie-consent', 'Template'),
@@ -132,6 +137,7 @@ class SiteSettings extends ActiveRecord
             'showCheckboxes' => 'cookie-consent:site-settings:content',
             'showAfterConsent' => 'cookie-consent:site-settings:content',
             'cookieName' => 'cookie-consent:site-settings:content',
+            'cookieExpiry' => 'cookie-consent:site-settings:content',
             'acceptAllButton' => 'cookie-consent:site-settings:content',
             'template' => 'cookie-consent:site-settings:template',
             'templateAsset' => 'cookie-consent:site-settings:template'

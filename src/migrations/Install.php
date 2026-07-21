@@ -32,6 +32,7 @@ class Install extends Migration
 				'showCheckboxes' => $this->boolean()->notNull()->defaultValue(true),
 				'showAfterConsent' => $this->boolean()->notNull()->defaultValue(true),
                 'cookieName' => $this->string()->notNull()->defaultValue('cookie-consent'),
+                'cookieExpiry' => $this->integer()->notNull()->defaultValue(365),
                 'acceptAllButton' => $this->boolean()->notNull()->defaultValue(false),
 				'headline' => $this->string(255)->notNull(),
 				'description' => $this->text(),

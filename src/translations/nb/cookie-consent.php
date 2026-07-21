@@ -46,6 +46,8 @@ return [
     'The banner template. Defaults to "cookie-consent/banner".' => 'Templaten for banneren. Standard er "cookie-consent/banner".',
     'Name of the consent cookie' => 'Navn på samtykke-cookien',
     'The name of the cookie stored in visitors browsers when giving consent.' => 'Navnet på cookien som lagres i nettleseren til besøkende når de gir samtykke.',
+    'Consent cookie expiry (days)' => 'Utløpstid for samtykke-cookien (dager)',
+    'Number of days before the consent cookie expires and the visitor is asked for consent again. Defaults to 365.' => 'Antall dager før samtykke-cookien utløper og den besøkende blir spurt om samtykke på nytt. Standard er 365.',
     'Headline' => 'Overskrift',
     'Show Checkboxes' => 'Vis avkrysningsbokser',
     'Show checkboxes before the user clicks "Details".' => 'Vis avkrysningsbokser før brukeren klikker på "Detaljer".',

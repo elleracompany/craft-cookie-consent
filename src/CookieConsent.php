@@ -93,7 +93,7 @@ class CookieConsent extends \craft\base\Plugin
     // Properties
     // =========================================================================
     public bool $hasCpSection = true;
-    public string $schemaVersion = '1.6.0';
+    public string $schemaVersion = '1.7.0';
 
     // Public Methods
     // =========================================================================

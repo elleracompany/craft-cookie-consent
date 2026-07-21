@@ -46,6 +46,8 @@ return [
     'The banner template. Defaults to "cookie-consent/banner".' => '',
     'Name of the consent cookie' => '',
     'The name of the cookie stored in visitors browsers when giving consent.' => '',
+    'Consent cookie expiry (days)' => '',
+    'Number of days before the consent cookie expires and the visitor is asked for consent again. Defaults to 365.' => '',
     'Headline' => '',
     'Show Checkboxes' => '',
     'Show checkboxes before the user clicks "Details".' => '',

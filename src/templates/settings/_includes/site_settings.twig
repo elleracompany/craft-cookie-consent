@@ -71,6 +71,18 @@
 }) }}
 
 {{ forms.textField({
+    label: model.getAttributeLabel('cookieExpiry'),
+    instructions: 'Number of days before the consent cookie expires and the visitor is asked for consent again. Defaults to 365.'|t('cookie-consent'),
+    id: "cookieExpiry",
+    name: "cookieExpiry",
+    type: "number",
+    min: 1,
+    disabled: not canUpdate,
+    value: model.cookieExpiry,
+    errors: model.getErrors("cookieExpiry"),
+}) }}
+
+{{ forms.textField({
     label: model.getAttributeLabel('headline'),
     id: "headline",
     name: "headline",

@@ -63,10 +63,11 @@ class ConsentController extends Controller
             throw new ServerErrorHttpException('Could not save the consent.');
         }
 
+        $expiryDays = max(1, (int) $site->cookieExpiry ?: 365);
         Craft::$app->response->cookies->add(new Cookie([
             'name' => $site->cookieName,
             'value' => json_encode(array_merge(['consent_uid' => $consentRecord->uid], $consent)),
-            'expire' => strtotime('+1 year'),
+            'expire' => time() + $expiryDays * 86400,
             'secure' => true,
             'sameSite' => Cookie::SAME_SITE_LAX,
         ]));
