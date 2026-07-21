@@ -23,7 +23,7 @@ class Variables extends Component
     /**
      * Decoded consent cookie payload
      */
-    private ?object $consent_string = null;
+    private ?object $consentData = null;
 
     /**
      * Initiate the plugin for this site
@@ -38,14 +38,14 @@ class Variables extends Component
             $cookie = Craft::$app->request->cookies->getValue($this->settings->cookieName);
 
             $decoded = $cookie !== null ? json_decode($cookie) : null;
-            $this->consent_string = is_object($decoded) ? $decoded : null;
-            $this->consent = isset($this->consent_string->consent_uid);
+            $this->consentData = is_object($decoded) ? $decoded : null;
+            $this->consent = isset($this->consentData->consent_uid);
 
             if ($this->consent) {
-                $consentRecord = Consent::findOne($this->consent_string->consent_uid);
+                $consentRecord = Consent::findOne($this->consentData->consent_uid);
                 if (!$consentRecord || strtotime($consentRecord->dateUpdated) < strtotime($this->settings->dateInvalidated)) {
                     $this->consent = false;
-                    $this->consent_string = null;
+                    $this->consentData = null;
                 }
             }
         }
@@ -156,21 +156,21 @@ class Variables extends Component
 
     public function getUid(): ?string
     {
-        return $this->consent_string->consent_uid ?? null;
+        return $this->consentData->consent_uid ?? null;
     }
 
     public function getConsent($slug): bool
     {
-        if (isset($this->consent_string->$slug)) {
+        if (isset($this->consentData->$slug)) {
             // Cookies written since 5.x store booleans; 'on' covers cookies from older versions
-            return $this->consent_string->$slug === true || $this->consent_string->$slug === 'on';
+            return $this->consentData->$slug === true || $this->consentData->$slug === 'on';
         }
         return $this->settings ? in_array($slug, $this->settings->getRequiredCookieGroups()) : false;
     }
 
     public function getConsents(): ?object
     {
-        return $this->consent_string;
+        return $this->consentData;
     }
 
     public function refreshEnabled(): bool

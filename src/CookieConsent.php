@@ -157,15 +157,13 @@ class CookieConsent extends \craft\base\Plugin
      */
     public function renderPluginTemplate(string $path, array $params = []): string
     {
-        if ($path == 'cookie-consent/banner')
-        {
+        if ($path === self::DEFAULT_TEMPLATE) {
             $oldMode = Craft::$app->view->getTemplateMode();
             Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
-            $html = Craft::$app->view->renderTemplate($path,$params);
+            $html = Craft::$app->view->renderTemplate($path, $params);
             Craft::$app->view->setTemplateMode($oldMode);
-        }
-        else {
-            $html = Craft::$app->view->renderTemplate($path,$params);
+        } else {
+            $html = Craft::$app->view->renderTemplate($path, $params);
         }
         return $html;
     }

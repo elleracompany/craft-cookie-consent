@@ -17,8 +17,9 @@ class SettingsController extends Controller
 {
     public function actionIndex(): Response
     {
+        $readme = dirname(CookieConsent::getInstance()->getBasePath()).DIRECTORY_SEPARATOR.'README.md';
         $variables = [
-            'content' => file_get_contents(dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR.'README.md'),
+            'content' => is_file($readme) ? file_get_contents($readme) : '',
         ];
         $this->_prepVariables($variables);
         $variables['currentPage'] = 'readme';

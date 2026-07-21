@@ -10,6 +10,7 @@
 - The consent submission endpoint now requires a POST request, validates `site_id`, returns a JSON object (`success`, `uid`, `consent`) instead of a bare `true`, and sets `SameSite=Lax` on the consent cookie. Submitting for a site without settings now returns a 400 response instead of causing a PHP error.
 
 ### Internal
+- The CP Readme page now resolves the README through the plugin's base path and no longer errors if the file is missing.
 - Normalized code style across the plugin: consistent 4-space indentation (tabs removed), braces on all conditionals, and an `.editorconfig` added.
 - Added parameter and return type declarations throughout (fixing PHP 8.4 implicit-nullable deprecation warnings), replaced the deprecated `SluggableBehavior::className()` call and string class names with `::class` constants, and corrected copy-pasted docblocks in the record classes. `SiteSettings::getLastUpdate()` no longer errors when there is nothing to compare.
 - Removed dead code: a large commented-out block and no-op request calls in the settings controller, an unused variable in the site permission check, leftover TODO stubs and empty asset arrays.
