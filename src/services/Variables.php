@@ -174,7 +174,11 @@ class Variables extends Component
 
 	public function getConsent($slug)
 	{
-		return isset($this->consent_string->$slug) ? $this->consent_string->$slug == 'on' : in_array($slug, $this->settings->getRequiredCookieGroups());
+		if (isset($this->consent_string->$slug)) {
+			// Cookies written since 5.x store booleans; 'on' covers cookies from older versions
+			return $this->consent_string->$slug === true || $this->consent_string->$slug === 'on';
+		}
+		return in_array($slug, $this->settings->getRequiredCookieGroups());
 	}
 
     public function getConsents()

@@ -9,6 +9,7 @@
 - "Invalidate Consents" now requires a POST request with a CSRF token and the `cookie-consent:site-settings` permission (plus site edit permission on multisite installs). Previously any logged-in CP user could invalidate all consents via a GET request. The button now asks for confirmation, and an unknown site no longer causes a PHP error.
 
 ### Bugfix
+- `craft.cookieConsent.getConsent()` compared stored consent values against the string `'on'` even though the consent cookie stores booleans; it only returned the right result through PHP's loose comparison rules. It now checks booleans strictly (still accepting `'on'` from cookies set by very old versions).
 - Activating the banner made every front-end page uncacheable: `{{ csrfInput() }}` in the banner template caused Craft to overwrite the response's cache headers with no-cache headers, and the plugin opened a PHP session (and re-sent the consent cookie) on every request. The CSRF token is now fetched via ajax when consent is submitted, and the consent state is read from the request cookie only.
 
 ### Breaking
