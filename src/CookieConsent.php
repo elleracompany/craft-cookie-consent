@@ -153,8 +153,18 @@ class CookieConsent extends \craft\base\Plugin
             return;
         }
         $this->installSiteEventListeners();
-        $this->cookieConsent->loadCss();
-        $this->cookieConsent->loadJs();
+        // Register the asset bundles when the page template is about to
+        // render, not at init time: when Craft renders an error template
+        // (e.g. a 404 page), Yii's error handler clears the view first,
+        // wiping any asset bundles registered earlier (#111)
+        Event::on(
+            View::class,
+            View::EVENT_BEFORE_RENDER_PAGE_TEMPLATE,
+            function() {
+                $this->cookieConsent->loadCss();
+                $this->cookieConsent->loadJs();
+            }
+        );
         if ($this->cookieConsent->renderTemplate()) {
             Craft::$app->view->hook('after-body-start', function (array &$context) {
                 return $this->renderPluginTemplate($this->cookieConsent->getTemplate());
