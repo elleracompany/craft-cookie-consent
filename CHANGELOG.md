@@ -1,6 +1,6 @@
 # Release Notes for Cookie Consent
 
-## 5.1.1 - Unreleased
+## 5.1.1 - 2026-07-21
 
 ### Bugfix
 - The banner's CSS and JS assets are now loaded on error pages such as 404s ([#111](https://github.com/elleracompany/craft-cookie-consent/issues/111), [#55](https://github.com/elleracompany/craft-cookie-consent/issues/55)). When Craft renders an error template, Yii's error handler clears all assets registered on the view, so the bundles the plugin registered during initialization never reached the page (while the banner markup itself, rendered via a template hook, survived). The plugin now registers its asset bundles when the page template renders — after the error handler's reset.
