@@ -9,6 +9,7 @@
 - The consent submission endpoint now requires a POST request, validates `site_id`, returns a JSON object (`success`, `uid`, `consent`) instead of a bare `true`, and sets `SameSite=Lax` on the consent cookie. Submitting for a site without settings now returns a 400 response instead of causing a PHP error.
 
 ### Internal
+- Normalized code style across the plugin: consistent 4-space indentation (tabs removed), braces on all conditionals, and an `.editorconfig` added.
 - Added parameter and return type declarations throughout (fixing PHP 8.4 implicit-nullable deprecation warnings), replaced the deprecated `SluggableBehavior::className()` call and string class names with `::class` constants, and corrected copy-pasted docblocks in the record classes. `SiteSettings::getLastUpdate()` no longer errors when there is nothing to compare.
 - Removed dead code: a large commented-out block and no-op request calls in the settings controller, an unused variable in the site permission check, leftover TODO stubs and empty asset arrays.
 
@@ -21,6 +22,7 @@
 ### Bugfix
 - The "Required", "Name", "Description", "Provider" and "Expiry" strings in the banner template were translated with the `site` category instead of `cookie-consent`, so the plugin's bundled translations (e.g. Norwegian) were never used for them.
 - The banner no longer errors when a cookie group has no cookies JSON stored.
+- An unknown `?site=` handle in the CP settings pages now falls back to the primary site instead of causing a PHP error.
 - Consent list pagination links are now generated with `UrlHelper::cpUrl()` and keep the selected site. Previously they were built by string concatenation (broken with a custom `cpTrigger` setup or subdirectory installs) and always jumped back to the primary site on multisite installs.
 - Using `craft.cookieConsent.*` template variables on a site that has no Cookie Consent settings row (or a tampered/non-JSON consent cookie) no longer causes a PHP error. Every variable now falls back to a sensible default when settings are missing.
 - `craft.cookieConsent.getConsent()` compared stored consent values against the string `'on'` even though the consent cookie stores booleans; it only returned the right result through PHP's loose comparison rules. It now checks booleans strictly (still accepting `'on'` from cookies set by very old versions).
