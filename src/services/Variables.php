@@ -159,13 +159,13 @@ class Variables extends Component
         return $this->consentData->consent_uid ?? null;
     }
 
-    public function getConsent($slug): bool
+    public function getConsent(string $slug): bool
     {
         if (isset($this->consentData->$slug)) {
             // Cookies written since 5.x store booleans; 'on' covers cookies from older versions
             return $this->consentData->$slug === true || $this->consentData->$slug === 'on';
         }
-        return $this->settings ? in_array($slug, $this->settings->getRequiredCookieGroups()) : false;
+        return $this->settings ? in_array($slug, $this->settings->getRequiredCookieGroups(), true) : false;
     }
 
     public function getConsents(): ?object

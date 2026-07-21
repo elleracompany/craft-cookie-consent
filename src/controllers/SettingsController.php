@@ -354,7 +354,7 @@ class SettingsController extends Controller
     {
         if (Craft::$app->getIsMultiSite()) {
             $editableSiteIds = Craft::$app->getSites()->getEditableSiteIds();
-            if (!\in_array($siteId, $editableSiteIds, false)) {
+            if (!\in_array($siteId, $editableSiteIds, true)) {
                 $this->requirePermission('editSite:'.$siteId);
             }
         }

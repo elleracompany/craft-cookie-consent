@@ -11,6 +11,7 @@
 - The consent submission endpoint now requires a POST request, validates `site_id`, returns a JSON object (`success`, `uid`, `consent`) instead of a bare `true`, and sets `SameSite=Lax` on the consent cookie. Submitting for a site without settings now returns a 400 response instead of causing a PHP error.
 
 ### Internal
+- Site-permission and required-group lookups now use strict `in_array()` comparisons per the Craft coding guidelines, and `getConsent()` requires a string slug.
 - PHPStan level raised from 0 to 4 and the codebase passes cleanly; relation magic properties are now documented with `@property-read` annotations.
 - The CP Readme page now resolves the README through the plugin's base path and no longer errors if the file is missing.
 - Normalized code style across the plugin: consistent 4-space indentation (tabs removed), braces on all conditionals, and an `.editorconfig` added.
