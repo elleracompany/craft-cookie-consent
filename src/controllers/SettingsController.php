@@ -74,7 +74,7 @@ class SettingsController extends Controller
 		$total = Consent::find()->where(['site_id' => $variables['selectedSite']->id])->count();
 		$count = count($variables['consents']);
 
-		$cpTrigger = Craft::$app->config->general->cpTrigger;
+		$siteParam = ['site' => $variables['selectedSite']->handle];
 
 		$from = (($page-1)*$pageSize)+1;
 		$to = (($page-1)*$pageSize)+$count;
@@ -83,8 +83,8 @@ class SettingsController extends Controller
             'currentPage' => $page,
             'from' => $from,
             'to' => $to,
-            'previous' => $from > 1 ? "/{$cpTrigger}/cookie-consent/site/consent/".($page-1) : null,
-            'next' => $to < $total ? "/{$cpTrigger}/cookie-consent/site/consent/".($page+1) : null,
+            'previous' => $from > 1 ? UrlHelper::cpUrl('cookie-consent/site/consent/'.($page-1), $siteParam) : null,
+            'next' => $to < $total ? UrlHelper::cpUrl('cookie-consent/site/consent/'.($page+1), $siteParam) : null,
             'current' => $count,
             'total' => $total
         ];
