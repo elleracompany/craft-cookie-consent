@@ -190,7 +190,10 @@ class SettingsController extends Controller
         ];
         $this->_prepVariables($variables);
         $this->_prepEditGroupVariables($variables);
-        if ($variables['selectedSite']->id !== $variables['group']->site_id) {
+        // site_id may be a string when the group was repopulated from POST after
+        // a failed validation - a strict int/string mismatch here would redirect
+        // away and swallow the validation errors (#96)
+        if ($variables['selectedSite']->id !== (int) $variables['group']->site_id) {
             return $this->redirect(UrlHelper::cpUrl('cookie-consent?site=' . $variables['selectedSite']->handle));
         }
         $this->_checkSiteEditPermission($variables['selectedSite']->id);

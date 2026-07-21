@@ -27,6 +27,7 @@
 - "Invalidate Consents" now requires a POST request with a CSRF token and the `cookie-consent:site-settings` permission (plus site edit permission on multisite installs). Previously any logged-in CP user could invalidate all consents via a GET request. The button now asks for confirmation, and an unknown site no longer causes a PHP error.
 
 ### Bugfix
+- Validation errors are now displayed when saving a cookie group fails ([#96](https://github.com/elleracompany/craft-cookie-consent/issues/96)). A strict int/string comparison on `site_id` made the edit page redirect to the Readme after a failed save, discarding the errors. The Name and Description fields are also marked as required in the form.
 - The "Last updated" date shown by `craft.cookieConsent.updated` now takes cookie group changes into account as intended. The previous code iterated over the relation query object instead of the related records, so group updates never affected the date.
 - The "Required", "Name", "Description", "Provider" and "Expiry" strings in the banner template were translated with the `site` category instead of `cookie-consent`, so the plugin's bundled translations (e.g. Norwegian) were never used for them.
 - The banner no longer errors when a cookie group has no cookies JSON stored.

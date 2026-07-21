@@ -48,6 +48,7 @@
     label: group.getAttributeLabel('name'),
     name: "name",
     disabled: disabled,
+    required: true,
     value: group.name,
     errors: group.getErrors("name"),
 }) }}
@@ -57,6 +58,7 @@
     label: group.getAttributeLabel('description'),
     name: "description",
     disabled: disabled,
+    required: true,
     rows: 4,
     value: group.description,
     errors: group.getErrors("description"),
