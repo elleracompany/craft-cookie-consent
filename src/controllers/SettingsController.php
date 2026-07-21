@@ -122,27 +122,31 @@ class SettingsController extends Controller
         foreach (['activated', 'jsAssets', 'cssAssets', 'templateAsset', 'showCheckboxes', 'showAfterConsent'] as $lightswitch) {
             $record->$lightswitch = (bool) $record->$lightswitch;
         }
-        if ($record->save()) {
-            Craft::$app->getSession()->setNotice(Craft::t('cookie-consent', 'Settings saved.'));
-        } else {
-            Craft::$app->getUrlManager()->setRouteParams([
-                'model' => $record
-            ]);
-            Craft::$app->getSession()->setError(Craft::t('cookie-consent', 'Couldn’t save the settings.'));
+
+        if (!$record->save()) {
+            return $this->asModelFailure($record, Craft::t('cookie-consent', 'Couldn’t save the settings.'), 'model');
         }
-        return null;
+
+        $site = Craft::$app->getSites()->getSiteById((int) $record->site_id);
+        return $this->asModelSuccess(
+            $record,
+            Craft::t('cookie-consent', 'Settings saved.'),
+            'model',
+            [],
+            UrlHelper::cpUrl('cookie-consent/site', $site ? ['site' => $site->handle] : [])
+        );
     }
 
     /**
      * Invalidate all consents for a site by bumping its dateInvalidated
      *
-     * @return Response
+     * @return Response|null
      * @throws NotFoundHttpException
      * @throws \craft\errors\MissingComponentException
      * @throws \yii\web\BadRequestHttpException
      * @throws \yii\web\ForbiddenHttpException
      */
-    public function actionInvalidateConsents(): Response
+    public function actionInvalidateConsents(): ?Response
     {
         $this->requirePostRequest();
         $this->requirePermission('cookie-consent:site-settings');
@@ -156,14 +160,16 @@ class SettingsController extends Controller
         }
 
         $record->dateInvalidated = Db::prepareDateForDb(new \DateTime());
-        if ($record->save()) {
-            Craft::$app->getSession()->setNotice(Craft::t('cookie-consent', 'Consents invalidated.'));
-        } else {
-            Craft::$app->getSession()->setError(Craft::t('cookie-consent', 'Couldn’t invalidate the consents.'));
+        if (!$record->save()) {
+            return $this->asFailure(Craft::t('cookie-consent', 'Couldn’t invalidate the consents.'));
         }
 
         $site = Craft::$app->getSites()->getSiteById($siteId);
-        return $this->redirect(UrlHelper::cpUrl('cookie-consent/site', $site ? ['site' => $site->handle] : []));
+        return $this->asSuccess(
+            Craft::t('cookie-consent', 'Consents invalidated.'),
+            [],
+            UrlHelper::cpUrl('cookie-consent/site', $site ? ['site' => $site->handle] : [])
+        );
     }
 
     /**
@@ -224,14 +230,15 @@ class SettingsController extends Controller
             $record->default = true;
         }
         if (!$record->save()) {
-            Craft::$app->getUrlManager()->setRouteParams([
-                'group' => $record
-            ]);
-            Craft::$app->getSession()->setError(Craft::t('cookie-consent', 'Couldn’t save the cookie group.'));
-            return null;
+            return $this->asModelFailure($record, Craft::t('cookie-consent', 'Couldn’t save the cookie group.'), 'group');
         }
-        Craft::$app->getSession()->setNotice(Craft::t('cookie-consent', 'Cookie group saved.'));
-        return $this->redirect($record->getEditUrl());
+        return $this->asModelSuccess(
+            $record,
+            Craft::t('cookie-consent', 'Cookie group saved.'),
+            'group',
+            [],
+            $record->getEditUrl()
+        );
     }
 
     /**
@@ -242,7 +249,7 @@ class SettingsController extends Controller
      * @throws \yii\db\StaleObjectException
      * @throws \yii\web\ForbiddenHttpException
      */
-    public function actionDeleteCookieGroup(): Response
+    public function actionDeleteCookieGroup(): ?Response
     {
         $this->_checkSiteEditPermission((int) Craft::$app->request->getParam('site_id'));
         $this->requirePermission('cookie-consent:cookie-groups:delete');
@@ -253,10 +260,14 @@ class SettingsController extends Controller
         if (!$group) {
             throw new NotFoundHttpException('Cookie group not found');
         }
-        if ($group->delete()) {
-            Craft::$app->getSession()->setNotice(Craft::t('cookie-consent', 'Cookie group deleted.'));
+        if (!$group->delete()) {
+            return $this->asFailure(Craft::t('cookie-consent', 'Couldn’t delete the cookie group.'));
         }
-        return $this->redirect(UrlHelper::cpUrl('cookie-consent/site'));
+        return $this->asSuccess(
+            Craft::t('cookie-consent', 'Cookie group deleted.'),
+            [],
+            UrlHelper::cpUrl('cookie-consent/site')
+        );
     }
 
     /**

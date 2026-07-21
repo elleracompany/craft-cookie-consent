@@ -3,6 +3,7 @@
 ## 5.1.0 - 2026-07-21
 
 ### Improved
+- CP save/delete/invalidate actions now use Craft's `asSuccess()`/`asFailure()`/`asModelSuccess()`/`asModelFailure()` response helpers. Saving site settings now redirects after success (preventing form re-submission on refresh) and stays on the selected site, and a failed cookie group deletion now shows an error instead of silently redirecting.
 - The front-end banner bootstrapping (settings lookup, asset loading, template hook) is now deferred with `Craft::$app->onInit()` as recommended by the Craft plugin guide, instead of querying the database during plugin initialization.
 - Added a database index on the consent table (`site_id`, `dateUpdated`), speeding up the CP consent list and the retention command on large tables (schema version 1.6.0).
 - The banner form's refresh settings are now rendered as proper quoted `data-refresh`/`data-refreshtime` attributes via the new `craft.cookieConsent.refreshEnabled` and `craft.cookieConsent.refreshTime` variables. `getRefreshDataAttr()` (which returned a raw unescaped HTML string) is deprecated but still works for custom templates.
