@@ -72,20 +72,22 @@ function submitConsent(event) {
     let cookieTab = document.getElementById("elc-cookie-tab");
     if(typeof cookieTab !== 'undefined' && cookieTab !== null) document.getElementById("elc-cookie-tab").classList.toggle('elc-hidden');
 
-    let xhr = new XMLHttpRequest();
-    xhr.open('POST', form.dataset.url);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.send(data);
+    withCsrf(form, data, function (payload) {
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', form.dataset.url);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.send(payload);
 
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-            addWindowObject()
-            if (xhr.status !== 200) console.log('Error: ' + xhr.status);
-            else if (form.hasAttribute("data-refresh") && form.dataset.refresh === "true" && form.hasAttribute("data-refreshtime")) {
-                refresh(form.dataset.refreshtime)
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                addWindowObject()
+                if (xhr.status !== 200) console.log('Error: ' + xhr.status);
+                else if (form.hasAttribute("data-refresh") && form.dataset.refresh === "true" && form.hasAttribute("data-refreshtime")) {
+                    refresh(form.dataset.refreshtime)
+                }
             }
         }
-    }
+    });
 }
 
 function submitAllConsent(event) {
@@ -109,16 +111,48 @@ function submitAllConsent(event) {
     let cookieTab = document.getElementById("elc-cookie-tab");
     if(typeof cookieTab !== 'undefined' && cookieTab !== null) document.getElementById("elc-cookie-tab").classList.toggle('elc-hidden');
 
+    withCsrf(form, data.concat('&acceptAll=true'), function (payload) {
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', form.dataset.url);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.send(payload);
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status !== 200) console.log('Error: ' + xhr.status);
+                else if (form.hasAttribute("data-refresh") && form.dataset.refresh === "true" && form.hasAttribute("data-refreshtime")) {
+                    refresh(form.dataset.refreshtime)
+                }
+            }
+        }
+    });
+}
+
+/*
+ * Fetch a fresh CSRF token and append it to the serialized form data.
+ * The token is not part of the rendered banner, so cached pages stay
+ * valid for every visitor; it is only requested when consent is submitted.
+ */
+function withCsrf(form, data, callback) {
+    if (typeof form.dataset.csrf === 'undefined') {
+        callback(data);
+        return;
+    }
+
     let xhr = new XMLHttpRequest();
-    xhr.open('POST', form.dataset.url);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.send(data.concat('&acceptAll=true'));
+    xhr.open('GET', form.dataset.csrf);
+    xhr.setRequestHeader('Accept', 'application/json');
+    xhr.send();
 
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
-            if (xhr.status !== 200) console.log('Error: ' + xhr.status);
-            else if (form.hasAttribute("data-refresh") && form.dataset.refresh === "true" && form.hasAttribute("data-refreshtime")) {
-                refresh(form.dataset.refreshtime)
+            if (xhr.status === 200) {
+                let token = JSON.parse(xhr.response);
+                callback(data + '&' + encodeURIComponent(token.name) + '=' + encodeURIComponent(token.value));
+            }
+            else {
+                console.log('Error: ' + xhr.status);
+                callback(data);
             }
         }
     }

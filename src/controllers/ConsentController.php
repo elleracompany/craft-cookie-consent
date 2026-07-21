@@ -61,4 +61,20 @@ class ConsentController extends Controller
         Craft::$app->response->format = Response::FORMAT_JSON;
         return CookieConsent::getInstance()->cookieConsent->getConsents();
     }
+
+	/**
+	 * Ajax CSRF token endpoint, fetched by the banner script right before
+	 * submitting consent. The token is not rendered into the banner markup
+	 * because generating it would mark the whole page as uncacheable.
+	 *
+	 * @return array
+	 */
+	public function actionCsrf()
+	{
+		Craft::$app->response->format = Response::FORMAT_JSON;
+		return [
+			'name' => Craft::$app->config->general->csrfTokenName,
+			'value' => Craft::$app->request->getCsrfToken(),
+		];
+	}
 }

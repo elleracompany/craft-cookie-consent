@@ -8,7 +8,6 @@ use craft\helpers\Db;
 use elleracompany\cookieconsent\records\Consent;
 use elleracompany\cookieconsent\records\SiteSettings;
 use yii\base\Component;
-use yii\web\Cookie;
 
 class Variables extends Component
 {
@@ -39,22 +38,10 @@ class Variables extends Component
 
 		if(isset($this->settings->activated) && $this->settings->activated == 1)
         {
-            $consent = Craft::$app->session->get('cookieConsent');
+            $consent = Craft::$app->request->cookies->getValue($this->settings->cookieName);
 
-            if($consent)
-            {
-                $cookie = new Cookie([
-                    'name' => $this->settings->cookieName,
-                    'value' => $consent,
-                    'expire' => strtotime('+1 year', time())
-                ]);
-
-                Craft::$app->response->cookies->add($cookie);
-            }
-            else $consent = Craft::$app->request->cookies->get($this->settings->cookieName);
-
-            $this->consent = $consent !== null;
-            $this->consent_string = json_decode($consent);
+            $this->consent_string = $consent !== null ? json_decode($consent) : null;
+            $this->consent = is_object($this->consent_string) && isset($this->consent_string->consent_uid);
 
             if($this->consent)
             {

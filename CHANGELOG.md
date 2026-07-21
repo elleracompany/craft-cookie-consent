@@ -1,5 +1,13 @@
 # Release Notes for Cookie Consent
 
+## 5.1.0 - 2026-07-21
+
+### Bugfix
+- Activating the banner made every front-end page uncacheable: `{{ csrfInput() }}` in the banner template caused Craft to overwrite the response's cache headers with no-cache headers, and the plugin opened a PHP session (and re-sent the consent cookie) on every request. The CSRF token is now fetched via ajax when consent is submitted, and the consent state is read from the request cookie only.
+
+### Breaking
+- `{{ csrfInput() }}` was removed from the banner template. If you use a custom template based on the old one, remove `{{ csrfInput() }}` and add `data-csrf="{{ actionUrl('cookie-consent/consent/csrf') }}"` to the form tag to get the same caching fix. Custom templates that keep `{{ csrfInput() }}` continue to work, but their pages remain uncacheable.
+
 ## 5.0.4 - 2024-11-07
 
 ### Updated
