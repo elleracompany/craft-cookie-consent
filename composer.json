@@ -12,7 +12,9 @@
     }
   ],
   "support": {
-    "email": "support@ellera.no"
+    "email": "support@ellera.no",
+    "issues": "https://github.com/elleracompany/craft-cookie-consent/issues",
+    "docs": "https://github.com/elleracompany/craft-cookie-consent/blob/master/README.md"
   },
   "require": {
     "ext-json": "*",
@@ -26,6 +28,10 @@
   "extra": {
     "name": "Cookie Consent",
     "handle": "cookie-consent",
+    "description": "GDPR-friendly cookie consent banner with configurable cookie groups, per-site settings and consent logging.",
+    "developer": "Ellera AS",
+    "developerUrl": "https://ellera.no",
+    "developerEmail": "support@ellera.no",
     "documentationUrl": "https://github.com/elleracompany/craft-cookie-consent/blob/master/README.md",
     "changelogUrl": "https://github.com/elleracompany/craft-cookie-consent/blob/master/CHANGELOG.md",
     "class": "elleracompany\\cookieconsent\\CookieConsent"
