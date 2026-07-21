@@ -3,9 +3,12 @@
 namespace elleracompany\cookieconsent\services;
 
 use Craft;
+use craft\helpers\Template;
+use craft\helpers\UrlHelper;
 use elleracompany\cookieconsent\CookieConsent;
 use elleracompany\cookieconsent\records\Consent;
 use elleracompany\cookieconsent\records\SiteSettings;
+use Twig\Markup;
 use yii\base\Component;
 
 class Variables extends Component
@@ -171,6 +174,129 @@ class Variables extends Component
     public function getConsents(): ?object
     {
         return $this->consentData;
+    }
+
+    /**
+     * Is Google Consent Mode v2 enabled (and the banner activated) for this site?
+     */
+    public function consentModeEnabled(): bool
+    {
+        return (bool) ($this->settings?->activated && $this->settings->enableConsentMode);
+    }
+
+    /**
+     * Map of cookie group slug to the Google Consent Mode signals the group grants
+     *
+     * @return array<string,string[]>
+     */
+    public function getGcmMap(): array
+    {
+        $map = [];
+        if (!$this->settings) {
+            return $map;
+        }
+        foreach ($this->settings->cookieGroups as $group) {
+            $signals = $group->getSignals();
+            if ($signals !== []) {
+                $map[$group->slug] = $signals;
+            }
+        }
+        return $map;
+    }
+
+    /**
+     * The default consent state for gtag('consent', 'default', ...): the four
+     * core v2 signals plus every mapped signal denied, except signals granted
+     * by required groups. Contains no visitor-specific data, so pages using
+     * it stay cacheable.
+     *
+     * @return array<string,string>
+     */
+    public function getGcmDefaults(): array
+    {
+        $defaults = [];
+        foreach (CookieConsent::GCM_CORE_SIGNALS as $signal) {
+            $defaults[$signal] = 'denied';
+        }
+        if (!$this->settings) {
+            return $defaults;
+        }
+        foreach ($this->settings->cookieGroups as $group) {
+            foreach ($group->getSignals() as $signal) {
+                if ($group->required) {
+                    $defaults[$signal] = 'granted';
+                } elseif (!isset($defaults[$signal])) {
+                    $defaults[$signal] = 'denied';
+                }
+            }
+        }
+        return $defaults;
+    }
+
+    /**
+     * JSON consumed by the banner script (data-gcm attribute): the group to
+     * signal map and the data layer name
+     */
+    public function getGcmJson(): string
+    {
+        return json_encode([
+            'dataLayer' => $this->settings->gcmDataLayerName ?: 'dataLayer',
+            'map' => (object) $this->getGcmMap(),
+        ]);
+    }
+
+    /**
+     * Inline script tag for Google Consent Mode v2. Place it in the <head>,
+     * before the gtag.js/GTM snippet (including snippets rendered by other
+     * plugins such as SEOmatic). Sets the default (denied) consent state
+     * synchronously, then fetches the visitor's stored consent and pushes a
+     * consent update. The output contains no visitor-specific data.
+     */
+    public function consentModeScript(): Markup
+    {
+        if (!$this->consentModeEnabled()) {
+            return Template::raw('');
+        }
+
+        $dataLayer = json_encode($this->settings->gcmDataLayerName ?: 'dataLayer');
+        $defaults = $this->getGcmDefaults();
+        if ((int) $this->settings->gcmWaitForUpdate > 0) {
+            $defaults['wait_for_update'] = (int) $this->settings->gcmWaitForUpdate;
+        }
+        $map = json_encode((object) $this->getGcmMap());
+        $showUrl = json_encode(UrlHelper::siteUrl('cookie-consent/show'));
+
+        $js = "window[{$dataLayer}] = window[{$dataLayer}] || [];\n";
+        $js .= "function gtag(){window[{$dataLayer}].push(arguments);}\n";
+        $js .= "gtag('consent', 'default', ".json_encode($defaults).");\n";
+        if ($this->settings->gcmAdsDataRedaction) {
+            $js .= "gtag('set', 'ads_data_redaction', true);\n";
+        }
+        if ($this->settings->gcmUrlPassthrough) {
+            $js .= "gtag('set', 'url_passthrough', true);\n";
+        }
+        // Fetch the visitor's stored consent and lift the defaults. This is
+        // independent of the banner script so the update also happens on
+        // pages where the banner is not rendered (e.g. consent already given
+        // and "Show after Consent" disabled).
+        $js .= "fetch({$showUrl}, {headers: {'Accept': 'application/json'}})\n";
+        $js .= "    .then(function (r) { return r.ok ? r.json() : null; })\n";
+        $js .= "    .then(function (c) {\n";
+        $js .= "        if (!c || typeof c.consent_uid === 'undefined') { return; }\n";
+        $js .= "        var map = {$map}, state = {};\n";
+        $js .= "        for (var slug in map) {\n";
+        $js .= "            var granted = c[slug] === true || c[slug] === 'on';\n";
+        $js .= "            for (var i = 0; i < map[slug].length; i++) {\n";
+        $js .= "                if (granted || state[map[slug][i]] !== 'granted') {\n";
+        $js .= "                    state[map[slug][i]] = granted ? 'granted' : 'denied';\n";
+        $js .= "                }\n";
+        $js .= "            }\n";
+        $js .= "        }\n";
+        $js .= "        if (Object.keys(state).length) { gtag('consent', 'update', state); }\n";
+        $js .= "    })\n";
+        $js .= "    .catch(function () {});\n";
+
+        return Template::raw("<script>\n".$js."</script>");
     }
 
     public function refreshEnabled(): bool

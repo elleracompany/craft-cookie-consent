@@ -151,7 +151,47 @@ window.addEventListener('ccc-loaded', function (event) {
 The banner itself is cache-friendly as of 5.1.0: the CSRF token is no longer rendered into the page but fetched via ajax when consent is submitted, so cached pages stay valid for every visitor.
 
 ## Google Consent Mode v2
-Google's Consent Mode v2 expects a default consent state to be set before any Google tags load, followed by an update once the visitor makes a choice. Both map directly onto the plugin's cookie groups via the `ccc-loaded` event:
+As of version 5.2.0 the plugin has built-in support for [Google Consent Mode v2](https://developers.google.com/tag-platform/security/guides/consent), which signals the visitor's consent to Google tags (Analytics, Ads, Tag Manager). Setup:
+
+**1. Map your cookie groups to consent signals.** On each cookie group's settings page, check the Google Consent Mode signals the group grants when accepted. Typically:
+
+| Cookie group | Signals |
+| --- | --- |
+| Necessary | `functionality_storage`, `security_storage` |
+| Statistics | `analytics_storage` |
+| Marketing | `ad_storage`, `ad_user_data`, `ad_personalization` |
+
+New installs get these mappings on the default groups automatically.
+
+**2. Enable Consent Mode** in the plugin's site settings.
+
+**3. Place the consent mode script in your layout's `<head>`, before any Google tags:**
+
+```twig
+<head>
+    {{ craft.cookieConsent.consentModeScript() }}
+    {# gtag.js / GTM snippets load below this line #}
+    ...
+</head>
+```
+
+The script sets the default consent state (everything denied, except signals granted by *required* groups) synchronously, so Google tags that load afterwards hold back cookies until consent is known. It then fetches the visitor's stored consent and pushes a `consent update`. When the visitor submits or changes their consent in the banner, an update is pushed immediately — no reload needed.
+
+This is Google's "advanced" consent mode: tags load normally and send cookieless pings until consent is granted, which preserves conversion modeling. If you prefer "basic" mode (no Google tags at all before consent), load your tags via the `ccc-loaded` event instead — see [The window.ccc object](#the-windowccc-object).
+
+The output of `consentModeScript()` contains no visitor-specific data, so it's safe on statically cached pages (see the Blitz section above) — the visitor's actual consent state is always fetched client-side.
+
+**Options** (site settings):
+- **Data layer name** — must match the data layer variable your Google tags use. Leave as `dataLayer` unless you renamed it.
+- **Wait for update** — how long Google tags wait for the consent state before firing (default 2000 ms).
+- **Redact ads data** — sets `ads_data_redaction`, redacting ad click identifiers while `ad_storage` is denied.
+- **URL passthrough** — sets `url_passthrough`, passing ad click info through URLs while `ad_storage` is denied.
+
+### With SEOmatic (or other plugins rendering Google tags)
+SEOmatic injects its tracking scripts right before the closing `</head>` tag, so placing `{{ craft.cookieConsent.consentModeScript() }}` at the top of your `<head>` guarantees the default consent state is set first. No SEOmatic configuration is needed — its gtag/GTM scripts pick up the consent state automatically. If you've renamed the data layer variable in SEOmatic's GTM settings, set the same name in this plugin's site settings.
+
+### Manual implementation
+If you need full control (custom signals, regional defaults, ...), leave "Enable Google Consent Mode" off and wire it up yourself with the `ccc-loaded` event:
 
 ```html
 <script>

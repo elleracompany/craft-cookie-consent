@@ -42,6 +42,65 @@
 }) }}
 
 {{ forms.lightswitchField({
+    label: model.getAttributeLabel('enableConsentMode'),
+    instructions: 'Signal the visitor\'s consent to Google tags (Analytics, Ads, Tag Manager) via Google Consent Mode v2. Requires placing the consent mode script in your template — see the README.'|t('cookie-consent'),
+    name: "enableConsentMode",
+    disabled: not canUpdate,
+    on: model.enableConsentMode,
+    errors: model.getErrors("enableConsentMode"),
+}) }}
+
+<div class="field">
+    <div style="padding-right: 5%; display: inline-block; width: 45%; vertical-align: top;">
+        {{ forms.textField({
+            label: model.getAttributeLabel('gcmDataLayerName'),
+            instructions: 'The name of the data layer variable used by your Google tags. Leave as "dataLayer" unless you renamed it (e.g. in Tag Manager or SEOmatic).'|t('cookie-consent'),
+            id: "gcmDataLayerName",
+            name: "gcmDataLayerName",
+            disabled: not canUpdate,
+            value: model.gcmDataLayerName,
+            errors: model.getErrors("gcmDataLayerName"),
+        }) }}
+    </div>
+    <div style="display: inline-block; width: 45%; vertical-align: top;">
+        {{ forms.textField({
+            label: model.getAttributeLabel('gcmWaitForUpdate'),
+            instructions: 'How long Google tags should wait for the consent state before firing, in milliseconds. Defaults to 2000.'|t('cookie-consent'),
+            id: "gcmWaitForUpdate",
+            name: "gcmWaitForUpdate",
+            type: "number",
+            min: 0,
+            disabled: not canUpdate,
+            value: model.gcmWaitForUpdate,
+            errors: model.getErrors("gcmWaitForUpdate"),
+        }) }}
+    </div>
+</div>
+
+<div class="field">
+    <div style="padding-right: 5%; display: inline-block; width: 45%; vertical-align: top;">
+        {{ forms.lightswitchField({
+            label: model.getAttributeLabel('gcmAdsDataRedaction'),
+            instructions: 'Redact ad click identifiers from Google ad requests while ad_storage is denied.'|t('cookie-consent'),
+            name: "gcmAdsDataRedaction",
+            disabled: not canUpdate,
+            on: model.gcmAdsDataRedaction,
+            errors: model.getErrors("gcmAdsDataRedaction"),
+        }) }}
+    </div>
+    <div style="display: inline-block; width: 45%; vertical-align: top;">
+        {{ forms.lightswitchField({
+            label: model.getAttributeLabel('gcmUrlPassthrough'),
+            instructions: 'Pass ad click information through URLs while ad_storage is denied.'|t('cookie-consent'),
+            name: "gcmUrlPassthrough",
+            disabled: not canUpdate,
+            on: model.gcmUrlPassthrough,
+            errors: model.getErrors("gcmUrlPassthrough"),
+        }) }}
+    </div>
+</div>
+
+{{ forms.lightswitchField({
     label: model.getAttributeLabel('templateAsset'),
     instructions: 'Load template.'|t('cookie-consent'),
     name: "templateAsset",

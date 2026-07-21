@@ -19,6 +19,7 @@ use yii\web\NotFoundHttpException;
  * @property boolean $default
  * @property integer $site_id
  * @property string|array $cookies
+ * @property string|array $consent_signals
  * @property string $name
  * @property string $description
  * @property string $slug
@@ -59,6 +60,7 @@ class CookieGroup extends ActiveRecord
             'slug',
             'required',
             'cookies',
+            'consent_signals',
             'store_ip',
             'description',
             'site_id',
@@ -76,6 +78,7 @@ class CookieGroup extends ActiveRecord
             'required' => Craft::t('cookie-consent', 'Required'),
             'default' => Craft::t('cookie-consent', 'Default'),
             'cookies' => Craft::t('cookie-consent', 'Cookies'),
+            'consent_signals' => Craft::t('cookie-consent', 'Google Consent Mode signals'),
             'store_ip' => Craft::t('cookie-consent', 'Store IP'),
             'description' => Craft::t('cookie-consent', 'Description'),
             'site_id' => Craft::t('cookie-consent', 'Site ID'),
@@ -95,6 +98,7 @@ class CookieGroup extends ActiveRecord
     {
         return [
             [['name', 'slug', 'description', 'cookies'], 'string'],
+            ['consent_signals', 'validateConsentSignals'],
             [['site_id', 'description', 'name', 'slug'], 'required'],
             [['required', 'store_ip', 'default'], 'boolean'],
             [['required', 'store_ip', 'default', 'order'], 'default', 'value' => 0],
@@ -111,7 +115,49 @@ class CookieGroup extends ActiveRecord
     public function beforeSave($insert): bool
     {
         $this->stringifyCookies();
+        $this->stringifyConsentSignals();
         return parent::beforeSave($insert);
+    }
+
+    /**
+     * Validates that consent_signals only contains signals defined by
+     * Google Consent Mode v2
+     *
+     * @param $attribute
+     * @param $params
+     */
+    public function validateConsentSignals($attribute, $params): void
+    {
+        $signals = $this->$attribute;
+        if (is_string($signals)) {
+            $signals = json_decode($signals, true);
+        }
+        if ($signals === null || $signals === '') {
+            return;
+        }
+        if (!is_array($signals)) {
+            $this->addError($attribute, Craft::t('cookie-consent', 'Consent signals must be a list.'));
+            return;
+        }
+        foreach ($signals as $signal) {
+            if (!in_array($signal, CookieConsent::GCM_SIGNALS, true)) {
+                $this->addError($attribute, Craft::t('cookie-consent', 'Unknown consent signal: {signal}', ['signal' => $signal]));
+            }
+        }
+    }
+
+    /**
+     * The Google Consent Mode signals granted by this group, as an array
+     *
+     * @return string[]
+     */
+    public function getSignals(): array
+    {
+        $signals = $this->consent_signals;
+        if (is_string($signals)) {
+            $signals = json_decode($signals, true);
+        }
+        return is_array($signals) ? $signals : [];
     }
 
     /**
@@ -138,6 +184,7 @@ class CookieGroup extends ActiveRecord
     public function beforeValidate(): bool
     {
         $this->stringifyCookies();
+        $this->stringifyConsentSignals();
         return parent::beforeValidate();
     }
 
@@ -145,6 +192,13 @@ class CookieGroup extends ActiveRecord
     {
         if (is_array($this->cookies)) {
             $this->cookies = json_encode($this->cookies);
+        }
+    }
+
+    private function stringifyConsentSignals(): void
+    {
+        if (is_array($this->consent_signals)) {
+            $this->consent_signals = json_encode(array_values($this->consent_signals));
         }
     }
 

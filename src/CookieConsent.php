@@ -37,6 +37,26 @@ class CookieConsent extends \craft\base\Plugin
     const CONSENT_TABLE = '{{%cookie_consent_consent}}';
     const DEFAULT_TEMPLATE = 'cookie-consent/banner';
     const DEFAULT_HEADLINE = 'This website uses cookies';
+    /**
+     * Consent signals defined by Google Consent Mode v2. The first four are
+     * the "core" signals Google requires a default state for when consent
+     * mode is enabled.
+     */
+    const GCM_CORE_SIGNALS = [
+        'ad_storage',
+        'ad_user_data',
+        'ad_personalization',
+        'analytics_storage',
+    ];
+    const GCM_SIGNALS = [
+        'ad_storage',
+        'ad_user_data',
+        'ad_personalization',
+        'analytics_storage',
+        'functionality_storage',
+        'personalization_storage',
+        'security_storage',
+    ];
     const DEFAULT_DESCRIPTION = 'We use cookies to personalize content and ads, and to analyze our traffic and improve our service.';
     const DEFAULT_GROUPS = [
         [
@@ -45,6 +65,7 @@ class CookieConsent extends \craft\base\Plugin
             'default' => true,
             'name' => 'Necessary',
             'description' => 'Cookies that the site cannot function properly without. This includes cookies for access to secure areas and CSRF security. Please note that Craft’s default cookies do not collect any personal or sensitive information. Craft\'s default cookies do not collect IP addresses. The information they store is not sent to Pixel & Tonic or any 3rd parties.',
+            'consent_signals' => ['functionality_storage', 'security_storage'],
             'cookies' => [
                 [
                     'name' => 'CraftSessionId',
@@ -78,6 +99,7 @@ class CookieConsent extends \craft\base\Plugin
             'default' => false,
             'name' => 'Statistics',
             'description' => 'Statistic cookies help us understand how visitors interact with websites by collecting and reporting information anonymously.',
+            'consent_signals' => ['analytics_storage'],
             'cookies' => []
         ],
         [
@@ -86,6 +108,7 @@ class CookieConsent extends \craft\base\Plugin
             'default' => false,
             'name' => 'Marketing',
             'description' => 'Marketing cookies are used to track visitors across websites. The intention is to display ads that are relevant and engaging for the individual user and thereby more valuable for publishers and third party advertisers.',
+            'consent_signals' => ['ad_storage', 'ad_user_data', 'ad_personalization'],
             'cookies' => []
         ]
     ];
@@ -94,7 +117,7 @@ class CookieConsent extends \craft\base\Plugin
     // Properties
     // =========================================================================
     public bool $hasCpSection = true;
-    public string $schemaVersion = '1.7.0';
+    public string $schemaVersion = '1.8.0';
 
     // Public Methods
     // =========================================================================
@@ -149,10 +172,17 @@ class CookieConsent extends \craft\base\Plugin
      */
     protected function handleSiteRequest(): void
     {
+        if (!$this->cookieConsent->activated()) {
+            return;
+        }
+        // The site routes (the consent "show" endpoint) must be available
+        // whenever the plugin is active — the Consent Mode head script
+        // fetches the consent state even on pages where the banner itself
+        // is not rendered (#106)
+        $this->installSiteEventListeners();
         if (!$this->cookieConsent->render()) {
             return;
         }
-        $this->installSiteEventListeners();
         // Register the asset bundles when the page template is about to
         // render, not at init time: when Craft renders an error template
         // (e.g. a 404 page), Yii's error handler clears the view first,
