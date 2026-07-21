@@ -1,157 +1,76 @@
 # Craft Cookie Consent
 
-Ellera Cookie Consent Plugin
+A cookie consent banner and consent log for Craft CMS, with built-in Google Consent Mode v2 support.
 
-## Install the plugin
-You can install this plugin from the Plugin Store.
+## Features
+- Configurable cookie groups and cookie descriptions per site (multisite compatible)
+- Accessible consent banner rendered first in the DOM, with an optional "Accept All" button
+- Google Consent Mode v2: map cookie groups to consent signals and let the plugin signal Google tags
+- Consent log with configurable retention, ready if you need to prove consent
+- Client-side consent state (`window.ccc` + `ccc-loaded` event) that works with static page caches like Blitz
+- Granular user permissions for managing settings, groups and consents
+- Use the default template, CSS and JS — or replace any of them with your own
 
-## Create hook in your template
-To give you full control over where the plugin is rendering the consent template. The cookie banner should be the first thing in the DOM for keyboard and screen-reader users. 
+## Requirements
+Craft CMS 5.1 or later.
 
-You need to add this line right after your start-body-tag in the relevant layout file(s):
+## Installation
+Install from the [Plugin Store](https://plugins.craftcms.com/cookie-consent), or with composer:
 
-`{% hook 'after-body-start' %}`
-
-## Activate the plugin for your site
-Navigate to the plugin inside your Control Panel. If you have the correct permissions, it should be visible in the menu.
-
-Go to "Site Settings" and add your cookies and cookie groups (We've added some basic ones for you already).
-
-Toggle the "Activated" lightswitch and you're off!
-
-## Customize
-
-### Using a custom template
-Update the template file under Site Settings to point to your template file.
-The path is rendered with `Craft::$app->view->renderTemplate()`.
-
-### Using custom CSS and/or JS
-You can turn off loading of assets in Site Settings if you have your own.
-
-You can look in `vendor/elleracompany/craft-cookie-consent/src/resources` to see the functionality currently implemented by the plugin.
-
-## Check for user consent
-You can use this function to manage cookie generation for your scripts
-
-`{% if craft.cookieConsent.getConsent('slug') %}`
-
-You can use it in SEOmatic by navigating to `admin/seomatic/tracking` and updating the script template.
-
-**Note:** if your pages are statically cached (e.g. with Blitz), don't gate scripts server-side with this function — the result gets baked into the cached page. See [Static caching (Blitz)](#static-caching-blitz) below for the cache-safe approach.
-
-## Planned features
-- Project.yaml compatibility
-
-## Example using SEOmatic
-
-**Note:** this server-side approach is not suitable for statically cached sites — if you use Blitz or similar, see [Static caching (Blitz)](#static-caching-blitz) instead.
-
-You will need to bust the SEOmatic cache in your twig templates (not in the SEOmatic script field)
-```
-{# -- START Cache-bust seomatic -- #}
-{% set scriptContainer = seomatic.script.container() %}
-{% do scriptContainer.clearCache(true) %}
-{# -- END Cache-bust seomatic -- #}
-```
-After that you can update the script field inside SEOmatic to something like this:
-```
-{% if trackingId.value is defined and trackingId.value %}
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','{{ analyticsUrl.value }}','ga');
-ga('create', '{{ trackingId.value |raw }}', 'auto'{% if linker.value %}, {allowLinker: true}{% endif %});
-{% if ipAnonymization.value or craft.cookieConsent.getConsent('default-marketing') != true %}
-ga('set', 'anonymizeIp', true);
-{% endif %}
-{% if displayFeatures.value and craft.cookieConsent.getConsent('default-marketing') %}
-ga('require', 'displayfeatures');
-{% endif %}
-{% if ecommerce.value and craft.cookieConsent.getConsent('default-marketing') %}
-ga('require', 'ecommerce');
-{% endif %}
-{% if enhancedEcommerce.value and craft.cookieConsent.getConsent('default-marketing') %}
-ga('require', 'ec');
-{% endif %}
-{% if enhancedLinkAttribution.value and craft.cookieConsent.getConsent('default-marketing') %}
-ga('require', 'linkid');
-{% endif %}
-{% if enhancedLinkAttribution.value and craft.cookieConsent.getConsent('default-marketing') %}
-ga('require', 'linker');
-{% endif %}
-{% set pageView = (sendPageView.value and not craft.app.request.isLivePreview) %}
-{% if pageView %}
-ga('send', 'pageview');
-{% endif %}
-{% endif %}
-```
-
-## Cleaning up old consents
-You can use a console command to clear out old consents from the database.
 ```bash
-./craft cookie-consent/retention/clear
+composer require elleracompany/craft-cookie-consent
+./craft plugin/install cookie-consent
 ```
 
-This command has three optional parameters:
+## Setup
+**1. Add the template hook.** The banner is injected through the `after-body-start` hook, so it lands first in the DOM for keyboard and screen-reader users. Add this line right after the opening `<body>` tag in your layout template(s):
 
-| Parameter | Alternative | Default | Type | Description |
-|---|---|---|---|---|
-| -d # | --days # | 365 | Integer | Sets number of days to keep records |
-| -s # | --sid # | null | Integer | Pass a site ID to only clear consents from that site |
-| -s <handle> | --handle <handle> | null | String | Pass a site handle to only clear consents from that site |
-
-**note:** you can only pass *sid* or *handle* - not both. If a site is not specified, consents will be deleted from all sites.
-
-Example: Delete all consents older than 2 years from site with ID 1
-```bash
-./craft cookie-consent/retention/clear -sid 1 -d 730
+```twig
+{% hook 'after-body-start' %}
 ```
 
-## The window.ccc object
-As of version 1.6.0, a new object window.ccc has been added to the default template.
+**2. Configure your cookie groups.** Navigate to the plugin in the Control Panel and review the cookie groups and cookies for your site — the plugin creates Necessary, Statistics and Marketing groups with sensible defaults for you. Each group has a slug you'll use to check consent in code.
 
-This object contains key-value pairs of consents and their status.
+**3. Activate.** Toggle the "Activated" lightswitch in the site settings and you're off.
 
-The object will be created if the default javascript file is loaded, and a form with the ID #elc-cookie-consent-form exists and has the `data-show`-attribute has the url to the consent show endpoint(/cookie-consent/show)
+If your visitors use Google Analytics, Ads or Tag Manager, continue with [Google Consent Mode v2](#google-consent-mode-v2) below.
 
-As of version 5.1.0, a `ccc-loaded` event is dispatched on `window` whenever the consent state has been (re)loaded — both on page load and after the visitor submits or updates their consent. The consent state is available as the event's `detail`, so site scripts can react to consent without polling or reloading the page:
+## Customizing
+
+### Custom template
+Point the "Template" field in the site settings to your own template file. It is rendered with `Craft::$app->view->renderTemplate()`. The default template is a good starting point — see `vendor/elleracompany/craft-cookie-consent/src/templates/banner.twig`.
+
+### Custom CSS and JS
+Turn off "Load CSS Assets" and/or "Load JS Assets" in the site settings if you ship your own. The plugin's implementation in `vendor/elleracompany/craft-cookie-consent/src/resources` shows what the default assets do (form submission, the `window.ccc` object, Consent Mode updates).
+
+## Checking consent
+
+### In Twig
+```twig
+{% if craft.cookieConsent.getConsent('default-statistics') %}
+    {# render something that requires consent #}
+{% endif %}
+```
+
+**Note:** if your pages are statically cached (e.g. with Blitz), don't gate scripts server-side with this function — the result gets baked into the cached page. See [Static caching (Blitz)](#static-caching-blitz) for the cache-safe approach.
+
+### In JavaScript
+The default script exposes the consent state as `window.ccc` — an object of group slugs and their consent status. It is populated whenever the default JS is loaded and the banner form is present.
+
+A `ccc-loaded` event is dispatched on `window` whenever the consent state has been (re)loaded — both on page load and immediately after the visitor submits or updates their consent. The consent state is available as the event's `detail`, so site scripts can react to consent changes without polling or reloading the page:
 
 ```js
 window.addEventListener('ccc-loaded', function (event) {
-    if (event.detail['marketing']) {
+    if (event.detail['default-marketing']) {
         // Load marketing scripts (GTM, pixels, ...) here
     }
 });
 ```
 
-This is especially useful together with static page caches (e.g. Blitz), where conditionally rendering scripts server-side with `craft.cookieConsent.getConsent()` would get baked into the cached page.
-
-## Static caching (Blitz)
-When pages are cached by Blitz (or any full-page static cache), everything rendered server-side is frozen at cache time — including the banner's visibility and any script conditionally rendered with `craft.cookieConsent.getConsent()`. That means the first visitor's consent state would be served to everyone. Two rules make the plugin work correctly with static caching:
-
-**1. Render the banner through a dynamic include.** Instead of relying on the automatic template hook, disable "Load Template" in the site settings, put `{% include 'cookie-consent/banner' %}` in a small template of its own (e.g. `_includes/cookie-consent.twig`), and include it dynamically so it's rendered fresh per visitor while the rest of the page stays cached:
-
-```twig
-{{ craft.blitz.includeDynamic('_includes/cookie-consent') }}
-```
-
-**2. Load consent-gated scripts client-side, not in Twig.** Don't wrap tracking scripts (GTM, analytics, pixels — including SEOmatic's script container) in `craft.cookieConsent.getConsent()` conditions on cached pages. Use the `ccc-loaded` event instead, which fires on page load and again immediately after the visitor accepts or updates their consent — no reload or cache clearing needed:
-
-```js
-window.addEventListener('ccc-loaded', function (event) {
-    if (event.detail['default-marketing']) {
-        // Inject GTM / marketing scripts here
-    }
-    if (event.detail['default-statistics']) {
-        // Inject analytics here
-    }
-});
-```
-
-The banner itself is cache-friendly as of 5.1.0: the CSRF token is no longer rendered into the page but fetched via ajax when consent is submitted, so cached pages stay valid for every visitor.
+This is the recommended way to gate tracking scripts — it works on statically cached pages, and it applies the moment the visitor accepts, with no reload.
 
 ## Google Consent Mode v2
-As of version 5.2.0 the plugin has built-in support for [Google Consent Mode v2](https://developers.google.com/tag-platform/security/guides/consent), which signals the visitor's consent to Google tags (Analytics, Ads, Tag Manager). Setup:
+The plugin has built-in support for [Google Consent Mode v2](https://developers.google.com/tag-platform/security/guides/consent), which signals the visitor's consent to Google tags (Analytics, Ads, Tag Manager). Setup:
 
 **1. Map your cookie groups to consent signals.** On each cookie group's settings page, check the Google Consent Mode signals the group grants when accepted. Typically:
 
@@ -177,9 +96,9 @@ New installs get these mappings on the default groups automatically.
 
 The script sets the default consent state (everything denied, except signals granted by *required* groups) synchronously, so Google tags that load afterwards hold back cookies until consent is known. It then fetches the visitor's stored consent and pushes a `consent update`. When the visitor submits or changes their consent in the banner, an update is pushed immediately — no reload needed.
 
-This is Google's "advanced" consent mode: tags load normally and send cookieless pings until consent is granted, which preserves conversion modeling. If you prefer "basic" mode (no Google tags at all before consent), load your tags via the `ccc-loaded` event instead — see [The window.ccc object](#the-windowccc-object).
+This is Google's "advanced" consent mode: tags load normally and send cookieless pings until consent is granted, which preserves conversion modeling. If you prefer "basic" mode (no Google tags at all before consent), load your tags via the `ccc-loaded` event instead — see [Checking consent](#in-javascript).
 
-The output of `consentModeScript()` contains no visitor-specific data, so it's safe on statically cached pages (see the Blitz section above) — the visitor's actual consent state is always fetched client-side.
+The output of `consentModeScript()` contains no visitor-specific data, so it's safe on statically cached pages (see [Static caching (Blitz)](#static-caching-blitz)) — the visitor's actual consent state is always fetched client-side.
 
 **Options** (site settings):
 - **Data layer name** — must match the data layer variable your Google tags use. Leave as `dataLayer` unless you renamed it.
@@ -219,8 +138,21 @@ If you need full control (custom signals, regional defaults, ...), leave "Enable
 
 Adjust the group slugs (`default-marketing`, `default-statistics`) to match your cookie groups — you'll find the slug on each group's settings page.
 
+## Static caching (Blitz)
+When pages are cached by Blitz (or any full-page static cache), everything rendered server-side is frozen at cache time — including the banner's visibility and any script conditionally rendered with `craft.cookieConsent.getConsent()`. That means the first visitor's consent state would be served to everyone. Two rules make the plugin work correctly with static caching:
+
+**1. Render the banner through a dynamic include.** Instead of relying on the automatic template hook, disable "Load Template" in the site settings, put `{% include 'cookie-consent/banner' %}` in a small template of its own (e.g. `_includes/cookie-consent.twig`), and include it dynamically so it's rendered fresh per visitor while the rest of the page stays cached:
+
+```twig
+{{ craft.blitz.includeDynamic('_includes/cookie-consent') }}
+```
+
+**2. Load consent-gated scripts client-side, not in Twig.** Don't wrap tracking scripts (GTM, analytics, pixels — including SEOmatic's script container) in `craft.cookieConsent.getConsent()` conditions on cached pages. Use the `ccc-loaded` event (see [Checking consent](#in-javascript)) or the built-in [Consent Mode support](#google-consent-mode-v2) instead — both apply the visitor's actual consent client-side, with no reload or cache clearing needed.
+
+The banner itself is cache-friendly: the CSRF token is not rendered into the page but fetched via ajax when consent is submitted, so cached pages stay valid for every visitor.
+
 ## Embedding the consent form on a specific page
-As of version 5.1.0 the plugin's templates are registered as site templates, so you can embed the consent form directly in any of your own templates — for example on a privacy or cookie policy page where visitors should be able to review and update their consent:
+The plugin's templates are registered as site templates, so you can embed the consent form directly in any of your own templates — for example on a privacy or cookie policy page where visitors should be able to review and update their consent:
 
 ```twig
 {% include 'cookie-consent/banner' %}
@@ -234,6 +166,35 @@ If you only want the consent form on specific pages, disable "Load Template" in 
 ```
 
 Don't embed the form on a page where the floating banner is also rendered — the two copies would share element IDs.
+
+## The consent log
+Every consent a visitor gives is stored in the database with a UID, so you can prove consent if required. Browse the log under "View consents" in the plugin's CP section. The visitor's IP address is only stored when they accept a group with "Store IP" enabled.
+
+"Invalidate Consents" in the site settings invalidates all stored consents at once, prompting every visitor to consent again — useful after changing your cookies or groups.
+
+### Cleaning up old consents
+Use the console command to clear old consents from the database, e.g. on a nightly cron:
+
+```bash
+./craft cookie-consent/retention/clear
+```
+
+| Option | Alias | Default | Type | Description |
+|---|---|---|---|---|
+| --days | -d | 365 | Integer | Number of days to keep records |
+| --sid | -s | null | Integer | Only clear consents from the site with this ID |
+| --handle | -h | null | String | Only clear consents from the site with this handle |
+
+**Note:** pass either *sid* or *handle* — not both. If no site is specified, consents are deleted from all sites.
+
+Example: delete all consents older than 2 years from site with ID 1
+
+```bash
+./craft cookie-consent/retention/clear -s 1 -d 730
+```
+
+## User permissions
+The plugin registers granular permissions under "Cookie Banner" in Craft's user permission settings: activating the banner, changing the template, updating content, viewing consents, and creating/editing/deleting cookie groups. On multisite installs, site edit permissions are respected as well.
 
 ## Acknowledgements
 Plugin Icon designed by Trinh Ho from Flaticon
