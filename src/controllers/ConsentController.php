@@ -4,77 +4,97 @@ namespace elleracompany\cookieconsent\controllers;
 
 use Craft;
 use craft\web\Controller;
-use craft\web\Response;
+use elleracompany\cookieconsent\CookieConsent;
 use elleracompany\cookieconsent\records\Consent;
 use elleracompany\cookieconsent\records\SiteSettings;
+use yii\web\BadRequestHttpException;
 use yii\web\Cookie;
-use elleracompany\cookieconsent\CookieConsent;
+use yii\web\Response;
+use yii\web\ServerErrorHttpException;
 
 class ConsentController extends Controller
 {
 	protected array|int|bool $allowAnonymous = true;
+
 	/**
 	 * Ajax Cookie Consent Store endpoint
 	 *
-	 * @return bool
+	 * @return Response
+	 * @throws BadRequestHttpException
+	 * @throws ServerErrorHttpException
 	 */
-	public function actionUpdate()
+	public function actionUpdate(): Response
 	{
-		$save_ip = false;
-		$post = Craft::$app->request->post();
+		$this->requirePostRequest();
 
-		/** @var $site  SiteSettings */
-		$site = SiteSettings::find()->where(['site_id' => $post['site_id']])->with('cookieGroups')->one();
+		$request = Craft::$app->getRequest();
+		$siteId = $request->getRequiredBodyParam('site_id');
+
+		/** @var SiteSettings|null $site */
+		$site = SiteSettings::find()->where(['site_id' => $siteId])->with('cookieGroups')->one();
+		if (!$site) {
+			throw new BadRequestHttpException('No cookie consent settings exist for site '.$siteId);
+		}
+
+		$saveIp = false;
+		$acceptAll = $request->getBodyParam('acceptAll') === 'true';
 		$consent = [];
 
-		foreach ($site->cookieGroups as $group)
-		{
-            if(isset($post['acceptAll']) && $post['acceptAll'] == 'true') $consent[$group->slug] = true;
-			elseif(isset($post['group-'.$group->slug])) $consent[$group->slug] = $post['group-'.$group->slug] == 'on' ? true : false;
-			else $consent[$group->slug] = $group->required ? true : false;
-			if($consent[$group->slug] && (int)$group->store_ip == 1) $save_ip = true;
+		foreach ($site->cookieGroups as $group) {
+			if ($acceptAll) {
+				$consent[$group->slug] = true;
+			} elseif ($request->getBodyParam('group-'.$group->slug) !== null) {
+				$consent[$group->slug] = $request->getBodyParam('group-'.$group->slug) === 'on';
+			} else {
+				$consent[$group->slug] = (bool) $group->required;
+			}
+			if ($consent[$group->slug] && $group->store_ip) {
+				$saveIp = true;
+			}
 		}
 
 		$consentRecord = new Consent();
-		$consentRecord->site_id = $post['site_id'];
-		$consentRecord->ip = $save_ip ? Craft::$app->request->getUserIP() : null;
-        $consentRecord->cookieName = $site->cookieName;
+		$consentRecord->site_id = $site->site_id;
+		$consentRecord->ip = $saveIp ? $request->getUserIP() : null;
+		$consentRecord->cookieName = $site->cookieName;
 		$consentRecord->data = json_encode($consent);
-		$consentRecord->save();
 
-		Craft::$app->response->format = Response::FORMAT_JSON;
+		if (!$consentRecord->save()) {
+			throw new ServerErrorHttpException('Could not save the consent.');
+		}
 
-		$cookie = new Cookie([
-		    'name' => $site->cookieName,
-            'value' => json_encode(array_merge(['consent_uid' => $consentRecord->uid],$consent)),
-            'expire' => strtotime('+1 year', time()),
+		Craft::$app->response->cookies->add(new Cookie([
+			'name' => $site->cookieName,
+			'value' => json_encode(array_merge(['consent_uid' => $consentRecord->uid], $consent)),
+			'expire' => strtotime('+1 year'),
 			'secure' => true,
-        ]);
+			'sameSite' => Cookie::SAME_SITE_LAX,
+		]));
 
-		Craft::$app->response->cookies->add($cookie);
-
-        return true;
+		return $this->asJson([
+			'success' => true,
+			'uid' => $consentRecord->uid,
+			'consent' => $consent,
+		]);
 	}
 
-    public function actionShow()
-    {
-        Craft::$app->response->format = Response::FORMAT_JSON;
-        return CookieConsent::getInstance()->cookieConsent->getConsents();
-    }
+	public function actionShow(): Response
+	{
+		return $this->asJson(CookieConsent::getInstance()->cookieConsent->getConsents());
+	}
 
 	/**
 	 * Ajax CSRF token endpoint, fetched by the banner script right before
 	 * submitting consent. The token is not rendered into the banner markup
 	 * because generating it would mark the whole page as uncacheable.
 	 *
-	 * @return array
+	 * @return Response
 	 */
-	public function actionCsrf()
+	public function actionCsrf(): Response
 	{
-		Craft::$app->response->format = Response::FORMAT_JSON;
-		return [
+		return $this->asJson([
 			'name' => Craft::$app->config->general->csrfTokenName,
 			'value' => Craft::$app->request->getCsrfToken(),
-		];
+		]);
 	}
 }

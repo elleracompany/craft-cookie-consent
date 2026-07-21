@@ -2,6 +2,9 @@
 
 ## 5.1.0 - 2026-07-21
 
+### Improved
+- The consent submission endpoint now requires a POST request, validates `site_id`, returns a JSON object (`success`, `uid`, `consent`) instead of a bare `true`, and sets `SameSite=Lax` on the consent cookie. Submitting for a site without settings now returns a 400 response instead of causing a PHP error.
+
 ### Bugfix
 - Activating the banner made every front-end page uncacheable: `{{ csrfInput() }}` in the banner template caused Craft to overwrite the response's cache headers with no-cache headers, and the plugin opened a PHP session (and re-sent the consent cookie) on every request. The CSRF token is now fetched via ajax when consent is submitted, and the consent state is read from the request cookie only.
 
